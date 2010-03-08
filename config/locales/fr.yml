@@ -1,0 +1,10 @@
+# French strings go here for Rails i18n
+fr:
+  start_time_tracker: "démarrer"
+  stop_time_tracker: "arrêter"
+  time_tracker_not_running: "Arrêté"
+  start_time_tracker_error: "Le traqueur de temps n'a pu être démarré"
+  time_tracker_already_running_error: "Un traqueur de temps est déjà démarré"
+  no_time_tracker_running_error: "Aucun traqueur de temps n'est démarré"
+  time_tracker_hour_sym: ":"
+

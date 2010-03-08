@@ -1,0 +1,20 @@
+<% time_tracker = time_tracker_for(User.current) %>
+<% if !time_tracker.nil? %>
+    <%= link_to '#' + time_tracker.issue_id.to_s,
+        { :controller => 'issues', :action => 'show', :id => time_tracker.issue_id },
+        { :class => 'icon icon-clock' }
+    %>
+    (<%= time_tracker.time_spent_to_s %> /
+    <%= link_to l(:stop_time_tracker), { :controller => 'time_trackers', :action => 'stop' } %>)
+<% elsif !@project.nil? and User.current.allowed_to?(:log_time, @project) %>
+    <% if !@issue.nil? %>
+        <%= link_to_remote l(:start_time_tracker) + ' #' + @issue.id.to_s,
+            :url => { :controller => 'time_trackers', :action => 'start', :issue_id => @issue.id },
+            :html => { :class => 'icon icon-time-add' },
+            :update => 'time-tracker-menu'
+        %>
+    <% else %>
+        <span class='icon icon-time'><%= l(:time_tracker_not_running) %></span>
+    <% end %>
+<% end %>
+
