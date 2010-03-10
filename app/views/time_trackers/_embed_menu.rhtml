@@ -2,7 +2,7 @@
 <% if !time_tracker.nil? %>
     <%= link_to '#' + time_tracker.issue_id.to_s,
         { :controller => 'issues', :action => 'show', :id => time_tracker.issue_id },
-        { :class => 'icon icon-clock' }
+        { :class => 'icon icon-time' }
     %>
     (<%= time_tracker.time_spent_to_s %> /
     <%= link_to l(:stop_time_tracker), { :controller => 'time_trackers', :action => 'stop' } %>)
@@ -10,7 +10,7 @@
     <% if !@issue.nil? %>
         <%= link_to_remote l(:start_time_tracker) + ' #' + @issue.id.to_s,
             :url => { :controller => 'time_trackers', :action => 'start', :issue_id => @issue.id },
-            :html => { :class => 'icon icon-time-add' },
+            :html => { :class => 'icon icon-time' },
             :update => 'time-tracker-menu'
         %>
     <% else %>

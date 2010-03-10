@@ -1,3 +1,13 @@
+
+<!--
+This script updates the element 'id' with 'newContent' if the two contents differ
+-->
+<%= javascript_tag "function updateElementIfChanged(id, newContent) {
+    el = $(id);
+    if (el.innerHTML != newContent) { el.update(newContent); }
+    }"
+%>
+
 <!--
 This script replaces the <a id="time-tracker-menu">...</a> element by a span with the same id.
 This is needed as we want several links for our time tracker menu item.

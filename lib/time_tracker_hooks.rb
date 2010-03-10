@@ -3,9 +3,10 @@ class TimeTrackerHooks < Redmine::Hook::ViewListener
     render_on :view_layouts_base_body_bottom, :partial => 'time_trackers/update_menu'
 
     def view_layouts_base_html_head(context = {})
-        css = stylesheet_link_tag 'time_tracker.css', :plugin => 'redmine_time_tracker'
-        js = javascript_include_tag 'time_tracker.js', :plugin => 'redmine_time_tracker'
-        css + js
+        '<style type="text/css">
+            body #time-tracker-menu { margin-right: 8px; }
+            body #time-tracker-menu a { margin-right: 0px; }
+        </style>'
     end
 end
 

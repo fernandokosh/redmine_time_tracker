@@ -1,0 +1,9 @@
+# English strings go here for Rails i18n
+start_time_tracker: "start"
+stop_time_tracker: "stop"
+time_tracker_not_running: "Not running"
+start_time_tracker_error: "Fail to start the time tracker"
+time_tracker_already_running_error: "A time tracker is already running"
+no_time_tracker_running_error: "No time tracker is running"
+time_tracker_hour_sym: ":"
+
