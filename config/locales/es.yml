@@ -1,0 +1,9 @@
+# Spanish strings go here for Rails i18n
+es:
+  start_time_tracker: "Iniciar"
+  stop_time_tracker: "Detener"
+  time_tracker_not_running: "Detenido"
+  start_time_tracker_error: "Error al iniciar el control de tiempo"
+  time_tracker_already_running_error: "Ya esta corriendo el control de tiempo"
+  no_time_tracker_running_error: "No esta corriendo el control de tiempo"
+  time_tracker_hour_sym: ":"
