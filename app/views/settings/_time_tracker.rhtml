@@ -1,0 +1,6 @@
+<p>
+    <%= label_tag 'refresh_rate', l(:time_tracker_refresh_rate) %>
+    <%= text_field_tag 'settings[refresh_rate]', @settings['refresh_rate'], { :size => 4 } %>
+    (<%= l(:time_tracker_seconds) %>)
+</p>
+

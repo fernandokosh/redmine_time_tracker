@@ -10,6 +10,8 @@ Redmine::Plugin.register :redmine_time_tracker do
 
     requires_redmine :version_or_higher => '0.9.0'
 
+    settings :default => { 'refresh_rate' => '60' }, :partial => 'settings/time_tracker'
+
     menu :account_menu, :time_tracker_menu, '',
         {
             :caption => '',

@@ -24,6 +24,7 @@ the time tracker menu item using an AJAX request to retrieve the data
 
 <!--
 This script periodically updates the time tracker menu item to reflect any changes in the tracking state
+Refresh rate is taken from settings. If settings is invalid, 60 secs is used. The minimum value is 5 secs.
 -->
-<%= javascript_tag "new PeriodicalExecuter(updateTimeTrackerMenu, 60);" %>
+<%= javascript_tag "new PeriodicalExecuter(updateTimeTrackerMenu, #{[Setting.plugin_redmine_time_tracker['refresh_rate'].to_i == 0 ? 60 : Setting.plugin_redmine_time_tracker['refresh_rate'].to_i, 5].max});" %>
 

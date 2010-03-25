@@ -7,4 +7,6 @@ fr:
   time_tracker_already_running_error: "Un traqueur de temps est déjà démarré"
   no_time_tracker_running_error: "Aucun traqueur de temps n'est démarré"
   time_tracker_hour_sym: ":"
+  time_tracker_refresh_rate: "Taux de rafraîchissement"
+  time_tracker_seconds: "secondes"
 

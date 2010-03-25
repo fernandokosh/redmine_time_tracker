@@ -7,4 +7,6 @@ en:
   time_tracker_already_running_error: "A time tracker is already running"
   no_time_tracker_running_error: "No time tracker is running"
   time_tracker_hour_sym: ":"
+  time_tracker_refresh_rate: "Refresh rate"
+  time_tracker_seconds: "seconds"
 
