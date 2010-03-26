@@ -1,3 +1,5 @@
+<% if User.current.logged? %>
+
 <!--
 This script replaces the <a id="time-tracker-menu">...</a> element by a span with the same id.
 This is needed as we want several links for our time tracker menu item.
@@ -27,4 +29,6 @@ This script periodically updates the time tracker menu item to reflect any chang
 Refresh rate is taken from settings. If settings is invalid, 60 secs is used. The minimum value is 5 secs.
 -->
 <%= javascript_tag "new PeriodicalExecuter(updateTimeTrackerMenu, #{[Setting.plugin_redmine_time_tracker['refresh_rate'].to_i == 0 ? 60 : Setting.plugin_redmine_time_tracker['refresh_rate'].to_i, 5].max});" %>
+
+<% end %>
 
