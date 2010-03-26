@@ -4,3 +4,20 @@
 #time-tracker-menu { margin-right: 8px; }
 #time-tracker-menu a { margin-right: 0px; }
 
+.time-tracker-admin td.zombie,
+.time-tracker-admin td.start-date,
+.time-tracker-admin td.spent-time,
+.time-tracker-admin td.action,
+.time-tracker-admin td.msg {
+    text-align: center;
+}
+
+.time-tracker-admin td.user,
+.time-tracker-admin td.issue {
+    text-align: left;
+}
+
+.time-tracker-admin p.msg {
+    text-align: center;
+}
+

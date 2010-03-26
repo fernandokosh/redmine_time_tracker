@@ -20,5 +20,11 @@ Redmine::Plugin.register :redmine_time_tracker do
             :param => :project_id,
             :if => Proc.new { User.current.logged? }
         }
+
+    menu :top_menu, :time_tracker_admin_menu, { :controller => 'time_trackers', :action => 'index' },
+        {
+            :caption => :time_tracker_admin_menu,
+            :if => Proc.new { User.current.admin }
+        }
 end
 

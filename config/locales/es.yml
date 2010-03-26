@@ -5,7 +5,7 @@ es:
   time_tracker_not_running: "Detenido"
   start_time_tracker_error: "Error al iniciar el control de tiempo"
   time_tracker_already_running_error: "Ya esta corriendo el control de tiempo"
-  no_time_tracker_running_error: "No esta corriendo el control de tiempo"
+  no_time_tracker_running: "No esta corriendo el control de tiempo"
   time_tracker_hour_sym: ":"
   time_tracker_refresh_rate: "Frecuencia de refresco"
   time_tracker_seconds: "segundos"
