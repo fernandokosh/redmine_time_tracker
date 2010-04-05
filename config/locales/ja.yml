@@ -1,0 +1,20 @@
+# Japanese strings go here for Rails i18n
+ja:
+  start_time_tracker: "開始"
+  stop_time_tracker: "終了"
+  time_tracker_not_running: "停止中"
+  start_time_tracker_error: "作業時間の記録を開始できませんでした"
+  time_tracker_already_running_error: "作業時間の記録を開始済みです"
+  no_time_tracker_running: "作業中のチケットはありません"
+  time_tracker_hour_sym: ":"
+  time_tracker_refresh_rate: "更新間隔"
+  time_tracker_seconds: "秒"
+  time_tracker_admin_menu: "作業時間"
+  time_tracker_admin_title: "作業時間"
+  time_tracker_label_start_date: "開始時間"
+  time_tracker_label_action: "アクション"
+  time_tracker_label_delete: "削除"
+  time_tracker_delete_success: "作業時間を削除しました"
+  time_tracker_delete_fail: "作業時間は削除済みです"
+  time_tracker_zombie_legend: "ゾンビ"
+
