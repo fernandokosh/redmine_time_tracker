@@ -29,6 +29,7 @@
                         <td class="action">
                             <%= link_to_remote l(:time_tracker_label_delete),
                                 :url => { :controller => 'time_trackers', :action => 'delete', :id => time_tracker.id },
+                                :html => { :class => 'icon icon-del' },
                                 :complete => "$('#{'timetracker' + time_tracker.id.to_s}').update('<td colspan=\"0\" class=\"msg\">' + request.responseText + '</td>');"
                             %>
                         </td>
