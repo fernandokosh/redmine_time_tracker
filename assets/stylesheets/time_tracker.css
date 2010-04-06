@@ -7,7 +7,6 @@
 .time-tracker-admin td.zombie,
 .time-tracker-admin td.start-date,
 .time-tracker-admin td.spent-time,
-.time-tracker-admin td.action,
 .time-tracker-admin td.msg {
     text-align: center;
 }
