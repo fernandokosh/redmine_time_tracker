@@ -7,7 +7,7 @@
     (<%= time_tracker.time_spent_to_s %> /
     <%= link_to l(:stop_time_tracker), { :controller => 'time_trackers', :action => 'stop' } %>)
 <% elsif !@project.nil? and User.current.allowed_to?(:log_time, @project) %>
-    <% if !@issue.nil? %>
+    <% if !(@issue.nil? || @issue.new_record?) %>
         <%= link_to_remote l(:start_time_tracker) + ' #' + @issue.id.to_s,
             :url => { :controller => 'time_trackers', :action => 'start', :issue_id => @issue.id },
             :html => { :class => 'icon icon-time-add' },
