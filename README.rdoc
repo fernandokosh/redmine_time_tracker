@@ -5,7 +5,7 @@ The plugin allows to start/stop a timer on a per user basis.
 
 == Features
 
-* Current spent time shown
+* Current spent time always visible
 * Timer automatic updated without reload
 * Per user time tracking
 * Using known 'log time' dialog
