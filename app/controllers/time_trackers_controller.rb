@@ -27,7 +27,7 @@ class TimeTrackersController < ApplicationController
             redirect_to :back
         else
             issue_id = @time_tracker.issue_id
-            hours = @time_tracker.hours_spent
+            hours = @time_tracker.hours_spent.round(2)
             @time_tracker.destroy
 
             redirect_to :controller => 'timelog', :action => 'edit', :issue_id => issue_id, :time_entry => { :hours => hours }
