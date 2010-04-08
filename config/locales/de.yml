@@ -1,0 +1,20 @@
+# German strings go here for Rails i18n
+de:
+  start_time_tracker: "Start"
+  stop_time_tracker: "Stop"
+  time_tracker_not_running: "gestopt"
+  start_time_tracker_error: "konnte Time Tracker nicht starten"
+  time_tracker_already_running_error: "Es läuft bereits ein Time Tracker"
+  no_time_tracker_running: "keine Time Tracker läuft"
+  time_tracker_hour_sym: ":"
+  time_tracker_refresh_rate: "Aktualisierungszyklus"
+  time_tracker_seconds: "Sekunden"
+  time_tracker_admin_menu: "Time Trackers"
+  time_tracker_admin_title: "Time Trackers"
+  time_tracker_label_start_date: "Start Datum"
+  time_tracker_label_action: "Aktion"
+  time_tracker_label_delete: "Löschen"
+  time_tracker_delete_success: "Time Tracker erfolgreich gelöscht"
+  time_tracker_delete_fail: "der Time Tracker wurde bereits gelöscht/geschlossen"
+  time_tracker_zombie_legend: "Zombie Time Tracker"
+
