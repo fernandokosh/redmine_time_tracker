@@ -1,0 +1,61 @@
+
+<div id="status-transition-list">
+    <% edit_allowed = User.current.admin %>
+    <% transitions = transitions.nil? ? {} : transitions %>
+    <div class="autoscroll">
+        <table class="list">
+            <thead>
+                <tr>
+                    <th class="from"><%= l(:time_tracker_settings_from_status) %></th>
+                    <th class="to"><%= l(:time_tracker_settings_to_status) %></th>
+                    <% if edit_allowed %>
+                        <th class="buttons"></th>
+                    <% end %>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% if transitions.count == 0 %>
+                    <tr class="odd">
+                        <td class="msg center" colspan=<%= edit_allowed ? "3" : "2" %>><%= l(:time_tracker_settings_no_transition) %></td>
+                    </tr>
+                <% else %>
+                    <% transitions.each do |from, to| %>
+                        <tr class="<%=cycle('odd', 'even') %>">
+                            <td class="from">
+                                <%= status_from_id(from) %>
+                                <%= hidden_field_tag 'settings[status_transitions][' + from.to_s + ']', to.to_s %>
+                            </td>
+                            <td class="to"><%= status_from_id(to) %></td>
+                            <% if edit_allowed %>
+                                <td class="buttons">
+                                    <%= link_to_remote l(:time_tracker_label_delete),
+                                        :url => { :controller => 'time_trackers', :action => 'delete_status_transition', :transitions => transitions, :from_id => from },
+                                        :html => { :class => 'icon icon-del' },
+                                        :complete => "$('status-transition-list').replace(request.responseText);"
+                                    %>
+                                </td>
+                            <% end %>
+                        </tr>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+
+    <% if edit_allowed %>
+        <div>
+            <%= label_tag 'new-transition-from', l(:time_tracker_settings_new_transition_from) %>
+            <%= select_tag 'new-transition-from', new_transition_from_options(transitions) %>
+            <%= label_tag 'new-transition-to', l(:time_tracker_settings_new_transition_to) %>
+            <%= select_tag 'new-transition-to', new_transition_to_options %>
+            <%= link_to_remote l(:time_tracker_settings_new_transition_add),
+                :url => { :controller => 'time_trackers', :action => 'add_status_transition', :transitions => transitions },
+                :with => "'from_id=' + $('new-transition-from').value + '&to_id=' + $('new-transition-to').value",
+                :html => { :class => 'icon icon-add' },
+                :complete => "$('status-transition-list').replace(request.responseText);"
+            %>
+        </div>
+    <% end %>
+</div>
+

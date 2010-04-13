@@ -50,6 +50,20 @@ class TimeTrackersController < ApplicationController
         render :partial => 'embed_menu'
     end
 
+    def add_status_transition
+        transitions = params[:transitions].nil? ? {} : params[:transitions]
+        transitions[params[:from_id]] = params[:to_id]
+
+        render :partial => 'status_transition_list', :locals => { :transitions => transitions }
+    end
+
+    def delete_status_transition
+        transitions = params[:transitions].nil? ? {} : params[:transitions]
+        transitions.delete(params[:from_id])
+
+        render :partial => 'status_transition_list', :locals => { :transitions => transitions }
+    end
+
     protected
 
     def current

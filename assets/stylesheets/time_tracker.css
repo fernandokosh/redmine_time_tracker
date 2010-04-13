@@ -20,3 +20,9 @@
     text-align: center;
 }
 
+#status-transition-list {
+    margin-bottom: 10px;
+}
+
+#settings form[action="/settings/plugin/redmine_time_tracker"] > div + div { display: none } /* Hack to remove the div opened by redmine before rendering the plugin settings partial */
+
