@@ -28,5 +28,18 @@ module ApplicationHelper
     def new_transition_to_options()
         to_status_options(statuses_list())
     end
+
+    def global_allowed_to?(user, action)
+        return false if user.nil?
+
+        projects = Project.find(:all)
+        for p in projects
+            if user.allowed_to?(action, p)
+                return true
+            end
+        end
+
+        return false
+    end
 end
 
