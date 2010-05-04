@@ -1,7 +1,7 @@
 <h2><%= l(:time_tracker_admin_title) %></h2>
 
 <div class="time-tracker-admin">
-    <% if @time_trackers.count > 0 %>
+    <% if !@time_trackers.empty? %>
         <div class="autoscroll">
             <table class="list">
                 <thead>
