@@ -27,4 +27,6 @@ fr:
   time_tracker_settings_new_transition_from: "Du status"
   time_tracker_settings_new_transition_to: "au status"
   time_tracker_settings_new_transition_add: "Ajouter la transition"
+  time_tracker_settings_unknown_status: "Status inconnu"
+  time_tracker_settings_zombie_transition: "changement de status zombie"
 

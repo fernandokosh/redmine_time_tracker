@@ -24,5 +24,12 @@
     margin-bottom: 10px;
 }
 
+#status-transition-list td.zombie {
+    font-style: italic;
+}
+#status-transition-list td.msg {
+    text-align: center;
+}
+
 #settings form[action="/settings/plugin/redmine_time_tracker"] > div + div { display: none } /* Hack to remove the div opened by redmine before rendering the plugin settings partial */
 
