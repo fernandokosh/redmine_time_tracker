@@ -11,7 +11,9 @@ class TimeTrackersController < ApplicationController
 
             new_tracker = TimeTracker.new({ :issue_id => @issue.id })
             if new_tracker.save
+              if Setting.plugin_redmine_time_tracker['status_transitions'] != nil
                 apply_status_transition(@issue)
+              end
                 render_menu
             else
                 flash[:error] = l(:start_time_tracker_error)
