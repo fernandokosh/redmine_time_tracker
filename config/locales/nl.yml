@@ -14,6 +14,7 @@ nl:
   time_tracker_label_start_date: "Start datum"
   time_tracker_label_action: "Actie"
   time_tracker_label_delete: "Verwijder"
+  time_tracker_label_transition_journal: "Status automatisch gewijzigd doordat een timer is gestart."
   time_tracker_delete_success: "Timer succesvol verwijderd"
   time_tracker_delete_fail: "De timer is al reeds gestopt/verwijderd"
   time_tracker_zombie_legend: "zombie timer"

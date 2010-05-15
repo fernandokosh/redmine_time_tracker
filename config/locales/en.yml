@@ -14,6 +14,7 @@ en:
   time_tracker_label_start_date: "Start date"
   time_tracker_label_action: "Action"
   time_tracker_label_delete: "Delete"
+  time_tracker_label_transition_journal: "Status transition applied automatically due to the start of a time tracker."
   time_tracker_delete_success: "Time tracker successfully deleted"
   time_tracker_delete_fail: "The time tracker has already been closed/deleted"
   time_tracker_zombie_legend: "zombie time tracker"
