@@ -17,7 +17,7 @@
             </thead>
 
             <tbody>
-                <% if transitions.count == 0 %>
+                <% if transitions.empty? %>
                     <tr class="odd">
                         <td class="msg" colspan=<%= edit_allowed ? "4" : "3" %>><%= l(:time_tracker_settings_no_transition) %></td>
                     </tr>
