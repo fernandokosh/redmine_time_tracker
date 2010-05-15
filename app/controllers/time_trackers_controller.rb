@@ -77,7 +77,7 @@ class TimeTrackersController < ApplicationController
         new_status_id = Setting.plugin_redmine_time_tracker['status_transitions'][issue.status_id.to_s]
         new_status = IssueStatus.find(:first, :conditions => { :id => new_status_id })
         if issue.new_statuses_allowed_to(User.current).include?(new_status)
-            journal = @issue.init_journal(User.current)
+            journal = @issue.init_journal(User.current, notes = l(:time_tracker_label_transition_journal))
             @issue.status_id = new_status_id
             @issue.save
         end
