@@ -20,7 +20,7 @@ nl:
   time_tracker_settings_general_title: "Algemeen"
   time_tracker_settings_transition_title: "Status wijzigingen"
   time_tracker_settings_transition_msg: "Uit te voeren status wijziging wanneer een timer wordt gestart."
-  time_tracker_settings_transition_note: "Let op dat de gebruiker de benodigde rechten moet hebben om de status wijziging succesvol uit te kunnen voeren."
+  time_tracker_settings_transition_note: "Let op dat de gebruiker de benodigde permissies moet hebben om de status wijziging succesvol uit te kunnen voeren."
   time_tracker_settings_from_status: "Van status"
   time_tracker_settings_to_status: "Naar status"
   time_tracker_settings_no_transition: "Er zijn momenteel géén status wijzigingen geconfigureerd"
