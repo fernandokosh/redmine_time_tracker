@@ -2,10 +2,10 @@
 nl:
   start_time_tracker: "start"
   stop_time_tracker: "stop"
-  time_tracker_not_running: "Géén timer actief"
+  time_tracker_not_running: "GÃ©Ã©n timer actief"
   start_time_tracker_error: "Timer kon niet worden gestart"
   time_tracker_already_running_error: "Een andere timer is reeds actief"
-  no_time_tracker_running: "Er zijn géén timers actief"
+  no_time_tracker_running: "Er zijn gÃ©Ã©n timers actief"
   time_tracker_hour_sym: ":"
   time_tracker_refresh_rate: "Vernieuwingsfrequentie"
   time_tracker_seconds: "seconden"
@@ -23,10 +23,10 @@ nl:
   time_tracker_settings_transition_note: "Let op dat de gebruiker de benodigde rechten moet hebben om de status wijziging succesvol uit te kunnen voeren."
   time_tracker_settings_from_status: "Van status"
   time_tracker_settings_to_status: "Naar status"
-  time_tracker_settings_no_transition: "Er zijn momenteel géén status wijzigingen geconfigureerd"
+  time_tracker_settings_no_transition: "Er zijn momenteel gÃ©Ã©n status wijzigingen geconfigureerd"
   time_tracker_settings_new_transition_from: "Van"
   time_tracker_settings_new_transition_to: "Naar"
   time_tracker_settings_new_transition_add: "Voeg status wijziging toe"
   time_tracker_settings_unknown_status: "Onbekende status"
   time_tracker_settings_zombie_transition: "zombie status wijziging"
-
+  
