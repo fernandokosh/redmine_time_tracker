@@ -16,7 +16,7 @@
         :update => 'time-tracker-menu'
     %>
 <% elsif global_allowed_to?(User.current, :log_time) %>
-    <%#Â No time tracker is running but the user has the rights to track time on a project %>
+    <%# No time tracker is running but the user has the rights to track time on a project %>
     <%# Display the "Not running" entry %>
     <span class='icon icon-time'><%= l(:time_tracker_not_running) %></span>
 <% end %>
