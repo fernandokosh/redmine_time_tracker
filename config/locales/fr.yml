@@ -14,6 +14,7 @@ fr:
   time_tracker_label_start_date: "Date de début"
   time_tracker_label_action: "Action"
   time_tracker_label_delete: "Supprimer"
+  time_tracker_label_transition_journal: "Changement de status appliqué automatiquement dû au démarrage d'un traqueur de temps."
   time_tracker_delete_success: "Traqueur de temps supprimé avec succès"
   time_tracker_delete_fail: "Le traqueur de temps a déjà été arrêté/supprimé"
   time_tracker_zombie_legend: "traqueur de temps zombie"
