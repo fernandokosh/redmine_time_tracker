@@ -3,6 +3,7 @@
 
 #time-tracker-menu { margin-right: 8px; }
 #time-tracker-menu a { margin-right: 0px; }
+#time-tracker-menu .icon { padding-left: 20px; }
 
 #time-tracker-admin td.start-date,
 #time-tracker-admin td.spent-time,
