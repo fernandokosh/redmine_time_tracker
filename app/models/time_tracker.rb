@@ -18,14 +18,18 @@ class TimeTracker < ActiveRecord::Base
         super(arguments)
         self.user_id = User.current.id
         self.started_on = Time.now
+        self.time_spent = 0.0
+        self.paused = false
     end
-
+   
     def hours_spent
-        ((Time.now.to_i - started_on.to_i) / 3600.0).to_f
+        running_time + time_spent
     end
 
     def time_spent_to_s
-        hours, minutes = Date.day_fraction_to_time(DateTime.now - started_on.to_datetime)
+        total = hours_spent
+        hours = total.to_i
+        minutes = ((total - hours) * 60).to_i
         hours.to_s + l(:time_tracker_hour_sym) + minutes.to_s.rjust(2, '0')
     end
 
@@ -41,6 +45,16 @@ class TimeTracker < ActiveRecord::Base
         end
 
         return false
+    end
+
+    protected
+
+    def running_time
+        if paused
+            return 0
+        else
+            return ((Time.now.to_i - started_on.to_i) / 3600.0).to_f
+        end
     end
 end
 

@@ -1,4 +1,7 @@
 
+.icon-start { background-image: url(../images/time_start.png); }
+.icon-pause { background-image: url(../images/time_pause.png); }
+.icon-stop { background-image: url(../images/time_stop.png); }
 .icon-clock { background-image: url(../images/clock.gif); }
 
 #time-tracker-menu { margin-right: 8px; }
