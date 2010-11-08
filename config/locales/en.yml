@@ -9,6 +9,7 @@ en:
   stop_time_tracker: "stop"
   suspend_time_tracker: "suspend"
   suspend_time_tracker_error: "Fail to suspend the time tracker"
+  time_tracker_admin_menu: "Time trackers"
   time_tracker_admin_title: "Time trackers"
   time_tracker_already_running_error: "A time tracker is already running"
   time_tracker_delete_fail: "The time tracker has already been closed/deleted"
