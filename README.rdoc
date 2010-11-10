@@ -1,7 +1,7 @@
 = Redmine Time Tracker plugin
 
 Time tracker is a Redmine plugin to ease time tracking when working on an issue.
-The plugin allows to start/stop a timer on a per user basis.
+The plugin allows to start/suspend/resume/stop a timer on a per user basis.
 
 == Features
 
@@ -17,7 +17,7 @@ The newest version is always at {GitHub}[http://github.com/delaitre/redmine_time
 == Install
 
 1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins Make sure the plugin is installed to +vendor/plugins/redmine_time_tracker+
-2. Setup the database using the migrations. +rake db:migrate_plugins+
+2. Setup the database using the migrations. +rake db:migrate_plugins RAILS_ENV=production+
 3. Login to your Redmine install as an Administrator
 4. Setup the 'log time' permissions for your roles
 5. Add "Time tracking" to the enabled modules for your project
@@ -31,14 +31,26 @@ If a tracker is running, the tracked issue id is displayed with the current spen
 every 5 secs). A 'stop' link is also available. When stopping the time tracker, the user is
 redirected to the standard timelog edit page with the 'hours' field filled with the timer value.
 This way, we rely on existing and well known behaviours.
+Moreover, a 'suspend'/'resume' link allow to pause the time tracker.
+
+These actions are available in the issues list context menu too (right click in the issues list).
 
 As mentioned before, the time tracker menu is updated periodically. This way, other browser
 tabs/windows will display the correct information.
 
 == Upgrade
 
+=== Official release
+
+1. Download the last official release from the {Redmine plugin directory}[HTTP://Www.redmine.org/plugins/redmine_time_tracker]
+2. Replace your old Redmine's vendor/plugins/redmine_time_tracker folder with the one contained in the downloaded package
+3. Update the database using the migrations. +rake db:migrate_plugins RAILS_ENV=production+
+4. Restart your Redmine
+
 === Git
 
 1. Open a shell to your Redmine's vendor/plugins/redmine_time_tracker folder
 2. Update your git copy with +git pull+
-3. Restart your Redmine
+3. Update the database using the migrations. +rake db:migrate_plugins RAILS_ENV=production+
+4. Restart your Redmine
+
