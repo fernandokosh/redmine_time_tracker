@@ -1,0 +1,1 @@
+<%= select_tag "issues", options_from_collection_for_select(@issues, :id, :subject, @selected.nil? ? 0 : @selected) %>

@@ -46,6 +46,26 @@ class TimeTracker < ActiveRecord::Base
 
         return false
     end
+    
+    def save_time_entry(comment, activity)
+
+      issue = Issue.find(:first, :conditions => { :id => self.issue_id })
+      project = Project.find(:first, :conditions => { :id => issue.project_id })
+
+      time_entry ||= TimeEntry.new(
+        :project => project, 
+        :issue => issue, 
+        :user => User.current, 
+        :spent_on => User.current.today, 
+        :hours => self.hours_spent.round(2), 
+        :activity_id => activity, 
+        :comments => comment
+      )
+      
+      return time_entry.save
+      
+    end
+    
 
     protected
 

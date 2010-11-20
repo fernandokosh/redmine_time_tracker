@@ -1,0 +1,26 @@
+<%= select_tag('projects', options_from_collection_for_select(@projects, :id, :name, @project.nil? ? 0 : @project.id))%>
+
+<% if !@issues.nil?%>
+  <%= render :partial => 'issues', :locals => { :issues => @issues, :selected => @issue.nil? ? 0 : @issue.id} %>
+<% else %>
+  <%= select_tag "issues", options_for_select([ "Select a project" ]) %>
+<% end %>
+<br />
+<br />
+
+<% if !@activities.nil?%>
+  <%= render :partial => 'activities', :locals => { :activities => @activities } %>
+<% else %>
+  <%= select_tag "activities", options_for_select([ "Select a project" ]) %>
+<% end %>
+
+<br />
+<br />
+
+<div class="comment_wrapper">
+  <input type="textarea" id="comment"></input>  
+</div>
+
+<div>
+  <span id="current_time"><%= @time_tracker.nil? ? '00:00:00': @time_tracker.hours_spent %></span> <button id="start-stop-button" class="<%= !@issue.nil? ? 'running' : '' %>"><%= @issue.nil? ? 'Start' : 'Stop'%></button>    
+</div>

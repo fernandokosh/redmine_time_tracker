@@ -1,6 +1,50 @@
 class TimeTrackersController < ApplicationController
     unloadable
 
+    def popup_tracker
+
+      @time_tracker = current
+
+      if !@time_tracker.nil?
+        
+        @issue = Issue.find(:first, :conditions => { :id => @time_tracker.issue_id} )
+        @project = Project.find(:first, :conditions => { :id => @issue.project_id})
+        @issues = Issue.find(:all, :conditions => { :project_id => @project.id})
+        
+      else 
+        @project = Project.find(params[:project_id]) if params[:project_id]        
+        
+        if !@project_id.nil?
+          @issues = Issue.find(:conditions => { :project_id => @project.id})        
+        end
+      end
+      
+      if !@project.nil?
+        @activities = retrieve_activities(@project.id)
+      end
+      
+      @projects = Project.find(:all)
+      
+    end
+    
+    
+    def get_activities 
+      
+      @activities = retrieve_activities(params[:project_id])
+      render :partial => 'activities'
+      
+    end
+    
+    
+    def get_issues
+      
+      @project = params[:project_id]
+      raise 'No project id passed' unless !@project.nil?
+
+      @issues = Issue.find(:all, :conditions => { :project_id => @project})
+      render :partial => 'issues'
+    end
+
     def index
         @time_trackers = TimeTracker.find(:all)
     end
@@ -67,6 +111,27 @@ class TimeTrackersController < ApplicationController
             redirect_to :controller => 'timelog', :action => 'edit', :issue_id => issue_id, :time_entry => { :hours => hours }
         end
     end
+    
+    
+    def stop_and_add
+      
+      comment = params[:comment]
+      activity = params[:activity]
+      time_tracker = current
+      
+      result = 'success'
+      
+      if time_tracker.nil?
+        result = 'No time tracker running'
+      else
+          issue_id = time_tracker.issue_id
+          time_tracker.save_time_entry(comment, activity)
+          time_tracker.destroy
+      end
+      
+      return render :json => { :result => result }
+      
+    end
 
     def delete
         time_tracker = TimeTracker.find(:first, :conditions => { :id => params[:id] })
@@ -112,5 +177,16 @@ class TimeTrackersController < ApplicationController
             @issue.status_id = new_status_id
             @issue.save
         end
+    end    
+    
+    def retrieve_activities(project)
+
+      @activities = TimeEntryActivity.find(:all, :conditions => { :project_id => project, :active => 1 })
+      
+      if @activities.empty?
+        @activities = TimeEntryActivity.find(:all, :conditions => { :active => 1 } )
+      end
     end
+    
+    
 end
