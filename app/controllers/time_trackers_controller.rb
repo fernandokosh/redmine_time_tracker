@@ -60,9 +60,9 @@ class TimeTrackersController < ApplicationController
       raise 'No project id passed' unless !params[:project_id].nil?
 
       @project = Project.find(:first, :conditions => {:identifier => params[:project_id]})
-      
       @issues = Issue.find(:all, :conditions => { :project_id => @project.id})
-      render :partial => 'issues'
+      render :partial => 'issues', :locals => { :selected => nil }
+      
     end
 
     def index
