@@ -43,6 +43,6 @@
   </div>
 
   <div id="wrapper-left">
-    <a href="#" onclick="openPopup();return false"><img src="/plugin_assets/redmine_time_tracker/images/icon-popup.gif"></img></a>    
+    <a rel="<%= Setting.plugin_redmine_time_tracker['popup_width'].to_i == 0 ? 500 : Setting.plugin_redmine_time_tracker['popup_width'].to_i%>:<%= Setting.plugin_redmine_time_tracker['popup_height'].to_i == 0 ? 450 : Setting.plugin_redmine_time_tracker['popup_height'].to_i%>" href="#" onclick="openPopup(this);return false"><img src="/plugin_assets/redmine_time_tracker/images/icon-popup.gif"></img></a>    
   </div>
 </div>

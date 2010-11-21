@@ -8,6 +8,17 @@
         <%= text_field_tag 'settings[refresh_rate]', @settings['refresh_rate'], { :size => 4 } %>
         (<%= l(:time_tracker_seconds) %>)
     </p>
+    
+    <p>
+        <%= label_tag 'settings[popup_width]', l(:time_tracker_popup_width) %>
+        <%= text_field_tag 'settings[popup_width]', @settings['popup_width'], { :size => 4 } %>
+    </p>
+
+    <p>
+        <%= label_tag 'settings[popup_height]', l(:time_tracker_popup_height) %>
+        <%= text_field_tag 'settings[popup_height]', @settings['popup_height'], { :size => 4 } %>
+    </p>
+    
 </div>
 
 <h3><%= l(:time_tracker_settings_transition_title) %></h3>

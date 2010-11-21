@@ -11,14 +11,13 @@ function updateElementIfChanged(id, newContent) {
     if (el.innerHTML != newContent) { el.update(newContent); }
 }
 
-function openPopup() {
+function openPopup(elem) {
 	
   var url = "/time_trackers/popup_tracker";
   
-  if( !popup || popup.closed) {
-    popup = window.open( url, "timeTracker", 'height=500,width=450,scrollbars=no' );
+  if( !popup || popup.closed) {	
+		var dim = $(elem).readAttribute('rel').split(':');
+		var s = 'width=' + dim[0] + ',height=' + dim[1] + ',scrollbars=no';
+    popup = window.open( url, "timeTracker", s );
   } else popup.focus();	
-	
-//	window.open('/time_trackers/popup_tracker','Titel PopUp','width=500,height=500,scrollbars');
-	
 }

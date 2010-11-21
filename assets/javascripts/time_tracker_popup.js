@@ -30,6 +30,7 @@ function startTimer(interval) {
 		onSuccess: function(response) {
 			updateParent();
 			disableControls();
+			$('autocompleter').addClassName('hidden');
 		}		
 		
 	});
@@ -55,6 +56,7 @@ function stopTimer() {
 			enableControls();
 			$('comment').clear();
 			showAutocompleter($F($('project_select')));
+			updateParent();
 		}
 	});
 	
