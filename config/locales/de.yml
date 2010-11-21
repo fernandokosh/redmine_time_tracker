@@ -35,4 +35,7 @@ de:
   time_tracker_settings_unknown_status: "Unbekannter Status"
   time_tracker_settings_zombie_transition: "Zombie Statusübergang"
   time_tracker_zombie_legend: "Zombie Zeiterfassung"
+  time_tracker_no_issue_selected: "Kein Ticket ausgewählt"
+  time_tracker_select_issue: "Ticket auswählen"
+  
 
