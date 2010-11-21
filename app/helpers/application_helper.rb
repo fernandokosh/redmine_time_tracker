@@ -41,5 +41,22 @@ module ApplicationHelper
 
         return false
     end
-end
+    
+    def render_project_select_box
+      
+      projects = User.current.projects.all
+      disabled = @time_tracker.nil? ? '' : ' disabled'
+      
+      if projects.any?
+        s = '<select id="project_select"' + disabled + '>' +
+              "<option value=''>#{ l(:label_jump_to_a_project) }</option>" +
+              '<option value="" disabled="disabled">---</option>'
+        s << project_tree_options_for_select(projects, :selected => @project) do |p|
+          { :value => p.identifier }
+        end
+        s << '</select>'
+        s
+      end
 
+    end    
+end

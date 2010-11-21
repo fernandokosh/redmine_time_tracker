@@ -4,7 +4,7 @@
 .icon-stop { background-image: url(../images/time_stop.png); }
 .icon-clock { background-image: url(../images/clock.gif); }
 
-#time-tracker-menu { margin-right: 8px; }
+#time-tracker-menu { margin-right: 8px; float:left; }
 #time-tracker-menu a { margin-right: 0px; }
 #time-tracker-menu .icon { padding-left: 20px; }
 
@@ -35,4 +35,13 @@
 }
 
 #settings form[action="/settings/plugin/redmine_time_tracker"] > div + div { display: none } /* Hack to remove the div opened by redmine before rendering the plugin settings partial */
+
+span.popup_icon {	
+	
+	
+
+}
+
+#wrapper-left  { float: left; }
+#wrapper-right {float: right; }
 

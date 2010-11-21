@@ -23,21 +23,6 @@ Redmine::Plugin.register :redmine_time_tracker do
         }
         
         
-    menu :account_menu, :time_tracker_popup, { :controller => 'time_trackers', :action => 'popup_tracker'},
-      {
-        
-          :caption => 'Popup',
-          :html => { 
-            :id => 'time-tracker-popup', 
-            :target => '_blank',
-            :onClick => 'openPopup();return false'
-          },
-          :first => false,
-          :param => :project_id,
-          :if => Proc.new { User.current.logged? }
-        
-      }
-
     menu :top_menu, :time_tracker_admin_menu, { :controller => 'time_trackers', :action => 'index' },
         {
             :caption => :time_tracker_admin_menu,

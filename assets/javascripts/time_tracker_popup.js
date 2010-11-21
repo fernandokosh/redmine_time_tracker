@@ -11,14 +11,12 @@ Prototype.emptyFunction)
   }
 });
 
-
-
 function updateTime(pe) {
 	
 	
 }
 
-function startTimer() {
+function startTimer(interval) {
 	
 	var id = $F($('issues'));
 	
@@ -30,13 +28,19 @@ function startTimer() {
 	new Ajax.Request('/time_trackers/start?issue_id=' + id, {
 		
 		onSuccess: function(response) {
-			alert('success');	
-		}
+			updateParent();
+			disableControls();
+		}		
 		
 	});
 	
-  pe = new PeriodicalExecuter(updateTime, 1);
+  startUpdater(interval);
 	
+}
+
+function startUpdater (interval) {
+		
+	pe = new PeriodicalExecuter(updateTime, interval);
 }
 
 function stopTimer() {
@@ -47,34 +51,69 @@ function stopTimer() {
 			comment: $F($('comment')),
 			activity: $F($('activities'))
 		},
-		onSuccess: function(transport, json){
-			
-			if (!json)
-				return;
-				
-			alert(json.result);
-				
+		onSuccess: function(transport, json){			
+			enableControls();
+			$('comment').clear();
+			showAutocompleter($F($('project_select')));
 		}
 	});
 	
 }
 
+function updateParent() {	
+	if (opener && typeof opener.updateTimeTrackerMenu == 'function')
+		opener.updateTimeTrackerMenu();
+}
+
+
+function enableControls () {
+
+	$('project_select').disabled = false;
+	$('issues').disabled = false;
+	
+}
+
+function disableControls () {
+	
+	$('project_select').disabled = true;
+	$('issues').disabled = true;
+	
+}
+
+function showAutocompleter(id) {
+	observeParentIssueField('/issues/auto_complete?project_id=' + id);
+	$('autocompleter').removeClassName('hidden');			
+}
+
 document.observe('dom:loaded', function () {
-	
-	
-	$('projects').observe('change', function() {
 		
-		new Ajax.Replacer('issues', '/time_trackers/get_issues', {parameters: { project_id: $F(this)}});
-		new Ajax.Replacer('activities', '/time_trackers/get_activities', {parameters: { project_id: $F(this)}});		
+	$('project_select').observe('change', function() {		
+		
+		var id = $F(this);		
+		if (id == '') {
+			return;
+		}		
+		updateParent();
+		showAutocompleter(id);
+		new Ajax.Replacer('issues', '/time_trackers/get_issues', {parameters: { project_id: id}});
+		new Ajax.Replacer('activities', '/time_trackers/get_activities', {parameters: { project_id: id}});		
 		
 	});
 	
+	$startButton = $('start-stop-button');
 	
-	$('start-stop-button').observe('click', function() {
+	if ($startButton.hasClassName('running')) {		
+		disableControls();
+		startUpdater($('intervalHolder').readAttribute('rel'));
+	} else {
+		console.log('not running');
+	}
+	
+	$startButton.observe('click', function() {
 		
 		if( this.hasClassName('running') == false) {
 			this.update('Stop')						
-			startTimer();
+			startTimer($('intervalHolder').readAttribute('rel'));
 		} else {
 			
 			this.update('Start')			
@@ -82,10 +121,6 @@ document.observe('dom:loaded', function () {
 		}
 		
 		this.toggleClassName('running');
-
 		
-	});
-	
-	
-	
+	});	
 });

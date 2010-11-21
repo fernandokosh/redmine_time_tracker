@@ -1,6 +1,9 @@
 class TimeTrackersController < ApplicationController
     unloadable
 
+    layout :resolve_layout
+    
+    
     def popup_tracker
 
       @time_tracker = current
@@ -22,15 +25,13 @@ class TimeTrackersController < ApplicationController
       if !@project.nil?
         @activities = retrieve_activities(@project.id)
       end
-      
-      @projects = Project.find(:all)
-      
     end
     
     
     def get_activities 
       
-      @activities = retrieve_activities(params[:project_id])
+      @project = Project.find(:first, :conditions => {:identifier => params[:project_id]})      
+      @activities = retrieve_activities(@project.id)
       render :partial => 'activities'
       
     end
@@ -38,10 +39,11 @@ class TimeTrackersController < ApplicationController
     
     def get_issues
       
-      @project = params[:project_id]
-      raise 'No project id passed' unless !@project.nil?
+      raise 'No project id passed' unless !params[:project_id].nil?
 
-      @issues = Issue.find(:all, :conditions => { :project_id => @project})
+      @project = Project.find(:first, :conditions => {:identifier => params[:project_id]})
+      
+      @issues = Issue.find(:all, :conditions => { :project_id => @project.id})
       render :partial => 'issues'
     end
 
@@ -188,5 +190,13 @@ class TimeTrackersController < ApplicationController
       end
     end
     
-    
+    def resolve_layout
+      
+      case action_name
+      when "popup_tracker"
+        return "popup"
+      else
+        return "base"
+      end
+  end
 end

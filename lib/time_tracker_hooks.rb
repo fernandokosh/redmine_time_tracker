@@ -10,4 +10,3 @@ class TimeTrackerHooks < Redmine::Hook::ViewListener
         css + js + popup
     end
 end
-

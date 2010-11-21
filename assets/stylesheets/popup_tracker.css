@@ -1,0 +1,36 @@
+body.popup {	
+	min-width: 0;
+}
+
+html > body.popup #content {
+	min-height: 415px;
+}
+
+#comment {
+	height:150px;
+	width:428px;		
+}
+
+#header {
+background-color:#507AAA;
+color:#F8F8F8;
+height:3em;
+margin:0;
+padding:4px 6px 0;
+position:relative;
+}
+
+#quick-search {
+float:right;
+padding-top:5px;
+}
+
+div.comment_wrapper label {
+	
+	
+	
+}
+
+p.hidden {	
+	display: none;
+}
