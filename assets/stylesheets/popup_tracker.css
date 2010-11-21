@@ -6,9 +6,17 @@ html > body.popup #content {
 	min-height: 415px;
 }
 
+h1 {
+	font-size:24px;
+	font-weight:normal;
+	margin: 0;
+	padding: 0;
+	text-align:left;
+}
+
 #comment {
 	height:150px;
-	width:428px;		
+	width:99%;
 }
 
 #header {
@@ -33,4 +41,32 @@ div.comment_wrapper label {
 
 p.hidden {	
 	display: none;
+}
+
+input, select {
+	
+padding:4px;
+width:99%;
+
+}
+
+div.current_time_wrapper {
+	
+	margin-top:10px;	
+	float:right;
+}
+
+#current_time {
+	
+	font-size:24px;
+	font-weight:normal;
+	margin:0 10px 0 0;
+	padding:0;
+	text-align:left;
+	
+}
+
+#start-stop-button {
+	
+	font-size:20px;	
 }

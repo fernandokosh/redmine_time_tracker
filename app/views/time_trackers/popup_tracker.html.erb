@@ -1,37 +1,43 @@
-<p>
-  <label for="issues">Issue</label>
-<% if !@issues.nil?%>
-  <%= render :partial => 'issues', :locals => { :issues => @issues, :selected => @issue.nil? ? 0 : @issue.id} %>
-<% else %>
-  <%= select_tag "issues", options_for_select([ "Select a project" ]) %>
-<% end %>
-</p>
-<p>
-  <label for="activities">Activity</label>  
-  <% if !@activities.nil?%>
-    <%= render :partial => 'activities', :locals => { :activities => @activities } %>
+<div id="popup_wrapper">
+  <div>
+    <h1 id="current_issue" rel="<%= @issue.nil? ? 0 : @issue.id %>"><%= @issue.nil? ? l(:time_tracker_no_issue_selected) : @issue.to_s %></h1>
+    <a href="#" style="display:none" rel="<%= l(:time_tracker_no_issue_selected) %>"></a>
+  </div>  
+  <p>
+    <label for="issues">Issue</label>
+  <% if !@issues.nil?%>
+    <%= render :partial => 'issues', :locals => { :issues => @issues, :selected => @issue } %>
   <% else %>
-    <%= select_tag "activities", options_for_select([ "Select a project" ]) %>
+    <%= select_tag "issues", options_for_select([ "Select a project" ]) %>
   <% end %>
-</p>
-<p id="autocompleter" class="hidden">
-  <label for="issue_parent_issue_id">Search Issues</label>
-  <input type="text" size="10" name="issue[parent_issue_id]" id="issue_parent_issue_id" autocomplete="off">
-  <div id="parent_issue_candidates" class="autocomplete"></div>
-  <% if !@project.nil?%>
-    <%= javascript_tag "observeParentIssueField('#{auto_complete_issues_path(:id => @issue, :project_id => @project) }')" %>  
-  <% end %>
-</p>
-<div class="comment_wrapper">
-  <label for="comment">Comment</label>
-  <div style="clear: both;"></div>
-  <textarea id="comment"></textarea>  
+  </p>
+  <p id="autocompleter">
+    <label for="issue_id">Search Issues</label>
+    <input type="text" size="10" id="issue_id" autocomplete="off">
+    <div id="issue_candidates" class="autocomplete"></div>
+    <% if !@project.nil?%>
+      <%= javascript_tag "observeIssueField('#{auto_complete_issues_path(:id => @issue, :project_id => @project) }')" %>  
+    <% end %>
+  </p>
+  <p>
+    <label for="activities">Activity</label>  
+    <% if !@activities.nil?%>
+      <%= render :partial => 'activities', :locals => { :activities => @activities } %>
+    <% else %>
+      <%= select_tag "activities", options_for_select([ "Select a project" ]) %>
+    <% end %>
+  </p>
+  <div class="comment_wrapper">
+    <label for="comment">Comment</label>
+    <div style="clear: both;"></div>
+    <textarea id="comment"></textarea>  
+  </div>
+  <div class="current_time_wrapper">
+    <span id="current_time"><%= @time_tracker.nil? ? '0.0': @time_tracker.time_spent_to_s %></span>
+    <button id="start-stop-button" class="<%= !@time_tracker.nil? ? 'running' : '' %>"><%= @time_tracker.nil? ? 'Start' : 'Stop'%></button>    
+    <a id="intervalHolder" href="#" rel="<%= [Setting.plugin_redmine_time_tracker['refresh_rate'].to_i == 0 ? 60 : Setting.plugin_redmine_time_tracker['refresh_rate'].to_i, 5].max %>" style="display:none"></a>
+  </div>
+  <% content_for :header_tags do %>
+      <%= stylesheet_link_tag 'popup_tracker', :plugin => 'redmine_time_tracker' %>
+  <% end %>  
 </div>
-<div>
-  <span id="current_time"><%= @time_tracker.nil? ? '00:00:00': @time_tracker.hours_spent %></span>
-  <button id="start-stop-button" class="<%= !@issue.nil? ? 'running' : '' %>"><%= @issue.nil? ? 'Start' : 'Stop'%></button>    
-  <a id="intervalHolder" href="#" rel="<%= [Setting.plugin_redmine_time_tracker['refresh_rate'].to_i == 0 ? 60 : Setting.plugin_redmine_time_tracker['refresh_rate'].to_i, 5].max %>" style="display:none"></a>
-</div>
-<% content_for :header_tags do %>
-    <%= stylesheet_link_tag 'popup_tracker', :plugin => 'redmine_time_tracker' %>
-<% end %>

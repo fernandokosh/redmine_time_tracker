@@ -3,23 +3,41 @@ class TimeTrackersController < ApplicationController
 
     layout :resolve_layout
     
+    def get_current_time
+      
+      time_tracker = current
+      
+      if time_tracker.nil?
+        return render :json => {'spent_time' => '0.00'}
+      else 
+        return render :json => {'spent_time' => time_tracker.time_spent_to_s }
+      end
+    end
     
     def popup_tracker
 
       @time_tracker = current
-
+      
       if !@time_tracker.nil?
         
         @issue = Issue.find(:first, :conditions => { :id => @time_tracker.issue_id} )
+        
         @project = Project.find(:first, :conditions => { :id => @issue.project_id})
         @issues = Issue.find(:all, :conditions => { :project_id => @project.id})
         
       else 
-        @project = Project.find(params[:project_id]) if params[:project_id]        
+        @project = Project.find(:first, :conditions => { :id => params[:project_id]})
         
-        if !@project_id.nil?
-          @issues = Issue.find(:conditions => { :project_id => @project.id})        
+        if !@project.nil?
+          
+          @issues = Issue.find(:all, :conditions => { :project_id => @project.id})
+          
+          if params[:issue_id]          
+            @issue = Issue.find(:first, :conditions => { :id => params[:issue_id], :project_id => @project.id})
+          end
+          
         end
+        
       end
       
       if !@project.nil?

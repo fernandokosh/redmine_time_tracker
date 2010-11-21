@@ -42,7 +42,14 @@
     <% end %>  
   </div>
 
+  <% if global_allowed_to?(User.current, :log_time) %>
   <div id="wrapper-left">
-    <a rel="<%= Setting.plugin_redmine_time_tracker['popup_width'].to_i == 0 ? 500 : Setting.plugin_redmine_time_tracker['popup_width'].to_i%>:<%= Setting.plugin_redmine_time_tracker['popup_height'].to_i == 0 ? 450 : Setting.plugin_redmine_time_tracker['popup_height'].to_i%>" href="#" onclick="openPopup(this);return false"><img src="/plugin_assets/redmine_time_tracker/images/icon-popup.gif"></img></a>    
-  </div>
+    <% issue = !time_tracker.nil? ? time_tracker.issue_id : !@issue.nil? ? @issue.id : nil %>
+    <% if !issue.nil?%>
+      <a title="Open time tracker" rel="<%= Setting.plugin_redmine_time_tracker['popup_width'].to_i == 0 ? 500 : Setting.plugin_redmine_time_tracker['popup_width'].to_i%>:<%= Setting.plugin_redmine_time_tracker['popup_height'].to_i == 0 ? 450 : Setting.plugin_redmine_time_tracker['popup_height'].to_i%>" href="#" onclick="openPopup(this<%= @project.nil? ? '' : ', ' + @project.id.to_s %>, <%= issue %>);return false"><img src="/plugin_assets/redmine_time_tracker/images/icon-popup.gif"></img></a>    
+    <% else %>
+      <a title="Open time tracker" rel="<%= Setting.plugin_redmine_time_tracker['popup_width'].to_i == 0 ? 500 : Setting.plugin_redmine_time_tracker['popup_width'].to_i%>:<%= Setting.plugin_redmine_time_tracker['popup_height'].to_i == 0 ? 450 : Setting.plugin_redmine_time_tracker['popup_height'].to_i%>" href="#" onclick="openPopup(this<%= @project.nil? ? '' : ', ' + @project.id.to_s %>);return false"><img src="/plugin_assets/redmine_time_tracker/images/icon-popup.gif"></img></a>      
+    <% end %>
+  </div>  
+  <% end %>
 </div>

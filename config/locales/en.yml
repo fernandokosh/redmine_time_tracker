@@ -35,4 +35,6 @@ en:
   time_tracker_settings_unknown_status: "Unknown status"
   time_tracker_settings_zombie_transition: "zombie status transition"
   time_tracker_zombie_legend: "zombie time tracker"
+  time_tracker_no_issue_selected: "No issue selected"
+  time_tracker_select_issue: "Select issue"
 
