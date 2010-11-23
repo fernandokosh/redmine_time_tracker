@@ -23,14 +23,14 @@ class TimeTrackersController < ApplicationController
         @issue = Issue.find(:first, :conditions => { :id => @time_tracker.issue_id} )
         
         @project = Project.find(:first, :conditions => { :id => @issue.project_id})
-        @issues = Issue.find(:all, :conditions => { :project_id => @project.id})
+        @issues =  Issue.open.find(:all, :conditions => {:project_id => @project.id})
         
       else 
         @project = Project.find(:first, :conditions => { :id => params[:project_id]})
         
         if !@project.nil?
           
-          @issues = Issue.find(:all, :conditions => { :project_id => @project.id})
+          @issues = Issue.open.find(:all, :conditions => {:project_id => @project.id})
           
           if params[:issue_id]          
             @issue = Issue.find(:first, :conditions => { :id => params[:issue_id], :project_id => @project.id})
@@ -60,7 +60,7 @@ class TimeTrackersController < ApplicationController
       raise 'No project id passed' unless !params[:project_id].nil?
 
       @project = Project.find(:first, :conditions => {:identifier => params[:project_id]})
-      @issues = Issue.find(:all, :conditions => { :project_id => @project.id})
+      @issues = Issue.open.find(:all, :conditions => {:project_id => @project.id})
       render :partial => 'issues', :locals => { :selected => nil }
       
     end
