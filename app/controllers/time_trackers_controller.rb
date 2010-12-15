@@ -2,7 +2,13 @@ class TimeTrackersController < ApplicationController
     unloadable
 
     def index
-        @time_trackers = TimeTracker.find(:all)
+        if User.current.nil?
+            @user_time_trackers = nil
+            @time_trackers = TimeTracker.find(:all)
+        else
+            @user_time_trackers = TimeTracker.find(:all, :conditions => { :user_id => User.current.id })
+            @time_trackers = TimeTracker.find(:all, :conditions => [ 'user_id != ?', User.current.id ])
+        end
     end
 
     def start

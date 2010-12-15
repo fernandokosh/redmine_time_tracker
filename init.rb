@@ -12,6 +12,9 @@ Redmine::Plugin.register :redmine_time_tracker do
 
     settings :default => { 'refresh_rate' => '60', 'status_transitions' => {} }, :partial => 'settings/time_tracker'
 
+    permission :view_others_time_trackers, :time_trackers => :index
+    permission :delete_others_time_trackers, :time_trackers => :delete
+
     menu :account_menu, :time_tracker_menu, '',
         {
             :caption => '',
@@ -19,12 +22,6 @@ Redmine::Plugin.register :redmine_time_tracker do
             :first => true,
             :param => :project_id,
             :if => Proc.new { User.current.logged? }
-        }
-
-    menu :top_menu, :time_tracker_admin_menu, { :controller => 'time_trackers', :action => 'index' },
-        {
-            :caption => :time_tracker_admin_menu,
-            :if => Proc.new { User.current.admin }
         }
 end
 
