@@ -9,12 +9,12 @@
          / <%= time_tracker.time_spent_to_s %> /
         <%= link_to_remote '',
             :url => { :controller => 'time_trackers', :action => 'resume' },
-            :html => { :class => 'icon-action icon-start-action', :alt => l(:resume_time_tracker) },
+            :html => { :class => 'icon-action icon-start-action', :title => l(:resume_time_tracker) },
             :update => 'time-tracker-menu'
         %>
         <%= link_to '',
             { :controller => 'time_trackers', :action => 'stop' },
-            { :class => 'icon-action icon-stop-action', :alt => l(:stop_time_tracker) }
+            { :class => 'icon-action icon-stop-action', :title => l(:stop_time_tracker) }
          %>
     <% else %>
         <%# A time tracker is running, display the tracked issue, the time spent and the suspend/stop actions %>
@@ -25,12 +25,12 @@
          / <%= time_tracker.time_spent_to_s %> /
         <%= link_to_remote '',
             :url => { :controller => 'time_trackers', :action => 'suspend' },
-            :html => { :class => 'icon-action icon-pause-action', :alt => l(:suspend_time_tracker) },
+            :html => { :class => 'icon-action icon-pause-action', :title => l(:suspend_time_tracker) },
             :update => 'time-tracker-menu'
         %>
         <%= link_to '',
             { :controller => 'time_trackers', :action => 'stop' },
-            { :class => 'icon-action icon-stop-action', :alt => l(:stop_time_tracker) }
+            { :class => 'icon-action icon-stop-action', :title => l(:stop_time_tracker) }
         %>
     <% end %>
 <% elsif !@project.nil? and User.current.allowed_to?(:log_time, @project) and !(@issue.nil? || @issue.new_record?) %>
@@ -42,7 +42,7 @@
         :update => 'time-tracker-menu'
     %>
 <% elsif global_allowed_to?(User.current, :log_time) %>
-    <%# No time tracker is running but the user has the rights to track time on a project %>
+    <%# No time tracker is running but the user has the rights to track time on a project %>
     <%# Display the "Not running" entry %>
     <span class='icon icon-time'><%= l(:time_tracker_not_running) %>&nbsp;</span>
 <% end %>
@@ -51,7 +51,7 @@
     <span>
         <%= link_to '',
             { :controller => 'time_trackers', :action => 'index' },
-            { :class => 'icon-action icon-list-action', :alt => 'list' }
+            { :class => 'icon-action icon-list-action', :title => l(:time_tracker_list_title) }
         %>
     </span>
 <% end %>
