@@ -1,5 +1,6 @@
 # English strings go here for Rails i18n
 en:
+  list_time_trackers: "list"
   no_time_tracker: "No time tracker"
   no_time_tracker_running: "No time tracker is running"
   no_time_tracker_suspended: "No time tracker is suspended"
