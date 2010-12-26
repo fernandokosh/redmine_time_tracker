@@ -1,6 +1,7 @@
 require 'redmine'
 
 require_dependency 'time_tracker_hooks'
+require_dependency 'time_tracker_compatibility'
 
 Redmine::Plugin.register :redmine_time_tracker do
     name 'Redmine Time Tracker plugin'
