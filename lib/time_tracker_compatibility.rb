@@ -1,6 +1,6 @@
 # Wrappers around the Redmine Core API changes between versions
 module TimeTrackerCompatibility
-  class TimelogControllerCompatibility
+  class TimelogController
     # Wrapper around Redmine's API since TimelogController changed in trunk @ r4239
     # This can be removed once 1.1.0 is stable
     def self.return_correct_action
