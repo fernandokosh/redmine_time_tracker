@@ -9,8 +9,6 @@ nl:
   time_tracker_hour_sym: ":"
   time_tracker_refresh_rate: "Vernieuwingsfrequentie"
   time_tracker_seconds: "seconden"
-  time_tracker_admin_menu: "Timers"
-  time_tracker_admin_title: "Timers"
   time_tracker_label_start_date: "Start datum"
   time_tracker_label_action: "Actie"
   time_tracker_label_delete: "Verwijder"
