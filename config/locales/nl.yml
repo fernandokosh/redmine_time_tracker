@@ -28,4 +28,17 @@ nl:
   time_tracker_settings_new_transition_add: "Voeg status wijziging toe"
   time_tracker_settings_unknown_status: "Onbekende status"
   time_tracker_settings_zombie_transition: "zombie status wijziging"
+  # English stubs to translate, then re-sort the complete file based on the English (en) order of I18n-strings.
+  list_time_trackers: "list"
+  no_time_tracker: "No time tracker"
+  no_time_tracker_suspended: "No time tracker is suspended"
+  permission_delete_others_time_trackers: "Delete other user's time trackers"
+  permission_view_others_time_trackers: "View other user's time trackers"
+  resume_time_tracker: "resume"
+  resume_time_tracker_error: "Fail to resume the time tracker"
+  suspend_time_tracker: "suspend"
+  suspend_time_tracker_error: "Fail to suspend the time tracker"
+  time_tracker_label_your_time_trackers: "Your time trackers"
+  time_tracker_label_other_time_trackers: "Other user's time trackers"
+  time_tracker_list_title: "Time trackers"
   
