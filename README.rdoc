@@ -25,18 +25,32 @@ The newest version is always at {GitHub}[http://github.com/delaitre/redmine_time
 
 == Usage
 
-To start the time tracker, the user must have the 'log time' permission. Then, the time tracker will
-display a 'start' link in the menu when an issue is shown.
-If a tracker is running, the tracked issue id is displayed with the current spent time (updated
-every 5 secs). A 'stop' link is also available. When stopping the time tracker, the user is
-redirected to the standard timelog edit page with the 'hours' field filled with the timer value.
-This way, we rely on existing and well known behaviours.
-Moreover, a 'suspend'/'resume' link allow to pause the time tracker.
+To be able to use a time tracker, a user must have the 'log time' permission.
+Then, the current time tracker information are displayed in the top right menu, next to the user
+info.
 
-These actions are available in the issues list context menu too (right click in the issues list).
+These information are context dependant:
+- If the user does not have a running time tracker yet, a message telling so will be displayed.
+- If the user does not have a running time tracker yet but he is displaying an issue, then the
+  'start' action will be displayed.
+- If the user has a running time tracker, the current spent time is displayed (and refreshed
+  periodically) next to the tracked issue number. The 'pause' or the 'resume' action will be
+  displayed as well as the 'stop' one too. Stopping the time tracker will redirect the user to the
+  standard time logging page with the 'hours' field filled with the time tracker value. This way, we
+  rely on existing and well known behaviours.
 
-As mentioned before, the time tracker menu is updated periodically. This way, other browser
-tabs/windows will display the correct information.
+To be noted that these actions are available in the issues list context menu too (right click in the
+issues list).
+
+A 'list' action is displayed in the menu too. This action will redirect the user to a page listing
+his time tracker and other user's ones if the 'view others time trackers' right is set.
+From this list, the user can 'delete' his time tracker (or the other user's ones if the 'delete
+others time trackers' permission is set).
+
+The plugin settings page allows to define the spent time refresh rate and the status transition to
+apply when a time tracker is started.
+For example, if a transition 'New' -> 'In progress' is added, starting a time tracker on an issue having
+the 'New' status will automatically change it to 'In progress'.
 
 == Upgrade
 
