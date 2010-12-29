@@ -1,4 +1,3 @@
-
 .icon-clock { background-image: url(../images/clock.gif); }
 .icon-start { background-image: url(../images/time_start.png); }
 .icon-pause { background-image: url(../images/time_pause.png); }
@@ -51,4 +50,3 @@
 }
 
 #settings form[action="/settings/plugin/redmine_time_tracker"] > div + div { display: none } /* Hack to remove the div opened by redmine before rendering the plugin settings partial */
-
