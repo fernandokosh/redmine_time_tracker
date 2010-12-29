@@ -31,4 +31,3 @@ Refresh rate is taken from settings. If settings is invalid, 60 secs is used. Th
 <%= javascript_tag "new PeriodicalExecuter(updateTimeTrackerMenu, #{[Setting.plugin_redmine_time_tracker['refresh_rate'].to_i == 0 ? 60 : Setting.plugin_redmine_time_tracker['refresh_rate'].to_i, 5].max});" %>
 
 <% end %>
-

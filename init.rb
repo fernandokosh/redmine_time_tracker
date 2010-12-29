@@ -25,4 +25,3 @@ Redmine::Plugin.register :redmine_time_tracker do
             :if => Proc.new { User.current.logged? }
         }
 end
-

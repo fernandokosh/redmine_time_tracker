@@ -57,4 +57,3 @@ class TimeTracker < ActiveRecord::Base
         end
     end
 end
-

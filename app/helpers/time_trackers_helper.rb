@@ -7,4 +7,3 @@ module TimeTrackersHelper
         User.find(:first, :conditions => { :id => user_id })
     end
 end
-
