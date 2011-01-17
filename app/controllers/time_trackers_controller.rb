@@ -70,8 +70,7 @@ class TimeTrackersController < ApplicationController
             hours = @time_tracker.hours_spent.round(2)
             @time_tracker.destroy
 
-            logtime_action = TimeTrackerCompatibility::TimelogController.correct_logtime_action?
-            redirect_to :controller => 'timelog', :action => logtime_action, :issue_id => issue_id, :time_entry => { :hours => hours }
+            redirect_to :controller => 'timelog', :action => 'edit', :issue_id => issue_id, :time_entry => { :hours => hours }
         end
     end
 
