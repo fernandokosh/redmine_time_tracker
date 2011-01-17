@@ -6,7 +6,7 @@ Redmine::Plugin.register :redmine_time_tracker do
     name 'Redmine Time Tracker plugin'
     author 'Jérémie Delaitre'
     description 'This is a plugin to track time in Redmine'
-    version '0.3'
+    version '0.4'
 
     requires_redmine :version_or_higher => '1.1.0'
 
