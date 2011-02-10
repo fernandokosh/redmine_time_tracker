@@ -14,7 +14,7 @@
                             <th class="issue"><%= l(:label_issue) %></th>
                             <th class="start-date"><%= l(:time_tracker_label_start_date) %></th>
                             <th class="spent-time"><%= l(:label_spent_time) %></th>
-                            <th class="paused-status"><%= l(:time_tracker_label_paused_status) %></th>
+                            <th class="suspended-status"><%= l(:time_tracker_label_suspended_status) %></th>
                             <th class="buttons"><%= l(:time_tracker_label_action) %></th>
                         </tr>
                     </thead>
@@ -31,7 +31,7 @@
                                 <td class="issue"><%= link_to_issue issue_from_id(time_tracker[:issue_id]), :project => true %></td>
                                 <td class="start-date"><%= format_time(time_tracker[:started_on]) %></td>
                                 <td class="spent-time"><%= time_tracker.time_spent_to_s %></td>
-                                <td class="paused_status"><%= time_tracker.paused? %></td>
+                                <td class="suspended_status"><%= time_tracker.paused? %></td>
                                 <td class="buttons">
                                     <%= link_to_remote l(:time_tracker_label_delete),
                                         :url => { :controller => 'time_trackers', :action => 'delete', :id => time_tracker.id },
@@ -63,7 +63,7 @@
                             <th class="issue"><%= l(:label_issue) %></th>
                             <th class="start-date"><%= l(:time_tracker_label_start_date) %></th>
                             <th class="spent-time"><%= l(:label_spent_time) %></th>
-                            <th class="paused-status"><%= l(:time_tracker_label_paused_status) %></th>
+                            <th class="suspended-status"><%= l(:time_tracker_label_suspended_status) %></th>
                             <th class="buttons"><%= l(:time_tracker_label_action) %></th>
                         </tr>
                     </thead>
@@ -81,7 +81,7 @@
                                 <td class="issue"><%= link_to_issue issue_from_id(time_tracker[:issue_id]), :project => true %></td>
                                 <td class="start-date"><%= format_time(time_tracker[:started_on]) %></td>
                                 <td class="spent-time"><%= time_tracker.time_spent_to_s %></td>
-                                <td class="paused-status"><%= time_tracker.paused? %></td>
+                                <td class="suspended-status"><%= time_tracker.paused? %></td>
                                 <td class="buttons">
                                     <% if User.current.allowed_to?(:delete_others_time_trackers, nil, :global => true) %>
                                         <%= link_to_remote l(:time_tracker_label_delete),
