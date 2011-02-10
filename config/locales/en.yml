@@ -20,6 +20,7 @@ en:
   time_tracker_label_action: "Action"
   time_tracker_label_delete: "Delete"
   time_tracker_label_start_date: "Start date"
+	time_tracker_label_paused_status: "Paused?"
   time_tracker_label_transition_journal: "Status transition applied automatically due to the start of a time tracker."
   time_tracker_label_your_time_trackers: "Your time tracker"
   time_tracker_label_other_time_trackers: "Other user's time trackers"

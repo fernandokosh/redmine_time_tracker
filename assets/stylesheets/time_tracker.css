@@ -25,6 +25,7 @@
 
 #time-tracker-admin td.start-date,
 #time-tracker-admin td.spent-time,
+#time-tracker-admin td.paused-status,
 #time-tracker-admin td.msg {
     text-align: center;
 }

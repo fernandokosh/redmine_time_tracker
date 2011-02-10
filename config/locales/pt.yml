@@ -12,6 +12,7 @@ pt:
   time_tracker_admin_menu: "Time trackers"
   time_tracker_admin_title: "Time trackers"
   time_tracker_label_start_date: "Data inicial"
+	time_tracker_label_paused_status: "Pausado?"
   time_tracker_label_action: "Acção"
   time_tracker_label_delete: "Eliminar"
   time_tracker_delete_success: "Time tracker eliminado com sucesso"
