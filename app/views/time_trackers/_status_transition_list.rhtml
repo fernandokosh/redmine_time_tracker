@@ -1,4 +1,5 @@
-<div id="status-transition-list">
+<% div_id = transition_type + '-status-transition-list' %>
+<div id=<%= div_id %>>
     <% edit_allowed = User.current.admin %>
     <% transitions = transitions.nil? ? {} : transitions %>
     <% has_zombie = false %>
@@ -23,6 +24,7 @@
                 <% else %>
                     <% transitions.each do |from, to| %>
                         <tr class="<%=cycle('odd', 'even') %>">
+                            <% input_name = "settings[#{transition_type == 'stop' ? 'stop_' : ''}status_transitions][#{from}]" %>
                             <% status_from = status_from_id(from) %>
                             <% status_to = status_from_id(to) %>
                             <% if status_from.nil? or status_to.nil? %>
@@ -33,7 +35,7 @@
                             <% end %>
                             <td class="<%= status_from.nil? ? 'from zombie' : 'from' %>">
                                 <%= status_from.nil? ? l(:time_tracker_settings_unknown_status) : status_from %>
-                                <%= hidden_field_tag 'settings[status_transitions][' + from.to_s + ']', to.to_s %>
+                                <%= hidden_field_tag input_name, to.to_s %>
                             </td>
                             <td class="<%= status_to.nil? ? 'to zombie' : 'to' %>">
                                 <%= status_to.nil? ? l(:time_tracker_settings_unknown_status) : status_to %>
@@ -41,9 +43,13 @@
                             <% if edit_allowed %>
                                 <td class="buttons">
                                     <%= link_to_remote l(:time_tracker_label_delete),
-                                        :url => { :controller => 'time_trackers', :action => 'delete_status_transition', :transitions => transitions, :from_id => from },
                                         :html => { :class => 'icon icon-del' },
-                                        :complete => "$('status-transition-list').replace(request.responseText);"
+                                        :complete => "$('#{div_id}').replace(request.responseText);",
+                                        :url => { :controller => 'time_trackers',
+                                            :action => 'delete_status_transition',
+                                            :transitions => transitions,
+                                            :from_id => from,
+                                            :type => transition_type }
                                     %>
                                 </td>
                             <% end %>
@@ -60,15 +66,17 @@
 
     <% if edit_allowed %>
         <div>
-            <%= label_tag 'new-transition-from', l(:time_tracker_settings_new_transition_from) %>
-            <%= select_tag 'new-transition-from', new_transition_from_options(transitions) %>
-            <%= label_tag 'new-transition-to', l(:time_tracker_settings_new_transition_to) %>
-            <%= select_tag 'new-transition-to', new_transition_to_options %>
+            <% tag_id_prefix = transition_type + '-new-transition-' %>
+            <%= label_tag 'from', l(:time_tracker_settings_new_transition_from) %>
+            <%= select_tag tag_id_prefix + 'from', new_transition_from_options(transitions) %>
+            <%= label_tag 'to', l(:time_tracker_settings_new_transition_to) %>
+            <%= select_tag tag_id_prefix + 'to', new_transition_to_options %>
+            <%= hidden_field_tag tag_id_prefix + 'type', transition_type %>
             <%= link_to_remote l(:time_tracker_settings_new_transition_add),
                 :url => { :controller => 'time_trackers', :action => 'add_status_transition', :transitions => transitions },
-                :with => "'from_id=' + $('new-transition-from').value + '&to_id=' + $('new-transition-to').value",
+                :with => "'from_id=' + $('#{tag_id_prefix}from').value + '&to_id=' + $('#{tag_id_prefix}to').value + '&type=' + $('#{tag_id_prefix}type').value",
                 :html => { :class => 'icon icon-add' },
-                :complete => "$('status-transition-list').replace(request.responseText);"
+                :complete => "$('#{div_id}').replace(request.responseText);"
             %>
         </div>
     <% end %>

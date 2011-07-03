@@ -1,6 +1,17 @@
 require 'redmine'
+require 'dispatcher'
 
 require_dependency 'time_tracker_hooks'
+require_dependency 'time_tracker_issue_patch'
+
+Dispatcher.to_prepare :redmine_time_tracker do
+  require_dependency 'issue'
+  # Guards against including the module multiple time (like in tests)
+  # and registering multiple callbacks
+  unless Issue.included_modules.include? TimeTrackerIssuePatch
+    Issue.send(:include, TimeTrackerIssuePatch)
+  end
+end
 
 Redmine::Plugin.register :redmine_time_tracker do
     name 'Redmine Time Tracker plugin'
