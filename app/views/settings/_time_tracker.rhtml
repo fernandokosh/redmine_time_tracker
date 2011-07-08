@@ -16,6 +16,17 @@
     <p><%= l(:time_tracker_settings_transition_msg) %></p>
     <p><%= l(:time_tracker_settings_transition_note) %></p>
 
-    <%= render :partial => 'time_trackers/status_transition_list', :locals => { :transitions => @settings['status_transitions'] } %>
+    <%= render :partial => 'time_trackers/status_transition_list', :locals => { :transitions => @settings['status_transitions'], :transition_type => 'start' } %>
+</div>
+
+<br />
+<h3><%= l(:time_tracker_settings_stopped_transition_title) %></h3>
+
+<div>
+    <p><%= l(:time_tracker_settings_stopped_transition_msg) %></p>
+    <p><%= l(:time_tracker_settings_stopped_transition_note) %></p>
+
+    <%= render :partial => 'time_trackers/status_transition_list', :locals => { :transitions => @settings['stop_status_transitions'], :transition_type => 'stop' } %>
+    <br />
 
 <%# The div is not close as redmine will close the one opened before rendering this view. As we close this div at the begining of the view, we need an open one before returning. %>
