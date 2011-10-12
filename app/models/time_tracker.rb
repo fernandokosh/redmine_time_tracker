@@ -1,5 +1,5 @@
 # Helper access from the model
-def self.help
+def help
     Helper.instance
 end
 
