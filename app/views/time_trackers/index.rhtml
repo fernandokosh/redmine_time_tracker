@@ -32,7 +32,7 @@
                                 <td class="spent-time"><%= time_tracker.time_spent_to_s %></td>
                                 <td class="buttons">
                                     <%= link_to_remote l(:time_tracker_label_delete),
-                                        :url => { :controller => 'time_trackers', :action => 'delete', :id => time_tracker.id },
+                                        :url => { :controller => '/time_trackers', :action => 'delete', :id => time_tracker.id },
                                         :html => { :class => 'icon icon-del' },
                                         :complete => "$('#{'user-timetracker' + time_tracker.id.to_s}').update('<td colspan=\"0\" class=\"msg\">' + request.responseText + '</td>');"
                                     %>
@@ -81,7 +81,7 @@
                                 <td class="buttons">
                                     <% if User.current.allowed_to?(:delete_others_time_trackers, nil, :global => true) %>
                                         <%= link_to_remote l(:time_tracker_label_delete),
-                                            :url => { :controller => 'time_trackers', :action => 'delete', :id => time_tracker.id },
+                                            :url => { :controller => '/time_trackers', :action => 'delete', :id => time_tracker.id },
                                             :html => { :class => 'icon icon-del' },
                                             :complete => "$('#{'all-timetracker' + time_tracker.id.to_s}').update('<td colspan=\"0\" class=\"msg\">' + request.responseText + '</td>');"
                                         %>
