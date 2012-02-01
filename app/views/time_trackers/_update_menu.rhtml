@@ -18,7 +18,7 @@ the time tracker menu item using an AJAX request to retrieve the data
 -->
 <%= javascript_tag "function updateTimeTrackerMenu() {
     #{remote_function(
-        :url => { :controller => 'time_trackers', :action => 'render_menu', :project_id => (@project.nil? ? nil : @project.id), :issue_id => (@issue.nil? ? nil : @issue.id) },
+        :url => { :controller => '/time_trackers', :action => 'render_menu', :project_id => (@project.nil? ? nil : @project.id), :issue_id => (@issue.nil? ? nil : @issue.id) },
         :before => "Ajax.activeRequestCount--",
         :complete => "updateElementIfChanged('time-tracker-menu', request.responseText);")
     };}"
