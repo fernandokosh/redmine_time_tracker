@@ -41,7 +41,7 @@
                             <% if edit_allowed %>
                                 <td class="buttons">
                                     <%= link_to_remote l(:time_tracker_label_delete),
-                                        :url => { :controller => 'time_trackers', :action => 'delete_status_transition', :transitions => transitions, :from_id => from },
+                                        :url => { :controller => '/time_trackers', :action => 'delete_status_transition', :transitions => transitions, :from_id => from },
                                         :html => { :class => 'icon icon-del' },
                                         :complete => "$('status-transition-list').replace(request.responseText);"
                                     %>
@@ -65,7 +65,7 @@
             <%= label_tag 'new-transition-to', l(:time_tracker_settings_new_transition_to) %>
             <%= select_tag 'new-transition-to', new_transition_to_options %>
             <%= link_to_remote l(:time_tracker_settings_new_transition_add),
-                :url => { :controller => 'time_trackers', :action => 'add_status_transition', :transitions => transitions },
+                :url => { :controller => '/time_trackers', :action => 'add_status_transition', :transitions => transitions },
                 :with => "'from_id=' + $('new-transition-from').value + '&to_id=' + $('new-transition-to').value",
                 :html => { :class => 'icon icon-add' },
                 :complete => "$('status-transition-list').replace(request.responseText);"
