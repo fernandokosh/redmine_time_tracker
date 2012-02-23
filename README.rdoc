@@ -23,6 +23,10 @@ The newest version is always at {GitHub}[http://github.com/delaitre/redmine_time
 5. Add "Time tracking" to the enabled modules for your project
 6. The link to the plugin should appear in the 'account' menu bar
 
+<b>Note:</b> if you don't see any stop/pause buttons after starting a time tracker, you will need
+to copy <tt>redmine_time_tracker/assets/*</tt> to <tt><redmine_root>/plugin_assets/redmine_time_tracker/</tt>
+or to make a symbolic link <tt><redmine_root>/plugin_assets/redmine_time_tracker</tt> pointing to <tt>redmine_time_tracker/assets</tt>
+
 == Usage
 
 To be able to use a time tracker, a user must have the 'log time' permission.
@@ -60,6 +64,9 @@ the 'New' status will automatically change it to 'In progress'.
 2. Replace your old Redmine's vendor/plugins/redmine_time_tracker folder with the one contained in the downloaded package
 3. Update the database using the migrations. +rake db:migrate_plugins RAILS_ENV=production+
 4. Restart your Redmine
+
+<b>Note:</b> if you have done a copy of the plugin assets into <tt><redmine_root>/plugin_assets/redmine_time_tracker</tt>
+as explained in the _Install_ paragraph above, you will need to update these too.
 
 === Git
 
