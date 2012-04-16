@@ -1,11 +1,11 @@
 # Helper access from the model
-def help
-    Helper.instance
-end
-
-class Helper
+class TTHelper
     include Singleton
     include TimeTrackersHelper
+end
+
+def help
+    TTHelper.instance
 end
 
 class TimeTracker < ActiveRecord::Base
