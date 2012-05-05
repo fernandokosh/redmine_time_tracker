@@ -50,3 +50,6 @@
 }
 
 #settings form[action="/settings/plugin/redmine_time_tracker"] > div + div { display: none } /* Hack to remove the div opened by redmine before rendering the plugin settings partial */
+
+.red_notify { background-color: #ee0000; font-weight:bold; text-decoration:blink;}
+.green_notify { color: #00ee00;}

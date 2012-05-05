@@ -30,7 +30,8 @@ class TimeTracker < ActiveRecord::Base
         total = hours_spent
         hours = total.to_i
         minutes = ((total - hours) * 60).to_i
-        hours.to_s + l(:time_tracker_hour_sym) + minutes.to_s.rjust(2, '0')
+        seconds = ((total - hours - (minutes / 60.0)) * 3600).to_i
+        hours.to_s + l(:time_tracker_hour_sym) + minutes.to_s.rjust(2, '0') + l(:time_tracker_hour_sym) + seconds.to_s.rjust(2, '0')
     end
 
     def zombie?
