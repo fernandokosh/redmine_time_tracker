@@ -16,7 +16,7 @@ Redmine::Plugin.register :redmine_time_tracker do
 
   requires_redmine :version_or_higher => '2.0.0'
 
-  settings :default => { 'refresh_rate' => '60', 'status_transitions' => {} }, :partial => 'settings/time_tracker'
+  settings :default => { :refresh_rate => '60', :status_transitions => {} }, :partial => 'settings/time_tracker'
 
   permission :view_others_time_trackers, :time_trackers => :index
   permission :delete_others_time_trackers, :time_trackers => :delete
