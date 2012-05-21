@@ -36,7 +36,7 @@
 <% elsif !@project.nil? and User.current.allowed_to?(:log_time, @project) and !(@issue.nil? || @issue.new_record?) %>
     <%# No time tracker is running, but the user look at an issue and he has the rights to track time on it %>
     <%# Display the start time tracker action on this issue %>
-    <%= link_to_remote l(:start_time_tracker) + ' #' + @issue.id.to_s + '&nbsp;',
+    <%= link_to_remote l(:start_time_tracker) + ' #' + @issue.id.to_s + ' ',
         :url => { :controller => '/time_trackers', :action => 'start', :issue_id => @issue.id },
         :html => { :class => 'icon icon-start' },
         :update => 'time-tracker-menu'
