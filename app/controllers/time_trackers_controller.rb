@@ -4,17 +4,17 @@ class TimeTrackersController < ApplicationController
     def index
         if User.current.nil?
             @user_time_trackers = nil
-            @time_trackers = TimeTracker.find(:all)
+            @time_trackers = TimeTracker.all
         else
-            @user_time_trackers = TimeTracker.find(:all, :conditions => { :user_id => User.current.id })
-            @time_trackers = TimeTracker.find(:all, :conditions => [ 'user_id != ?', User.current.id ])
+            @user_time_trackers = TimeTracker.all( :conditions => { :user_id => User.current.id })
+            @time_trackers = TimeTracker.all( :conditions => [ 'user_id != ?', User.current.id ])
         end
     end
 
     def start
         @time_tracker = current
         if @time_tracker.nil?
-            @issue = Issue.find(:first, :conditions => { :id => params[:issue_id] })
+            @issue = Issue.first( :conditions => { :id => params[:issue_id] })
             @time_tracker = TimeTracker.new({ :issue_id => @issue.id })
 
             if @time_tracker.save
@@ -75,7 +75,7 @@ class TimeTrackersController < ApplicationController
     end
 
     def delete
-        time_tracker = TimeTracker.find(:first, :conditions => { :id => params[:id] })
+        time_tracker = TimeTracker.first( :conditions => { :id => params[:id] })
         if !time_tracker.nil?
             time_tracker.destroy
             render :text => l(:time_tracker_delete_success)
@@ -85,8 +85,8 @@ class TimeTrackersController < ApplicationController
     end
 
     def render_menu
-        @project = Project.find(:first, :conditions => { :id => params[:project_id] })
-        @issue = Issue.find(:first, :conditions => { :id => params[:issue_id] })
+        @project = Project.first( :conditions => { :id => params[:project_id] })
+        @issue = Issue.first( :conditions => { :id => params[:issue_id] })
         render :partial => 'embed_menu'
     end
 
@@ -107,12 +107,12 @@ class TimeTrackersController < ApplicationController
     protected
 
     def current
-        TimeTracker.find(:first, :conditions => { :user_id => User.current.id })
+        TimeTracker.first( :conditions => { :user_id => User.current.id })
     end
 
     def apply_status_transition(issue)
         new_status_id = Setting.plugin_redmine_time_tracker['status_transitions'][issue.status_id.to_s]
-        new_status = IssueStatus.find(:first, :conditions => { :id => new_status_id })
+        new_status = IssueStatus.first( :conditions => { :id => new_status_id })
         if issue.new_statuses_allowed_to(User.current).include?(new_status)
             journal = @issue.init_journal(User.current, notes = l(:time_tracker_label_transition_journal))
             @issue.status_id = new_status_id

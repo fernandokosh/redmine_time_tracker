@@ -1,14 +1,14 @@
 module ApplicationHelper
     def time_tracker_for(user)
-        TimeTracker.find(:first, :conditions => { :user_id => user.id })
+        TimeTracker.first( :conditions => { :user_id => user.id })
     end
 
     def status_from_id(status_id)
-        IssueStatus.find(:first, :conditions => { :id => status_id })
+        IssueStatus.first( :conditions => { :id => status_id })
     end
 
     def statuses_list()
-        IssueStatus.find(:all)
+        IssueStatus.all
     end
 
     def to_status_options(statuses)
@@ -32,7 +32,7 @@ module ApplicationHelper
     def global_allowed_to?(user, action)
         return false if user.nil?
 
-        projects = Project.find(:all)
+        projects = Project.all
         for p in projects
             if user.allowed_to?(action, p)
                 return true
