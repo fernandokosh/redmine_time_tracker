@@ -1,7 +1,18 @@
-.icon-clock { background-image: url(../images/clock.gif); }
-.icon-start { background-image: url(../images/time_start.png); }
-.icon-pause { background-image: url(../images/time_pause.png); }
-.icon-stop { background-image: url(../images/time_stop.png); }
+.icon-clock {
+    background-image: url(../images/clock.gif);
+}
+
+.icon-start {
+    background-image: url(../images/time_start.png);
+}
+
+.icon-pause {
+    background-image: url(../images/time_pause.png);
+}
+
+.icon-stop {
+    background-image: url(../images/time_stop.png);
+}
 
 .icon-action {
     background-repeat: no-repeat;
@@ -9,19 +20,39 @@
     padding-top: 2px;
     padding-bottom: 3px;
 }
+
 .icon-action:hover {
     padding-top: 1px;
     padding-bottom: 4px;
 }
 
-.icon-start-action { background-image: url(../images/start.png); }
-.icon-pause-action { background-image: url(../images/pause.png); }
-.icon-stop-action { background-image: url(../images/stop.png); }
-.icon-list-action { background-image: url(../images/list.png); }
+.icon-start-action {
+    background-image: url(../images/start.png);
+}
 
-#time-tracker-menu { margin-right: 8px; }
-#time-tracker-menu a { margin-right: 0px; }
-#time-tracker-menu .icon { padding-left: 20px; }
+.icon-pause-action {
+    background-image: url(../images/pause.png);
+}
+
+.icon-stop-action {
+    background-image: url(../images/stop.png);
+}
+
+.icon-list-action {
+    background-image: url(../images/list.png);
+}
+
+#time-tracker-menu {
+    margin-right: 8px;
+}
+
+#time-tracker-menu a {
+    margin-right: 0px;
+}
+
+#time-tracker-menu .icon {
+    padding-left: 20px;
+}
 
 #time-tracker-admin td.start-date,
 #time-tracker-admin td.spent-time,
@@ -45,8 +76,13 @@
 #status-transition-list td.zombie {
     font-style: italic;
 }
+
 #status-transition-list td.msg {
     text-align: center;
 }
 
-#settings form[action="/settings/plugin/redmine_time_tracker"] > div + div { display: none } /* Hack to remove the div opened by redmine before rendering the plugin settings partial */
+#settings form[action="/settings/plugin/redmine_time_tracker"] > div + div {
+    display: none
+}
+
+/* Hack to remove the div opened by redmine before rendering the plugin settings partial */

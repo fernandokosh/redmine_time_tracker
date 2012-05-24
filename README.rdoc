@@ -1,3 +1,6 @@
+== WARNING: this is an unofficial fork
+Latest official version available at {GitHub}[http://github.com/delaitre/redmine_time_tracker].
+
 = Redmine Time Tracker plugin
 
 Time tracker is a Redmine plugin to ease time tracking when working on an issue.

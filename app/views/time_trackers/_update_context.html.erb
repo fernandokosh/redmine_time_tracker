@@ -3,36 +3,36 @@
     <% if time_tracker.paused %>
         <%# A time tracker is paused, display the resume action %>
         <li>
-        <%= link_to_remote l(:resume_time_tracker).capitalize + ' #' + time_tracker.issue_id.to_s,
-            :url => { :controller => '/time_trackers', :action => 'resume' },
-            :html => { :class => 'icon icon-start' },
-            :update => 'time-tracker-menu'
-        %>
+          <%= link_to_remote l(:resume_time_tracker).capitalize + ' #' + time_tracker.issue_id.to_s,
+                             :url => {:controller => '/time_trackers', :action => 'resume'},
+                             :html => {:class => 'icon icon-start'},
+                             :update => 'time-tracker-menu'
+          %>
         </li>
     <% else %>
         <%# A time tracker is not paused, display the suspend action %>
         <li>
-        <%= link_to_remote l(:suspend_time_tracker).capitalize + ' #' + time_tracker.issue_id.to_s,
-            :url => { :controller => '/time_trackers', :action => 'suspend' },
-            :html => { :class => 'icon icon-pause' },
-            :update => 'time-tracker-menu'
-        %>
+          <%= link_to_remote l(:suspend_time_tracker).capitalize + ' #' + time_tracker.issue_id.to_s,
+                             :url => {:controller => '/time_trackers', :action => 'suspend'},
+                             :html => {:class => 'icon icon-pause'},
+                             :update => 'time-tracker-menu'
+          %>
         </li>
     <% end %>
 
     <%# A time tracker exists, display the stop action %>
     <li>
-        <%= link_to l(:stop_time_tracker).capitalize + ' #' + time_tracker.issue_id.to_s, { :controller => '/time_trackers', :action => 'stop' },
-            { :class => 'icon icon-stop' } %>
+      <%= link_to l(:stop_time_tracker).capitalize + ' #' + time_tracker.issue_id.to_s, {:controller => '/time_trackers', :action => 'stop'},
+                  {:class => 'icon icon-stop'} %>
     </li>
 <% elsif !@project.nil? and !@issue.nil? and User.current.allowed_to?(:log_time, @project) %>
     <%# No time tracker is running, but the user has the rights to track time on this issue %>
     <%# Display the start time tracker action %>
     <li>
-        <%= link_to_remote l(:start_time_tracker).capitalize + ' #' + @issue.id.to_s,
-            :url => { :controller => '/time_trackers', :action => 'start', :issue_id => @issue.id },
-            :html => { :class => 'icon icon-start' },
-            :update => 'time-tracker-menu'
-        %>
+      <%= link_to_remote l(:start_time_tracker).capitalize + ' #' + @issue.id.to_s,
+                         :url => {:controller => '/time_trackers', :action => 'start', :issue_id => @issue.id},
+                         :html => {:class => 'icon icon-start'},
+                         :update => 'time-tracker-menu'
+      %>
     </li>
 <% end %>
