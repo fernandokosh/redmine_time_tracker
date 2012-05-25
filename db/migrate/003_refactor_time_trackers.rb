@@ -1,6 +1,6 @@
 class RefactorTimeTrackers < ActiveRecord::Migration
   def self.up
-    drop_table :timet_rackers
+    drop_table :time_trackers
     create_table :time_trackers do |t|
       t.column :user_id, :integer
       t.column :started_on, :datetime
