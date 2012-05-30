@@ -1,10 +1,10 @@
 module ApplicationHelper
   def time_tracker_for(user)
-    TimeTracker.first(:conditions => {:user_id => user.id})
+    TimeTracker.where(:user_id => user.id).first
   end
 
   def status_from_id(status_id)
-    IssueStatus.first(:conditions => {:id => status_id})
+    IssueStatus.where(:id => status_id).first
   end
 
   def statuses_list()

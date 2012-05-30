@@ -4,7 +4,7 @@ class CreateTimeLogs < ActiveRecord::Migration
       t.column :user_id, :integer
       t.column :started_on, :datetime
       t.column :stopped_at, :datetime
-      t.column :project_id, :integer
+      t.column :project_id, :integer, :default => nil
       t.column :comments, :string
     end
   end
