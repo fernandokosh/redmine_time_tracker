@@ -28,7 +28,8 @@ class TimeTracker < ActiveRecord::Base
     super(arguments)
     self.user_id = User.current.id
     self.started_on = Time.now
-    self.save
+    # save should be called from the controller!
+    # self.save
   end
 
   def stop
@@ -69,38 +70,34 @@ class TimeTracker < ActiveRecord::Base
     hours.to_s + l(:time_tracker_hour_sym) + minutes.to_s.rjust(2, '0')
   end
 
-  # TODO examine if we need this method anymore
   def zombie?
     user = help.user_from_id(self.user_id)
     if user.nil? or user.locked?
       return true
     end
 
-    issue = help.issue_from_id(self.issue_id)
-    if issue.nil? or !user.allowed_to?(:log_time, issue.project)
-      return true
+    issue = help.issue_from_id(issue_id)
+    unless issue.nil?
+      return true unless user.allowed_to?(:log_time, issue.project)
     end
 
     return false
   end
 
-  protected
-
   # TODO think we don't need that method neither
   def running_time
-    if paused
-      return 0
-    else
-      return ((Time.now.to_i - started_on.to_i) / 3600.0).to_f
-    end
+    return ((Time.now.to_i - started_on.to_i) / 3600.0).to_f
   end
 
-  def issue_from_id(issue_id)
-    Issue.where(:id => issue_id).first
-  end
+  protected
 
   def current
     TimeTracker.where(:user_id => User.current.id).first
+  end
+
+
+  def issue_from_id(issue_id)
+    Issue.where(:id => issue_id).first
   end
 
   def issue_id_set?

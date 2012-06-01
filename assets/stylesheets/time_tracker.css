@@ -54,19 +54,17 @@
     padding-left: 20px;
 }
 
-#time-tracker-admin td.start-date,
-#time-tracker-admin td.spent-time,
-#time-tracker-admin td.msg {
+#time_tracker_list td.start-date,
+#time_tracker_list td.spent-time,
+#time_tracker_list td.buttons,
+#time_tracker_list p.msg,
+#time_tracker_list td.msg {
     text-align: center;
 }
 
-#time-tracker-admin td.user,
-#time-tracker-admin td.issue {
+#time_tracker_list td.user,
+#time_tracker_list td.issue {
     text-align: left;
-}
-
-#time-tracker-admin p.msg {
-    text-align: center;
 }
 
 #status-transition-list {
@@ -84,5 +82,10 @@
 #settings form[action="/settings/plugin/redmine_time_tracker"] > div + div {
     display: none
 }
-
 /* Hack to remove the div opened by redmine before rendering the plugin settings partial */
+
+/* control-panel CSS */
+.control_panel{
+    width: 200px;
+    border: 1px solid #507aaa;
+}

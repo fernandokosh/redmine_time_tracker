@@ -21,6 +21,7 @@ de:
   time_tracker_hour_sym: ":"
   time_tracker_label_action: "Aktion"
   time_tracker_label_delete: "Löschen"
+  time_tracker_label_main_menu: "Zeiterfassung"
   time_tracker_label_start_date: "Startdatum"
   time_tracker_label_transition_journal: "Status wurde durch die Zeiterfassung automatisch geändert."
   time_tracker_label_your_time_trackers: "Meine Zeiterfassungen"
