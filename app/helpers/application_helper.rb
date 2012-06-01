@@ -17,11 +17,9 @@ module ApplicationHelper
 
   def new_transition_from_options(transitions)
     statuses = []
-    for status in statuses_list()
-      if !transitions.has_key?(status.id.to_s)
-        statuses << status
-      end
-    end
+    statuses_list().each { |status|
+      statuses << status unless transitions.has_key?(status.id.to_s)
+    }
     to_status_options(statuses)
   end
 
@@ -33,12 +31,12 @@ module ApplicationHelper
     return false if user.nil?
 
     projects = Project.all
-    for p in projects
+    projects.each { |p|
       if user.allowed_to?(action, p)
         return true
       end
-    end
+    }
 
-    return false
+    false
   end
 end

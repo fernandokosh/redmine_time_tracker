@@ -28,8 +28,6 @@ class TimeTracker < ActiveRecord::Base
     super(arguments)
     self.user_id = User.current.id
     self.started_on = Time.now
-    # save should be called from the controller!
-    # self.save
   end
 
   def stop
@@ -81,12 +79,12 @@ class TimeTracker < ActiveRecord::Base
       return true unless user.allowed_to?(:log_time, issue.project)
     end
 
-    return false
+    false
   end
 
   # TODO think we don't need that method neither
   def running_time
-    return ((Time.now.to_i - started_on.to_i) / 3600.0).to_f
+    ((Time.now.to_i - started_on.to_i) / 3600.0).to_f
   end
 
   protected

@@ -21,7 +21,7 @@
                 </thead>
 
                 <tbody>
-                <% for time_tracker in @user_time_trackers %>
+                <% @user_time_trackers.each do |time_tracker| %>
                     <tr id="user-timetracker<%= time_tracker.id %>" class="<%= cycle('odd', 'even') %>">
                       <% if time_tracker.zombie? %>
                           <% has_zombie = true %>
@@ -75,7 +75,7 @@
                 </thead>
 
                 <tbody>
-                <% for time_tracker in @time_trackers %>
+                <% @time_trackers.each do |time_tracker| %>
                     <tr id="all-timetracker<%= time_tracker.id %>" class="<%= cycle('odd', 'even') %>">
                       <% if time_tracker.zombie? %>
                           <% has_zombie = true %>
