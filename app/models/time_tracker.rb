@@ -93,7 +93,6 @@ class TimeTracker < ActiveRecord::Base
     TimeTracker.where(:user_id => User.current.id).first
   end
 
-
   def issue_from_id(issue_id)
     Issue.where(:id => issue_id).first
   end
