@@ -34,6 +34,7 @@
               </tbody>
             </table>
           </div>
+          <p class="pagination"><%= pagination_links_full @booked_logs_pages, @user_bookings_count, :page_param => :page_booked %></p>
       <% end %>
     </div>
 <% end %>
