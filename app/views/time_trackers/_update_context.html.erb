@@ -10,7 +10,7 @@
     <%# Display the start time tracker action %>
     <li>
       <%= link_to_remote l(:start_time_tracker).capitalize + ' #' + @issue.id.to_s,
-                         :url => {:controller => '/time_trackers', :action => 'start', :issue_id => @issue.id},
+                         :url => {:controller => '/time_trackers', :action => 'start', :time_tracker => {:issue_id => @issue.id} },
                          :html => {:class => 'icon icon-start'}
       %>
     </li>
