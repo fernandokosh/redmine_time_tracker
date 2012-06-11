@@ -1,41 +1,35 @@
 <h2><%= l(:time_tracker_loglist_title) %></h2>
 
-<% unless @user_time_logs.nil? %>
+<% unless @bookable_logs.nil? %>
     <div id="user-time-logs-list">
-      <h3><%= l(:time_tracker_label_your_time_logs) %></h3>
-      <% if !@user_time_logs.empty? %>
+      <h3><%= l(:time_tracker_label_your_time_logs) -%></h3>
+      <% if @bookable_logs.empty? %>
+          <p class="msg"><%= l(:no_time_logs) -%></p>
+      <% else %>
           <div class="autoscroll">
             <table class="list">
               <thead>
               <tr>
-                <th class="issue"><%= l(:label_issue) %></th>
-                <th class="start-date"><%= l(:time_tracker_label_start_date) %></th>
-                <th class="spent-time"><%= l(:label_spent_time) %></th>
-                <th class="buttons"><%= l(:time_tracker_label_action) %></th>
+                <th class="comments"><%= l(:time_tracker_label_comments) -%></th>
+                <th class="spent-time"><%= l(:time_tracker_label_time_spent) -%></th>
+                <th class="actions"><%= l(:time_tracker_label_action) -%></th>
               </tr>
               </thead>
 
               <tbody>
-              <% @user_time_logs.each do |time_log| %>
-                  <tr id="user-log<%= time_log.id %>" class="<%= cycle('odd', 'even') %>">
-                    <% if time_log[:issue_id].nil? %>
-                        <td class="issue"></td>
-                    <% else %>
-                        <td class="issue"><%= link_to_issue issue_from_id(time_log[:issue_id]), :project => true %></td>
-                    <% end %>
-                    <td class="start-date"><%= format_time(time_log[:started_on]) %></td>
-                    <td class="spent-time"><%= time_log.hours_spent.round(2).to_s %></td>
+              <% @bookable_logs.each do |time_log| %>
+                  <tr class="<%= cycle('odd', 'even') -%>">
+                    <td id="user-log-comment<%= time_log.id -%>" class="comments"><%= time_log.comments -%></td>
+                    <td class="spent-time"><%= time_log.bookable_hours.round(2).to_s -%></td>
                     <td class="buttons">
                       <!-- TODO localize link-labels! -->
-                      <%= link_to "book", :controller => 'time_logs', :action => 'add_booking' %>
+                      <%= link_to_remote 'book', :update => 'user-log-comment'+time_log.id.to_s, :url => {:controller => 'time_logs', :action => 'show_booking', :time_log_id => time_log.id} %>
                     </td>
                   </tr>
               <% end %>
               </tbody>
             </table>
           </div>
-      <% else %>
-          <p class="msg"><%= l(:no_time_logs) %></p>
       <% end %>
     </div>
 <% end %>

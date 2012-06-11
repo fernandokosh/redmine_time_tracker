@@ -15,14 +15,18 @@ class TimeTrackersController < ApplicationController
 
   # we could start an empty timeTracker to track time without any association.
   # we also can give some more information, so the timeTracker could be automatically associated later.
-  def start(issue_id = nil, comments = nil)
+  def start(args = {})
+    default_args= {:issue_id => nil, :comments => nil}
+    args = default_args.merge(args)
+
     @time_tracker = current
     if @time_tracker.nil?
-      issue_id=params[:time_tracker][:issue_id] if issue_id.nil?
-      comments=params[:time_tracker][:comments] if comments.nil?
-      @time_tracker = TimeTracker.new(:issue_id => issue_id, :comments => comments)
+      # TODO work out a nicer way to get the params from the form
+      args[:issue_id]=params[:time_tracker][:issue_id] if args[:issue_id].nil?
+      args[:comments]=params[:time_tracker][:comments] if args[:comments].nil?
+      @time_tracker = TimeTracker.new(:issue_id => args[:issue_id], :comments => args[:comments])
       if @time_tracker.save
-        apply_status_transition(Issue.where(:id => issue_id).first) unless Setting.plugin_redmine_time_tracker[:status_transitions] == nil
+        apply_status_transition(Issue.where(:id => args[:issue_id]).first) unless Setting.plugin_redmine_time_tracker[:status_transitions] == nil
       else
         flash[:error] = l(:start_time_tracker_error)
       end
@@ -38,8 +42,8 @@ class TimeTrackersController < ApplicationController
       flash[:error] = l(:no_time_tracker_running)
       redirect_to :back
     else
-      issue_id = @time_tracker.issue_id
-      #hours = @time_tracker.hours_spent.round(2)
+      @time_tracker.issue_id = params[:time_tracker][:issue_id]
+      @time_tracker.comments = params[:time_tracker][:comments]
       @time_tracker.stop
       flash[:error] = l(:stop_time_tracker_error) unless @time_tracker.destroyed?
       redirect_to '/time_trackers'

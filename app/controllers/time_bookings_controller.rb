@@ -7,10 +7,12 @@ class TimeBookingsController < ApplicationController
   def delete
     time_booking = TimeBooking.where(:id => params[:id]).first
     if time_booking.nil?
-      render :text => l(:time_tracker_delete_booking_fail)
+      flash[:error] = l(:time_tracker_delete_booking_fail)
+      redirect_to :back
     else
       time_booking.destroy
-      render :text => l(:time_tracker_delete_booking_success)
+      flash[:success] = l(:time_tracker_delete_booking_success)
+      redirect_to :back
     end
   end
 end

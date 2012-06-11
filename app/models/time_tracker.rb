@@ -28,6 +28,9 @@ class TimeTracker < ActiveRecord::Base
     super(arguments)
     self.user_id = User.current.id
     self.started_on = Time.now
+    unless issue_id.nil?
+      self.project_id = issue_from_id(issue_id).project_id
+    end
   end
 
   def stop
@@ -43,7 +46,7 @@ class TimeTracker < ActiveRecord::Base
           issue = issue_from_id(issue_id)
           # project_id will be set during the add_booking method
           time_log.project_id = issue.project_id
-          time_log.add_booking(issue)
+          time_log.add_booking(:issue_id => issue_id)
           # otherwise we check for a project-id and associate the timeLog with an project only, using the project_id-field
           # of the timeLog
         else

@@ -8,71 +8,57 @@ class TimeLog < ActiveRecord::Base
   has_many :time_bookings
   has_many :time_entries, :through => :time_bookings
 
-  validate :save_no_virtuals, :on => :create
-
-  def save_no_virtuals
-    errors[:base] << "never save virtuals" if current.virtual.true?
-  end
-
-  #def initialize(arguments = nil, *args)
-  def initialize(arguments = nil, args = {})
+  def initialize(arguments = nil, *args)
     super(arguments)
-    if args[:virtual].nil?
-      self.virtual = false
-    else
-      self.virtual = args[:virtual]
-    end
   end
 
   # if issue is the only parameter we get, we will book the whole time to one issue
-  def add_booking(issue)
-    # TODO check for user-specific setup (limitations for bookable times etc)
-    # TODO ensure that the sum of all time-bookings does not break the whole time of a timeLog
-    # create a timeBooking to combine a timeLog-entry and a timeEntry
-    ActiveRecord::Base.transaction do
-      time_entry = issue.time_entries.create(:comments => comments, :spent_on => Time.now, :hours => hours_spent, :activity_id => 1)
-      # due to the mass-assignment security, we have to set the user_id extra
-      time_entry.user_id = user_id
-      time_entry.save
-      TimeBooking.create(:time_entry_id => time_entry.id, :time_log_id => id, :started_on => started_on, :stopped_at => stopped_at)
-    end
-  end
-
-  def hours_spent
-    ((stopped_at.to_i - started_on.to_i) / 3600.0).to_f
-  end
-
-  # this method finds all partially or entirely not booked time_logs
-  def self.get_partial_booked_logs(user = User.current)
-    logs = []
-    user.time_logs.each do |tl|
-      if tl.time_bookings.empty?
-        # log was not booked at all
-        logs.push(tl)
-      else
-        # every gap between the bookings should be bookable so we create virtual logs for them to show them in the list
-        temp = nil
-        tl.time_bookings.order('started_on ASC').each do |tb|
-          if temp.nil?
-            temp = tb
-          else
-            if tb.started_on > temp.stopped_at
-              logs.push(TimeLog.new({:id => tl.id, :user_id => tl.user_id, :started_on => temp.stopped_at, :stopped_at => tb.started_on}, :virtual => true))
-            end
-            temp = tb
-          end
-        end
-        logs.push(TimeLog.new({:id => tl.id, :user_id => tl.user_id, :started_on => temp.stopped_at, :stopped_at => tl.stopped_at}, :virtual => true)) if temp.stopped_at < tl.stopped_at
+  def add_booking(args = {})
+    # TODO not set activity_id default value to 1 / only for testing because redmine requires activity_id
+    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue_id => nil}
+    args = default_args.merge(args)
+    # without an issue it's not possible to add a booking'
+    unless args[:issue_id].nil?
+      issue = issue_from_id(args[:issue_id])
+      hours = hours_spent(args[:started_on], args[:stopped_at])
+      # limit the booking to maximum bookable time
+      if hours > bookable_hours
+        args[:stopped_at] = args[:started_on] + bookable_hours
+      end
+      # TODO check for user-specific setup (limitations for bookable times etc)
+      # create a timeBooking to combine a timeLog-entry and a timeEntry
+      ActiveRecord::Base.transaction do
+        time_entry = issue.time_entries.create(:comments => args[:comments], :spent_on => args[:started_on], :hours => hours, :activity_id => args[:activity_id])
+        # due to the mass-assignment security, we have to set the user_id extra
+        time_entry.user_id = user_id
+        time_entry.save
+        TimeBooking.create(:time_entry_id => time_entry.id, :time_log_id => id, :started_on => args[:started_on], :stopped_at => args[:stopped_at])
       end
     end
-    logs
   end
 
-  # deprecated due to get_partial_booked_logs will also return unbooked logs
-  #def self.get_unbooked_logs(user = User.current)
-  #  # for now we only get the time_logs which have no booking associated.
-  #  user.time_logs.where("id not in (select time_log_id from time_bookings)").all
-  #  # TODO implement full functionality to get_unbooked_logs
-  #  # what we want are all logs which have some of their time unbooked
-  #end
+  # TODO move this function into a helper due to DRY
+  def issue_from_id(issue_id)
+    Issue.where(:id => issue_id).first
+  end
+
+  # returns the hours between two timestamps
+  def hours_spent(time1 = started_on, time2 = stopped_at)
+    ((time2.to_i - time1.to_i) / 3600.0).to_f
+  end
+
+  # returns the sum of bookable time of an time entry
+  def bookable_hours
+    if time_bookings.empty?
+      # log was not booked at all, so the whole time is bookable
+      hours_spent
+    else
+      # every gap between the bookings represents bookable time so we sum up the time to show it as bookable time
+      time_booked = 0
+      time_bookings.each do |tb|
+        time_booked += tb.hours_spent
+      end
+      hours_spent - time_booked
+    end
+  end
 end

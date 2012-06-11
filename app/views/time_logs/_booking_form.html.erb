@@ -1,0 +1,12 @@
+<% unless @time_log.nil? %>
+    <%= form_tag(:controller => "time_logs" , :action => "add_booking") do %>
+        <%= hidden_field_tag(:time_log_id, @time_log.id) %>
+        <%= label_tag(:issue_id, "issue") %>
+        <%= text_field_tag(:issue_id, "1") %>
+        <%= label_tag(:comments, "comments") %>
+        <%= text_field_tag(:comments, @time_log.comments.to_s) %>
+        <%= label_tag(:hours, "hours spent") %>
+        <%= text_field_tag(:hours, @time_log.bookable_hours.round(2).to_s) %>
+        <%= submit_tag("book") %>
+    <% end %>
+<% end %>
