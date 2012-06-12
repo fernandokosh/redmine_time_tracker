@@ -1,79 +1,60 @@
-== WARNING: this is an unofficial fork
-Latest official version available at {GitHub}[http://github.com/delaitre/redmine_time_tracker].
-
 = Redmine Time Tracker plugin
 
 Time tracker is a Redmine plugin to ease time tracking when working on an issue.
-The plugin allows to start/suspend/resume/stop a timer on a per user basis.
+The plugin allows to start/stop a timer on a per user basis. The timer can be
+started with or without any reference to a Redmine Issue.
+If you track multiple timelogs without Issue references, you are able to reference
+Issues later.
+
+Later versions of the plugin will give you a better overview through statistics and add
+the possabillity to generate invoices.
+It will be individual adjustable for every user and seperate includable for any project.
+
+== WARNING: The plugin is under development.
+Main features to track time referring to an issue should work allready.
+The advanced features are going to be implemented soon.
+My goal is to have a release with all main-features within the next two month
+(that means till 08/2012)
 
 == Features
 
-* Current spent time always visible
-* Timer automatic updated without reload
 * Per user time tracking
-* Using known 'log time' dialog
+* Using known Redmine TimeEntries
+* Overview of spent Time
+* Track free time
+* Book tracked time on tickets
+* Detailed time tracking statistics for team management
+* Status monitor, watch currently tracked time of team
+* Detailed overview of spent time with filter options on (user, project, date)
+* Invoice generation on project basis
+* User specific settings (bookable hours per day, timetracking on/off)
+* Project specific settings (timetracking on/off)
+* Admin page (setup users bookable hours limit, add/remove timelogs)
 
 == Getting the plugin
 
-The newest version is always at {GitHub}[http://github.com/delaitre/redmine_time_tracker].
+Most current version is available at: {GitHub}[https://github.com/hicknhack-software/redmine_time_tracker].
 
 == Install
 
-1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins Make sure the plugin is installed to <tt>vendor/plugins/redmine_time_tracker</tt>
+1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins Make sure the plugin is installed to <tt>#{RAILS_ROOT}/plugins/redmine_time_tracker</tt>
 2. Setup the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
 3. Login to your Redmine install as an Administrator
 4. Setup the 'log time' permissions for your roles
 5. Add "Time tracking" to the enabled modules for your project
-6. The link to the plugin should appear in the 'account' menu bar
-
-<b>Note:</b> if you don't see any stop/pause buttons after starting a time tracker, you will need
-to copy <tt>redmine_time_tracker/assets/*</tt> to <tt><redmine_root>/plugin_assets/redmine_time_tracker/</tt>
-or to make a symbolic link <tt><redmine_root>/plugin_assets/redmine_time_tracker</tt> pointing to <tt>redmine_time_tracker/assets</tt>
+6. The link to the plugin should appear in the Main menu bar (upper left corner)
 
 == Usage
 
 To be able to use a time tracker, a user must have the 'log time' permission.
-Then, the current time tracker information are displayed in the top right menu, next to the user
-info.
+Then, the time tracker menu will appear in the top left menu
 
-These information are context dependant:
-- If the user does not have a running time tracker yet, a message telling so will be displayed.
-- If the user does not have a running time tracker yet but he is displaying an issue, then the
-  'start' action will be displayed.
-- If the user has a running time tracker, the current spent time is displayed (and refreshed
-  periodically) next to the tracked issue number. The 'pause' or the 'resume' action will be
-  displayed as well as the 'stop' one too. Stopping the time tracker will redirect the user to the
-  standard time logging page with the 'hours' field filled with the time tracker value. This way, we
-  rely on existing and well known behaviours.
-
-To be noted that these actions are available in the issues list context menu too (right click in the
-issues list).
-
-A 'list' action is displayed in the menu too. This action will redirect the user to a page listing
-his time tracker and other user's ones if the 'view others time trackers' right is set.
-From this list, the user can 'delete' his time tracker (or the other user's ones if the 'delete
-others time trackers' permission is set).
-
-The plugin settings page allows to define the spent time refresh rate and the status transition to
-apply when a time tracker is started.
-For example, if a transition 'New' -> 'In progress' is added, starting a time tracker on an issue having
-the 'New' status will automatically change it to 'In progress'.
-
-== Upgrade
-
-=== Official release
-
-1. Download the last official release from the {Redmine plugin directory}[HTTP://Www.redmine.org/plugins/redmine_time_tracker]
-2. Replace your old Redmine's <tt>vendor/plugins/redmine_time_tracker</tt> folder with the one contained in the downloaded package
-3. Update the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
-4. Restart your Redmine
-
-<b>Note:</b> if you have done a copy of the plugin assets into <tt><redmine_root>/plugin_assets/redmine_time_tracker</tt>
-as explained in the _Install_ paragraph above, you will need to update these too.
+To track time referring an issue, you can use the context menu (right click in the issues list) in
+the issue list to start or stop the timer.
 
 === Git
 
-1. Open a shell to your Redmine's <tt>vendor/plugins/redmine_time_tracker</tt> folder
+1. Open a shell to your Redmine's <tt>#{RAILS_ROOT}/plugins/redmine_time_tracker</tt> folder
 2. Update your git copy with <tt>git pull</tt>
 3. Update the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
 4. Restart your Redmine

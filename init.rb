@@ -10,7 +10,7 @@ User.send(:include, UserPatch)
 # workaround helping rails to find the helper-methods
 require File.join(File.dirname(__FILE__), "app", "helpers", "application_helper.rb")
 
-# TODO rails 3.2 ahs assets-directories as sub-dirs in app, lib and vendor => maybe we should organize our assets that way!
+# TODO rails 3.2 has assets-directories as sub-dirs in app, lib and vendor => maybe we should organize our assets that way!
 
 require_dependency 'time_tracker_hooks'
 
