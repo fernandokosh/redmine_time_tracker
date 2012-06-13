@@ -66,11 +66,11 @@ class TimeTrackersController < ApplicationController
     end
   end
 
-  def render_menu
-    @project = Project.where(:id => params[:project_id]).first
-    @issue = Issue.where(:id => params[:issue_id]).first
-    render :partial => 'embed_menu'
-  end
+  #def render_menu
+  #  @project = Project.where(:id => params[:project_id]).first
+  #  @issue = Issue.where(:id => params[:issue_id]).first
+  #  render :partial => 'embed_menu'
+  #end
 
   def add_status_transition
     transitions = params[:transitions].nil? ? {} : params[:transitions]

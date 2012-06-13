@@ -7,6 +7,9 @@ require 'redmine'
 require 'user_patch'
 User.send(:include, UserPatch)
 
+require 'menu_patch'
+Redmine::MenuManager::MenuHelper.send(:include, MenuPatch)
+
 # workaround helping rails to find the helper-methods
 require File.join(File.dirname(__FILE__), "app", "helpers", "application_helper.rb")
 
@@ -37,15 +40,11 @@ Redmine::Plugin.register :redmine_time_tracker do
 
   # setup an menu entry into the redmine top-menu on the upper left corner
   menu :top_menu, :time_tracker_main_menu, {:controller => 'time_trackers', :action => 'index'}, :caption => :time_tracker_label_main_menu,
-       :if => Proc.new { User.current.logged? } # && User.current.allowed_to?()
+       :if => Proc.new { User.current.logged? }
 
-  menu :application_menu, :time_tracker_menu_tab_overview, {:controller => 'time_trackers', :action => 'index'},
-       {
-           :caption => :time_tracker_label_menu_tab_overview,
-           # TODO figure out a condition that enables the menu only for the timeTracker-page
-           :if => Proc.new { User.current.logged? }
-       }
-  Redmine::MenuManager.map :application_menu do |menu|
+  Redmine::MenuManager.map :timetracker_menu do |menu|
+    menu.push :time_tracker_menu_tab_overview, {:controller => 'time_trackers', :action => 'index'}, :caption => :time_tracker_label_menu_tab_overview, :if => Proc.new { User.current.logged? }
     menu.push :time_tracker_menu_tab_logs, {:controller => 'time_logs', :action => 'index'}, :caption => :time_tracker_label_menu_tab_logs, :if => Proc.new { User.current.logged? }
+    #menu.push :time_tracker_menu_tab_stats, {:controller => 'time_logs', :action => 'index'}, :caption => :time_tracker_label_menu_tab_stats, :if => Proc.new { User.current.logged? }
   end
 end
