@@ -15,31 +15,28 @@ class TimeLog < ActiveRecord::Base
   # if issue is the only parameter we get, we will book the whole time to one issue
   def add_booking(args = {})
     # TODO not set activity_id default value to 1 / only for testing because redmine requires activity_id
-    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue_id => nil}
+    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil}
     args = default_args.merge(args)
     # without an issue it's not possible to add a booking'
-    unless args[:issue_id].nil?
-      issue = issue_from_id(args[:issue_id])
-      hours = hours_spent(args[:started_on], args[:stopped_at])
-      # limit the booking to maximum bookable time
-      if hours > bookable_hours
-        args[:stopped_at] = args[:started_on] + bookable_hours
-      end
-      # TODO check for user-specific setup (limitations for bookable times etc)
-      # create a timeBooking to combine a timeLog-entry and a timeEntry
-      ActiveRecord::Base.transaction do
-        time_entry = issue.time_entries.create(:comments => args[:comments], :spent_on => args[:started_on], :hours => hours, :activity_id => args[:activity_id])
-        # due to the mass-assignment security, we have to set the user_id extra
-        time_entry.user_id = user_id
-        time_entry.save
-        TimeBooking.create(:time_entry_id => time_entry.id, :time_log_id => id, :started_on => args[:started_on], :stopped_at => args[:stopped_at])
+    unless args[:issue].nil?
+      # to enforce a user to "log time" the admin has to set the redmine permissions
+      if User.current.allowed_to?(:log_time, args[:issue].project)
+        hours = hours_spent(args[:started_on], args[:stopped_at])
+        # limit the booking to maximum bookable time
+        if hours > bookable_hours
+          args[:stopped_at] = args[:started_on] + bookable_hours
+        end
+        # TODO check for user-specific setup (limitations for bookable times etc)
+        # create a timeBooking to combine a timeLog-entry and a timeEntry
+        ActiveRecord::Base.transaction do
+          time_entry = args[:issue].time_entries.create(:comments => args[:comments], :spent_on => args[:started_on], :hours => hours, :activity_id => args[:activity_id])
+          # due to the mass-assignment security, we have to set the user_id extra
+          time_entry.user_id = user_id
+          time_entry.save
+          TimeBooking.create(:time_entry_id => time_entry.id, :time_log_id => id, :started_on => args[:started_on], :stopped_at => args[:stopped_at])
+        end
       end
     end
-  end
-
-  # TODO move this function into a helper due to DRY
-  def issue_from_id(issue_id)
-    Issue.where(:id => issue_id).first
   end
 
   # returns the hours between two timestamps

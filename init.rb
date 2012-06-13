@@ -26,21 +26,26 @@ Redmine::Plugin.register :redmine_time_tracker do
 
   # following permission-setting will be found in a plugin-specific field within the roles-settings
   project_module :redmine_timetracker_plugin_settings do
-    permission :view_time_trackers, {:time_trackers => [:index, :start, :stop, :delete]}, :require => :loggedin
+    permission :use_time_tracker_plugin, {:time_trackers => [:index, :start, :stop, :delete],
+                                          :time_logs => [:index, :add_booking, :show_booking],
+                                          :time_bookings => [:index, :delete]},
+               :require => :loggedin
+    #permission :view_time_trackers, {:time_trackers => :index}, :public => true
   end
   # following permission will be set-up within the "project"-field in the roles-settings
-  #permission :delete_others_time_trackers, :time_trackers => :delete
+  permission :delete_others_time_trackers, :time_trackers => :delete
 
   # setup an menu entry into the redmine top-menu on the upper left corner
-  menu :top_menu, :time_tracker_main_menu, {:controller => 'time_trackers', :action => 'index'}, :caption => :time_tracker_label_main_menu, :if => Proc.new { User.current.logged? }
+  menu :top_menu, :time_tracker_main_menu, {:controller => 'time_trackers', :action => 'index'}, :caption => :time_tracker_label_main_menu,
+       :if => Proc.new { User.current.logged? } # && User.current.allowed_to?()
 
-  menu :application_menu, :time_tracker_menu_tab_overview, { :controller => 'time_trackers', :action => 'index'},
+  menu :application_menu, :time_tracker_menu_tab_overview, {:controller => 'time_trackers', :action => 'index'},
        {
            :caption => :time_tracker_label_menu_tab_overview,
            # TODO figure out a condition that enables the menu only for the timeTracker-page
            :if => Proc.new { User.current.logged? }
        }
   Redmine::MenuManager.map :application_menu do |menu|
-    menu.push :time_tracker_menu_tab_logs, { :controller => 'time_logs', :action => 'index'}, :caption => :time_tracker_label_menu_tab_logs, :if => Proc.new { User.current.logged? }
+    menu.push :time_tracker_menu_tab_logs, {:controller => 'time_logs', :action => 'index'}, :caption => :time_tracker_label_menu_tab_logs, :if => Proc.new { User.current.logged? }
   end
 end

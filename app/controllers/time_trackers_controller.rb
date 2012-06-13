@@ -1,6 +1,8 @@
 class TimeTrackersController < ApplicationController
   unloadable
 
+  before_filter :authorize_global
+
   def index
     current.nil? ? @time_tracker = TimeTracker.new : @time_tracker = current
     # original definitons to use the original time-tracker-list
