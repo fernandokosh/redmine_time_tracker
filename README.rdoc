@@ -1,3 +1,7 @@
+= WARNING:
+
+**This Plugin is in full development and therefore should NOT be considered stable or complete in any way. Do not expect any support until the anouncement of a stable release**
+
 = Redmine Time Tracker plugin
 
 Time tracker is a Redmine plugin to ease time tracking when working on an issue.
@@ -10,7 +14,6 @@ Later versions of the plugin will give you a better overview through statistics 
 the possabillity to generate invoices.
 It will be individual adjustable for every user and seperate includable for any project.
 
-== WARNING: The plugin is under development.
 Main features to track time referring to an issue should work allready.
 The advanced features are going to be implemented soon.
 My goal is to have a release with all main-features within the next two month
