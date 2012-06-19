@@ -1,9 +1,5 @@
-<%= render 'list_active_trackers' %>
+<%= render 'time_tracker_control' %>
 
-<% content_for :sidebar do %>
-    <%= render 'control_panel' %>
+<%= render 'time_logs/list_unbooked_logs' %>
+<%= render 'time_bookings/list_bookings' %>
 
-    <!--hier evtl selbst einen call_hook aufruf starten um andere plugins reinzulassen...
-        sofern es eine allgemeinen "hook-after-sidebar" oder so gibt
-        orginal siehe projects\show.html.erb zeile 75-->
-<% end %>

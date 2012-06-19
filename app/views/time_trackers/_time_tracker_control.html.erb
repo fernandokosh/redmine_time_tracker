@@ -1,0 +1,30 @@
+<div id="time-tracker-control">
+  <% unless @time_tracker.nil? %>
+      <% if @time_tracker.new_record? %>
+          <%= remote_form_for @time_tracker, :url => {:action => :start},
+                              :html => {:class => "time-tracker-form"},
+                              :update => "time-tracker-control" do |f| %>
+              <%= f.label l(:time_tracker_label_current_task) %>
+              <%= f.text_field :comments %>
+              <%= f.submit l(:start_time_tracker) %>
+          <% end %>
+      <% else %>
+          <%= form_for @time_tracker, :url => {:action => :stop},
+                       :html => {:class => "time-tracker-form",
+                                 :onchange => remote_function(
+                                         :update => {:success => :nothing, :failure => "time-tracker-control"},
+                                         :url => {:controller => :time_trackers, :action => "update"},
+                                         :method => :put,
+                                         :with => " Form.serializeElements( $(this).getInputs() ) ")} do |f| %>
+              <%= f.label l(:time_tracker_label_current_task) %>
+              <%= f.text_field :comments %>
+              <!-- TODO localize placeholders / add labels -->
+              <%= f.text_field :project_id, :size => "15", :placeholder => "project" %>
+              <%= f.text_field :issue_id, :size => "15", :placeholder => "issue" %>
+              <%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => "start" %>
+              <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date" %>
+              <%= f.submit l(:stop_time_tracker) %>
+          <% end %>
+      <% end %>
+  <% end %>
+</div>
