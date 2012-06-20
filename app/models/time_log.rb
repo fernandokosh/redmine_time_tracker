@@ -15,17 +15,19 @@ class TimeLog < ActiveRecord::Base
   # if issue is the only parameter we get, we will book the whole time to one issue
   def add_booking(args = {})
     # TODO not set activity_id default value to 1 / only for testing because redmine requires activity_id
-    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil}
+    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil, :hours => nil}
     args = default_args.merge(args)
     # without an issue it's not possible to add a booking'
     unless args[:issue].nil?
       # to enforce a user to "log time" the admin has to set the redmine permissions
       if User.current.allowed_to?(:log_time, args[:issue].project)
-        hours = hours_spent(args[:started_on], args[:stopped_at])
+        args[:hours].nil? ? hours = hours_spent(args[:started_on], args[:stopped_at]) : hours = args[:hours].to_f
         # limit the booking to maximum bookable time
         if hours > bookable_hours
-          args[:stopped_at] = args[:started_on] + bookable_hours
+          hours = bookable_hours
         end
+        args[:stopped_at] = Time.at(args[:started_on].to_i + (hours * 3600).to_i).getutc
+
         # TODO check for user-specific setup (limitations for bookable times etc)
         # create a timeBooking to combine a timeLog-entry and a timeEntry
         ActiveRecord::Base.transaction do

@@ -8,7 +8,7 @@ class TimeTrackersController < ApplicationController
 
     bookable_logs_temp = []
     # queries with "includes" work way faster that simple user.time_logs.each
-    logs = User.current.time_logs.includes(:time_bookings)
+    logs = User.current.time_logs.includes(:time_bookings).order("started_on DESC")
     logs.each do |tl|
       bookable_logs_temp.push(tl) if tl.bookable_hours > 0
     end
@@ -20,7 +20,7 @@ class TimeTrackersController < ApplicationController
     @unbooked_logs_pages = Paginator.new self, @unbooked_logs_count, ret[:limit], ret[:page]
 
     # time booking list
-    user_bookings_temp = User.current.time_bookings.includes(:time_entry => {:issue => [:status, :tracker, :priority]})
+    user_bookings_temp = User.current.time_bookings.includes(:time_entry => {:issue => [:status, :tracker, :priority]}).order("started_on DESC")
     @user_bookings_count = user_bookings_temp.count
 
     ret = paginate_array(user_bookings_temp, params['page_booked'].to_i)
