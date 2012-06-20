@@ -1,9 +1,8 @@
 <div id="time-tracker-control">
   <% unless @time_tracker.nil? %>
       <% if @time_tracker.new_record? %>
-          <%= remote_form_for @time_tracker, :url => {:action => :start},
-                              :html => {:class => "time-tracker-form"},
-                              :update => "time-tracker-control" do |f| %>
+          <%= form_for @time_tracker, :url => {:action => :start},
+                              :html => {:class => "time-tracker-form"} do |f| %>
               <%= f.label l(:time_tracker_label_current_task) %>
               <%= f.text_field :comments %>
               <%= f.submit l(:start_time_tracker) %>

@@ -50,7 +50,7 @@ class TimeTrackersController < ApplicationController
     else
       flash[:error] = l(:time_tracker_already_running_error)
     end
-    render :partial => "time_tracker_control"
+    redirect_to "/time_trackers"
   end
 
   def stop
