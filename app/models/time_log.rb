@@ -45,17 +45,13 @@ class TimeLog < ActiveRecord::Base
   end
 
   # returns the sum of bookable time of an time entry
+  # if log was not booked at all, so the whole time is bookable
   def bookable_hours
-    if time_bookings.empty?
-      # log was not booked at all, so the whole time is bookable
-      hours_spent
-    else
-      # every gap between the bookings represents bookable time so we sum up the time to show it as bookable time
-      time_booked = 0
-      time_bookings.each do |tb|
-        time_booked += tb.hours_spent
-      end
-      hours_spent - time_booked
+    # every gap between the bookings represents bookable time so we sum up the time to show it as bookable time
+    time_booked = 0
+    time_bookings.each do |tb|
+      time_booked += tb.hours_spent
     end
+    hours_spent - time_booked
   end
 end

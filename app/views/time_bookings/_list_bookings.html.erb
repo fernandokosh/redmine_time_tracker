@@ -19,8 +19,8 @@
 
               <tbody>
               <% @user_bookings.each do |time_booking| %>
-                  <% time_entry = TimeEntry.where(:id => time_booking.time_entry_id).first %>
-                  <% issue = Issue.where(:id => time_entry.issue_id).first %>
+                  <% time_entry = time_booking.time_entry %>
+                  <% issue = time_entry.issue %>
                   <tr id="booking_id<%= time_booking.id %>" class="<%= cycle('odd', 'even') %>">
                     <td class="issue"><%= link_to_issue issue %></td>
                     <td class="comments"><%= time_entry.comments %></td>

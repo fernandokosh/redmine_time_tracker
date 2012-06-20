@@ -11,11 +11,6 @@ class TimeBooking < ActiveRecord::Base
     super(arguments)
   end
 
-  def self.get_bookings(user = User.current)
-    tl_id = user.time_logs.pluck(:id)
-    where(:time_log_id => tl_id).all
-  end
-
   def hours_spent
     ((stopped_at.to_i - started_on.to_i) / 3600.0).to_f
   end

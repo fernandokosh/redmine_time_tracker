@@ -7,6 +7,7 @@ module UserPatch
     base.send(:include, InstanceMethods)
     base.class_eval do
       has_many :time_logs
+      has_many :time_bookings, :through => :time_logs
     end
   end
 

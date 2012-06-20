@@ -6,9 +6,10 @@ class TimeTrackersController < ApplicationController
   def index
     @time_tracker = get_current
 
-    user = User.current
     bookable_logs_temp = []
-    user.time_logs.each do |tl|
+    # queries with "includes" work way faster that simple user.time_logs.each
+    logs = User.current.time_logs.includes(:time_bookings)
+    logs.each do |tl|
       bookable_logs_temp.push(tl) if tl.bookable_hours > 0
     end
     # limit output of time_log list
@@ -19,7 +20,7 @@ class TimeTrackersController < ApplicationController
     @unbooked_logs_pages = Paginator.new self, @unbooked_logs_count, ret[:limit], ret[:page]
 
     # time booking list
-    user_bookings_temp = TimeBooking.get_bookings
+    user_bookings_temp = User.current.time_bookings.includes(:time_entry => {:issue => [:status, :tracker, :priority]})
     @user_bookings_count = user_bookings_temp.count
 
     ret = paginate_array(user_bookings_temp, params['page_booked'].to_i)
