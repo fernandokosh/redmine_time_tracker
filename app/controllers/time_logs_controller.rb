@@ -1,6 +1,7 @@
 class TimeLogsController < ApplicationController
   unloadable
 
+  menu_item :time_tracker_menu_tab_logs
   before_filter :authorize_global
 
   def index

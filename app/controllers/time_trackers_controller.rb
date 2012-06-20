@@ -1,6 +1,7 @@
 class TimeTrackersController < ApplicationController
   unloadable
 
+  menu_item :time_tracker_menu_tab_overview
   before_filter :authorize_global
 
   def index
