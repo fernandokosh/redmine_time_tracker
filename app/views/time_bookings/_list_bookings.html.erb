@@ -19,17 +19,29 @@
 
               <tbody>
               <% @user_bookings.each do |time_booking| %>
-                  <% time_entry = time_booking.time_entry %>
-                  <% issue = time_entry.issue %>
-                  <tr id="booking_id<%= time_booking.id %>" class="<%= cycle('odd', 'even') %>">
-                    <td class="issue"><%= link_to_issue issue %></td>
-                    <td class="comments"><%= time_entry.comments %></td>
-                    <td class="spent-time"><%= time_booking.hours_spent.round(2) %></td>
-                    <td class="actions">
-                      <%= link_to l(:time_tracker_label_continue), :controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => issue.id, :comments => time_entry.comments} %>
-                      <%= link_to l(:time_tracker_label_delete), :controller => 'time_bookings', :action => 'delete', :id => time_booking.id %>
-                    </td>
-                  </tr>
+                  <% if time_booking.virtual %>
+                      <tr id="booking_id<%= time_booking.id %>" class="<%= cycle('odd', 'even') %>">
+                        <td class="issue">virtual booking</td>
+                        <td class="comments"><%= time_booking.virtual_comment.comments %></td>
+                        <td class="spent-time"><%= time_booking.hours_spent.round(2) %></td>
+                        <td class="actions">
+                          <%= link_to l(:time_tracker_label_continue), :controller => 'time_trackers', :action => 'start' %>
+                          <%= link_to l(:time_tracker_label_delete), :controller => 'time_bookings', :action => 'delete', :id => time_booking.id %>
+                        </td>
+                      </tr>
+                  <% else %>
+                      <% time_entry = time_booking.time_entry %>
+                      <% issue = time_entry.issue %>
+                      <tr id="booking_id<%= time_booking.id %>" class="<%= cycle('odd', 'even') %>">
+                        <td class="issue"><%= link_to_issue issue %></td>
+                        <td class="comments"><%= time_entry.comments %></td>
+                        <td class="spent-time"><%= time_booking.hours_spent.round(2) %></td>
+                        <td class="actions">
+                          <%= link_to l(:time_tracker_label_continue), :controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => issue.id, :comments => time_entry.comments} %>
+                          <%= link_to l(:time_tracker_label_delete), :controller => 'time_bookings', :action => 'delete', :id => time_booking.id %>
+                        </td>
+                      </tr>
+                  <% end %>
               <% end %>
               </tbody>
             </table>

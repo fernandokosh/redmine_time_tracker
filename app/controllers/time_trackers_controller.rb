@@ -21,7 +21,7 @@ class TimeTrackersController < ApplicationController
     @unbooked_logs_pages = Paginator.new self, @unbooked_logs_count, ret[:limit], ret[:page]
 
     # time booking list
-    user_bookings_temp = User.current.time_bookings.includes(:time_entry => {:issue => [:status, :tracker, :priority]}).order("started_on DESC")
+    user_bookings_temp = User.current.time_bookings.includes(:virtual_comment, :time_entry => {:issue => [:status, :tracker, :priority]}).order("started_on DESC")
     @user_bookings_count = user_bookings_temp.count
 
     ret = paginate_array(user_bookings_temp, params['page_booked'].to_i)

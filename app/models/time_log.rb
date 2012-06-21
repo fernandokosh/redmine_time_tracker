@@ -2,8 +2,6 @@ class TimeLog < ActiveRecord::Base
   unloadable
 
   attr_accessible :user_id, :started_on, :stopped_at, :project_id, :comments
-  # using the virtual-flag for objects that should never been saved to the database
-  attr_accessor :virtual
   belongs_to :user
   has_many :time_bookings
   has_many :time_entries, :through => :time_bookings
@@ -13,32 +11,26 @@ class TimeLog < ActiveRecord::Base
   end
 
   # if issue is the only parameter we get, we will book the whole time to one issue
+  # method returns true if all works well, false otherwise
   def add_booking(args = {})
     # TODO not set activity_id default value to 1 / only for testing because redmine requires activity_id
-    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil, :hours => nil}
+    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil, :hours => nil, :virtual => false}
     args = default_args.merge(args)
-    # without an issue it's not possible to add a booking'
-    unless args[:issue].nil?
-      # to enforce a user to "log time" the admin has to set the redmine permissions
-      if User.current.allowed_to?(:log_time, args[:issue].project)
-        args[:hours].nil? ? hours = hours_spent(args[:started_on], args[:stopped_at]) : hours = args[:hours].to_f
-        # limit the booking to maximum bookable time
-        if hours > bookable_hours
-          hours = bookable_hours
-        end
-        args[:stopped_at] = Time.at(args[:started_on].to_i + (hours * 3600).to_i).getutc
 
-        # TODO check for user-specific setup (limitations for bookable times etc)
-        # create a timeBooking to combine a timeLog-entry and a timeEntry
-        ActiveRecord::Base.transaction do
-          time_entry = args[:issue].time_entries.create(:comments => args[:comments], :spent_on => args[:started_on], :hours => hours, :activity_id => args[:activity_id])
-          # due to the mass-assignment security, we have to set the user_id extra
-          time_entry.user_id = user_id
-          time_entry.save
-          TimeBooking.create(:time_entry_id => time_entry.id, :time_log_id => id, :started_on => args[:started_on], :stopped_at => args[:stopped_at])
-        end
-      end
+    # basic calculations are always the same
+    args[:hours].nil? ? args[:hours] = hours_spent(args[:started_on], args[:stopped_at]) : args[:hours] = args[:hours].to_f
+    # limit the booking to maximum bookable time
+    if args[:hours] > bookable_hours
+      args[:hours] = bookable_hours
     end
+    args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getutc
+
+    args[:time_log_id] = self.id
+    # userid of booking will be set to the user who created timeLog, even if the admin will create the booking
+    args[:user_id] = self.user_id
+    tb = TimeBooking.create(args)
+    # tb.persisted? will be true if transaction was successfully completed
+    tb.persisted?
   end
 
   # returns the hours between two timestamps

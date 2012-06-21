@@ -3,6 +3,8 @@
         <%= hidden_field_tag(:time_log_id, @time_log.id) %>
         <%= label_tag(:issue_id, "issue") %>
         <%= text_field_tag(:issue_id, "", :placeholder => "issue") %>
+        <%= label_tag(:virtual, "virtual?") %>
+        <%= check_box_tag(:virtual) %>
         <%= label_tag(:comments, "comments") %>
         <%= text_field_tag(:comments, @time_log.comments.to_s) %>
         <%= label_tag(:hours, "hours spent") %>

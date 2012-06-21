@@ -5,19 +5,18 @@ class TimeLogsController < ApplicationController
   before_filter :authorize_global
 
   def index
-
   end
 
+  # TODO localize messages
   def add_booking
+    time_log = TimeLog.where(:id => params[:time_log_id]).first
     issue = issue_from_id(params[:issue_id])
-    if User.current.allowed_to?(:log_time, issue.project)
-      time_log = TimeLog.where(:id => params[:time_log_id]).first
-      time_log.add_booking(:hours => params[:hours], :comments => params[:comments], :issue => issue)
-      redirect_to '/time_trackers'
+    if time_log.add_booking(:hours => params[:hours], :comments => params[:comments], :issue => issue, :virtual => params[:virtual])
+      flash[:notice] = "success :D"
     else
       flash[:error] = "not allowed to do that.. :)"
-      redirect_to '/time_trackers'
     end
+    redirect_to '/time_trackers'
   end
 
   def show_booking
