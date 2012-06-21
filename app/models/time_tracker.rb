@@ -46,14 +46,14 @@ class TimeTracker < ActiveRecord::Base
       act_time = self.started_on.to_a
       # time
       ts = self.start_time.to_s.strip.split(':')
-      act_time[1] = ts[0].to_i
-      act_time[2] = ts[1].to_i
+      act_time[2] = ts[0].to_i
+      act_time[1] = ts[1].to_i
       # date
       ds = self.date.to_s.strip.split('-')
       act_time[5] = ds[0].to_i
       act_time[4] = ds[1].to_i
       act_time[3] = ds[2].to_i
-      self.started_on = Time.utc(*act_time)
+      self.started_on = Time.local(*act_time)
     end
   end
 
@@ -93,9 +93,10 @@ class TimeTracker < ActiveRecord::Base
             time_log.add_booking(:issue => issue)
           end
           # otherwise we check for a project-id and associate the timeLog with an project only, using the project_id-field
-          # of the timeLog
-        else
-          time_log.project_id = project_id if project_id_set?
+          # of the timeLog. in that case we could create a virtual booking
+        elsif project_id_set?
+          time_log.project_id = project_id
+          time_log.add_booking(:virtual => true)
         end
         # after creating the TimeLog we can remove the TimeTracker, so the user can start a new one
         # print an error-message otherwise
@@ -105,7 +106,7 @@ class TimeTracker < ActiveRecord::Base
   end
 
   def get_formatted_time
-    self.started_on.to_time.to_s(:time) unless self.started_on.nil?
+    self.started_on.to_time.localtime.to_s(:time) unless self.started_on.nil?
   end
 
   def get_formatted_date

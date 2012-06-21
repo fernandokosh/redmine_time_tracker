@@ -23,7 +23,7 @@ class TimeLog < ActiveRecord::Base
     if args[:hours] > bookable_hours
       args[:hours] = bookable_hours
     end
-    args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getutc
+    args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getlocal
 
     args[:time_log_id] = self.id
     # userid of booking will be set to the user who created timeLog, even if the admin will create the booking
