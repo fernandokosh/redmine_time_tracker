@@ -2,7 +2,7 @@
   <% unless @time_tracker.nil? %>
       <% if @time_tracker.new_record? %>
           <%= form_for @time_tracker, :url => {:action => :start},
-                              :html => {:class => "time-tracker-form"} do |f| %>
+                       :html => {:class => "time-tracker-form"} do |f| %>
               <%= f.label l(:time_tracker_label_current_task) %>
               <%= f.text_field :comments %>
               <%= f.submit l(:start_time_tracker) %>
@@ -10,20 +10,47 @@
       <% else %>
           <%= form_for @time_tracker, :url => {:action => :stop},
                        :html => {:class => "time-tracker-form",
-                                 :onchange => remote_function(
-                                         :update => {:success => :nothing, :failure => "time-tracker-control"},
-                                         :url => {:controller => :time_trackers, :action => "update"},
-                                         :method => :put,
-                                         :with => " Form.serializeElements( $(this).getInputs() ) ")} do |f| %>
-              <%= f.label l(:time_tracker_label_current_task) %>
-              <%= f.text_field :comments %>
+                                 :onchange => "updateForm($(this))"} do |f| %>
               <!-- TODO localize placeholders / add labels -->
-              <%= f.text_field :project_id, :size => "15", :placeholder => "project" %>
+              <%= f.label l(:time_tracker_label_current_task) %>
               <%= f.text_field :issue_id, :size => "15", :placeholder => "issue" %>
-              <%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => "start" %>
-              <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date" %>
+              <%= f.text_field :comments %>
+              <% projects = User.current.memberships.collect(&:project).compact.uniq %>
+              <% proj_list = project_tree_options_for_select(projects, :selected => Project.find(@time_tracker.project_id)) %>
+              <%= select_tag :project_id_select, proj_list, :onchange => "$('time_tracker_project_id').value=$(this).value", :disabled => !@time_tracker.issue_id.nil? %>
+              <%= f.hidden_field :project_id %>
+              <!--  TODO refactor conditions for disabling the Time-Inputs to use special Role-settings instead of admin only  -->
+              <%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => "start", :disabled => !User.current.admin? %>
+              <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date", :disabled => !User.current.admin? %>
               <%= f.submit l(:stop_time_tracker) %>
           <% end %>
       <% end %>
   <% end %>
 </div>
+<script>
+    updateForm = function (form) {
+        new Ajax.Request('/time_trackers/update.json?' + Form.serializeElements(form.getInputs()),
+                {
+                    method:'put',
+                    onSuccess:function (transport) {
+                        var tt = transport.responseJSON.time_tracker;
+                        form.time_tracker_issue_id.value = tt.issue_id;
+                        (tt.issue_id == null) ? form.project_id_select.enable() : form.project_id_select.disable();
+                        form.time_tracker_comments.value = tt.comments;
+                        form.time_tracker_project_id.value = tt.project_id;
+                        select_options = form.project_id_select;
+                        for (i = 0; i < select_options.length; i++) {
+                            if (select_options[i].value == tt.project_id) select_options[i].selected = true;
+                        }
+                        dat = new Date(Date.parse(tt.started_on));
+                        //form.time_tracker_start_time.value = dat.getHours().toString()+':'+dat.getMinutes().toString();
+                        form.time_tracker_start_time.value = dat.toLocaleTimeString();
+                        year = dat.getFullYear().toString();
+                        month = dat.getMonth() + 1;
+                        (month < 10) ? month = '0' + month.toString() : month = month.toString();
+                        day = dat.getDate().toString();
+                        form.time_tracker_date.value = year + '-' + month + '-' + day;
+                    }
+                });
+    }
+</script>

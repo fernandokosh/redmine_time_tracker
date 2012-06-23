@@ -23,7 +23,7 @@ class TimeTracker < ActiveRecord::Base
 
   # TODO specify all necessary validations
   # TODO add auto completion for input fields
-  VALID_TIME_REGEX = /\A([01]?\d?|2[0123]):[012345]?\d?\z/ # hour:min
+  VALID_TIME_REGEX = /\A([01]?\d?|2[0123]):[012345]?\d?:[012345]?\d?\z/ # hour:min
   VALID_DATE_REGEX = /\A\d{4}-(0?\d?|1[012])-([012]?\d?|3[01])\z/ # day:month:year
   validates :comments, length: {maximum: 150}, :allow_blank => true
   validates :project_id, :numericality => true, :allow_blank => true
@@ -48,12 +48,20 @@ class TimeTracker < ActiveRecord::Base
       ts = self.start_time.to_s.strip.split(':')
       act_time[2] = ts[0].to_i
       act_time[1] = ts[1].to_i
+      act_time[0] = ts[2].to_i
       # date
       ds = self.date.to_s.strip.split('-')
       act_time[5] = ds[0].to_i
       act_time[4] = ds[1].to_i
       act_time[3] = ds[2].to_i
       self.started_on = Time.local(*act_time)
+    end
+  end
+
+  before_save do
+    unless self.issue_id.nil?
+      issue = Issue.find(self.issue_id)
+      self.project_id = issue.project_id unless self.project_id == issue.project_id
     end
   end
 
@@ -106,24 +114,25 @@ class TimeTracker < ActiveRecord::Base
   end
 
   def get_formatted_time
-    self.started_on.to_time.localtime.to_s(:time) unless self.started_on.nil?
+    self.started_on.to_time.localtime.strftime("%H:%M:%S") unless self.started_on.nil?
+    #self.started_on.to_time.localtime.to_s(:time) unless self.started_on.nil?
   end
 
   def get_formatted_date
     self.started_on.to_date.to_s(:db) unless self.started_on.nil?
   end
 
-  # TODO method needed?
-  def hours_spent
-    running_time + time_spent
-  end
-
-  def time_spent_to_s
-    total = hours_spent
-    hours = total.to_i
-    minutes = ((total - hours) * 60).to_i
-    hours.to_s + l(:time_tracker_hour_sym) + minutes.to_s.rjust(2, '0')
-  end
+  ## TODO method needed?
+  #def hours_spent
+  #  running_time + time_spent
+  #end
+  #
+  #def time_spent_to_s
+  #  total = hours_spent
+  #  hours = total.to_i
+  #  minutes = ((total - hours) * 60).to_i
+  #  hours.to_s + l(:time_tracker_hour_sym) + minutes.to_s.rjust(2, '0')
+  #end
 
   def zombie?
     user = help.user_from_id(self.user_id)

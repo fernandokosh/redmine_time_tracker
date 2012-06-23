@@ -83,12 +83,11 @@ class TimeTrackersController < ApplicationController
 
   def update
     @time_tracker = get_current
-    if @time_tracker.update_attributes(params[:time_tracker])
-      render :nothing => true, :status => :ok
-    else
-      # TODO find out how to display flash-messages after ajax request
-      @time_tracker = get_current
-      render :partial => "time_tracker_control", :status => :bad_request
+    @time_tracker.update_attributes(params[:time_tracker])
+    respond_to do |format|
+      format.html { render :nothing => true }
+      format.xml { render :xml => @time_tracker }
+      format.json { render :json => @time_tracker }
     end
   end
 
