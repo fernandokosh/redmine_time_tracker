@@ -1,4 +1,4 @@
-<div id="time-tracker-control">
+<div id="time-tracker-control" style="height: 130px;">
   <% unless @time_tracker.nil? %>
       <% if @time_tracker.new_record? %>
           <%= form_for @time_tracker, :url => {:action => :start},
@@ -12,16 +12,35 @@
                        :html => {:class => "time-tracker-form",
                                  :onchange => "updateForm($(this))"} do |f| %>
               <!-- TODO localize placeholders / add labels -->
-              <%= f.label l(:time_tracker_label_current_task) %>
-              <%= f.text_field :issue_id, :size => "15", :placeholder => "issue" %>
-              <%= f.text_field :comments %>
+              <h3><%= l(:time_tracker_label_current_task) %></h3>
+              <div class="task_form_top_fields">
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
+                  <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue" %></div>
+                </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
+                  <div class="task_form_input"><%= f.text_field :comments %></div>
+                </div>
+              </div>
               <% projects = User.current.memberships.collect(&:project).compact.uniq %>
               <% proj_list = project_tree_options_for_select(projects, :selected => Project.find(@time_tracker.project_id)) %>
-              <%= select_tag :project_id_select, proj_list, :onchange => "$('time_tracker_project_id').value=$(this).value", :disabled => !@time_tracker.issue_id.nil? %>
-              <%= f.hidden_field :project_id %>
-              <!--  TODO refactor conditions for disabling the Time-Inputs to use special Role-settings instead of admin only  -->
-              <%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => "start", :disabled => !User.current.admin? %>
-              <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date", :disabled => !User.current.admin? %>
+              <div class="task_form_bottom_fields">
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
+                  <div class="task_form_input"><%= select_tag :project_id_select, proj_list, :onchange => "$('time_tracker_project_id').value=$(this).value", :disabled => !@time_tracker.issue_id.nil? %></div>
+                </div>
+                <div class="task_form_sub_fields">
+                  <%= f.hidden_field :project_id %>
+                  <!--  TODO refactor conditions for disabling the Time-Inputs to use special Role-settings instead of admin only  -->
+                  <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
+                  <div class="task_form_input"><%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => "start", :disabled => !User.current.admin? %></div>
+                </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_start_date) %></div>
+                  <div class="task_form_input"><%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date", :disabled => !User.current.admin? %></div>
+                </div>
+              </div>
               <%= f.submit l(:stop_time_tracker) %>
           <% end %>
       <% end %>

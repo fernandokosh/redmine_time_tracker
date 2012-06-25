@@ -1,3 +1,26 @@
+.task_form_top_fields, .task_form_btottom_fields {
+    width: 100%;
+    position: relative;
+    float: left;
+    margin-right: 205px;
+}
+
+.task_form_sub_fields {
+    float: left;
+    margin-right: 5px;
+}
+
+.input_hint {
+    float: left;
+    position: relative;
+    overflow: hidden;
+    font-size: 9px;
+}
+
+.task_form_input {
+    margin-top: 15px;
+}
+
 .icon-clock {
     background-image: url(../images/clock.gif);
 }
@@ -79,10 +102,5 @@
 #settings form[action="/settings/plugin/redmine_time_tracker"] > div + div {
     display: none
 }
-/* Hack to remove the div opened by redmine before rendering the plugin settings partial */
 
-/* control-panel CSS */
-.control_panel{
-    width: 200px;
-    border: 1px solid #507aaa;
-}
+/* Hack to remove the div opened by redmine before rendering the plugin settings partial */

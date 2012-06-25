@@ -1,7 +1,7 @@
-<h2><%= l(:time_tracker_loglist_title) %></h2>
+<div id="user-time-logs-list">
+  <h2><%= l(:time_tracker_loglist_title) %></h2>
 
-<% unless @bookable_logs.nil? %>
-    <div id="user-time-logs-list">
+  <% unless @bookable_logs.nil? %>
       <h3><%= l(:time_tracker_label_your_time_logs) -%></h3>
       <% if @bookable_logs.empty? %>
           <p class="msg"><%= l(:no_time_logs) -%></p>
@@ -32,5 +32,5 @@
           </div>
           <p class="pagination"><%= pagination_links_full @unbooked_logs_pages, @unbooked_logs_count, :page_param => :page_unbooked, :per_page_links => false %></p>
       <% end %>
-    </div>
-<% end %>
+  <% end %>
+</div>
