@@ -115,24 +115,11 @@ class TimeTracker < ActiveRecord::Base
 
   def get_formatted_time
     self.started_on.to_time.localtime.strftime("%H:%M:%S") unless self.started_on.nil?
-    #self.started_on.to_time.localtime.to_s(:time) unless self.started_on.nil?
   end
 
   def get_formatted_date
     self.started_on.to_date.to_s(:db) unless self.started_on.nil?
   end
-
-  ## TODO method needed?
-  #def hours_spent
-  #  running_time + time_spent
-  #end
-  #
-  #def time_spent_to_s
-  #  total = hours_spent
-  #  hours = total.to_i
-  #  minutes = ((total - hours) * 60).to_i
-  #  hours.to_s + l(:time_tracker_hour_sym) + minutes.to_s.rjust(2, '0')
-  #end
 
   def zombie?
     user = help.user_from_id(self.user_id)

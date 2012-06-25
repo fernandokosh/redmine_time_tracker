@@ -1,9 +1,9 @@
-<div id="time-tracker-control" style="height: 130px;">
+<div id="time-tracker-control" style="margin-bottom: 30px;">
   <% unless @time_tracker.nil? %>
       <% if @time_tracker.new_record? %>
           <%= form_for @time_tracker, :url => {:action => :start},
                        :html => {:class => "time-tracker-form"} do |f| %>
-              <%= f.label l(:time_tracker_label_current_task) %>
+              <h3><%= f.label l(:time_tracker_label_current_task) %></h3>
               <%= f.text_field :comments %>
               <%= f.submit l(:start_time_tracker) %>
           <% end %>
@@ -13,6 +13,7 @@
                                  :onchange => "updateForm($(this))"} do |f| %>
               <!-- TODO localize placeholders / add labels -->
               <h3><%= l(:time_tracker_label_current_task) %></h3>
+
               <div class="task_form_top_fields">
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
@@ -24,7 +25,8 @@
                 </div>
               </div>
               <% projects = User.current.memberships.collect(&:project).compact.uniq %>
-              <% proj_list = project_tree_options_for_select(projects, :selected => Project.find(@time_tracker.project_id)) %>
+              <% @time_tracker.project_id.nil? ? select = nil : select = Project.find(@time_tracker.project_id) %>
+              <% proj_list = project_tree_options_for_select(projects, :selected => select) %>
               <div class="task_form_bottom_fields">
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_project) %></div>

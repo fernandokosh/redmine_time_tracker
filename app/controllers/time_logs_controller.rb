@@ -11,7 +11,7 @@ class TimeLogsController < ApplicationController
   def add_booking
     time_log = TimeLog.where(:id => params[:time_log_id]).first
     issue = issue_from_id(params[:issue_id])
-    if time_log.add_booking(:hours => params[:hours], :comments => params[:comments], :issue => issue, :virtual => params[:virtual])
+    if time_log.add_booking(:spent_time => params[:spent_time], :comments => params[:comments], :issue => issue, :virtual => params[:virtual])
       flash[:notice] = "success :D"
     else
       flash[:error] = "not allowed to do that.. :)"

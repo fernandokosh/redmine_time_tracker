@@ -7,8 +7,8 @@
         <%= check_box_tag(:virtual) %>
         <%= label_tag(:comments, "comments") %>
         <%= text_field_tag(:comments, @time_log.comments.to_s) %>
-        <%= label_tag(:hours, "hours spent") %>
-        <%= text_field_tag(:hours, @time_log.bookable_hours.round(2).to_s) %>
+        <%= label_tag(:spent_time, "time spent") %>
+        <%= text_field_tag(:spent_time, @time_log.get_formatted_time) %>
         <%= submit_tag("book") %>
     <% end %>
 <% end %>

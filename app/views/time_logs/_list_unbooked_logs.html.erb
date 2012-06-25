@@ -20,7 +20,7 @@
               <% @bookable_logs.each do |time_log| %>
                   <tr class="<%= cycle('odd', 'even') -%>">
                     <td id="user-log-comment<%= time_log.id -%>" class="comments"><%= time_log.comments -%></td>
-                    <td class="spent-time"><%= time_log.bookable_hours.round(2).to_s -%></td>
+                    <td class="spent-time"><%= time_log.get_formatted_time() -%></td>
                     <td class="buttons">
                       <!-- TODO localize link-labels! -->
                       <%= link_to_remote 'book', :update => 'user-log-comment'+time_log.id.to_s, :url => {:controller => 'time_logs', :action => 'show_booking', :time_log_id => time_log.id} %>
