@@ -26,7 +26,10 @@
               </div>
               <% projects = User.current.memberships.collect(&:project).compact.uniq %>
               <% @time_tracker.project_id.nil? ? select = nil : select = Project.find(@time_tracker.project_id) %>
-              <% proj_list = project_tree_options_for_select(projects, :selected => select) %>
+              <% proj_list = "<option value=''>#{ l(:time_tracker_label_none) }</option>" %>
+              <% proj_list << "<option value='' disabled='disabled'>---</option>" %>
+              <% proj_list = proj_list.html_safe %>
+              <% proj_list << project_tree_options_for_select(projects, :selected => select) %>
               <div class="task_form_bottom_fields">
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_project) %></div>

@@ -39,11 +39,20 @@ function updateTTControllerForm (form) {
 // ================== booking_form helpers ============================
 
 function updateBookingHours (form) {
-    form.time_log_spent_time.value = calcBookingHelper(form.time_log_start_time, form.time_log_stop_time, 1);
+    start = form.time_log_start_time.value;
+    stop = form.time_log_stop_time.value;
+    if (timeString2sec(stop) < timeString2sec(start)) {
+        swap = start;
+        start = stop;
+        stop = swap;
+        form.time_log_start_time.value = start;
+        form.time_log_stop_time.value = stop;
+    }
+    form.time_log_spent_time.value = calcBookingHelper(start, stop, 1);
 }
 
 function updateBookingStop (form) {
-    form.time_log_stop_time.value = calcBookingHelper(form.time_log_start_time, form.time_log_spent_time, 2);
+    form.time_log_stop_time.value = calcBookingHelper(form.time_log_start_time.value, form.time_log_spent_time.value, 2);
 }
 
 function updateBookingProject (form) {
@@ -71,13 +80,14 @@ function updateBookingProject (form) {
     }
 }
 
+function timeString2sec (str) {
+    arr = str.strip().split(':');
+    return new Number(arr[0]) * 3600 + new Number(arr[1]) * 60 + new Number(arr[2]);
+}
+
 function calcBookingHelper (ele1, ele2, calc) {
-    start_string = ele1.value.strip();
-    stop_string = ele2.value.strip();
-    ss1 = start_string.split(':');
-    sec1 = new Number(ss1[0]) * 3600 + new Number(ss1[1]) * 60 + new Number(ss1[2]);
-    ss2 = stop_string.split(':');
-    sec2 = new Number(ss2[0]) * 3600 + new Number(ss2[1]) * 60 + new Number(ss2[2]);
+    sec1 = timeString2sec(ele1);
+    sec2 = timeString2sec(ele2);
     if (calc == 1) {
         val = sec2 - sec1;
     }

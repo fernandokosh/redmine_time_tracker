@@ -23,6 +23,9 @@ class TimeLog < ActiveRecord::Base
     # limit the booking to maximum bookable time
     if args[:hours] > bookable_hours
       args[:hours] = bookable_hours
+    elsif args[:hours] < 0
+      args[:hours] = 0  # impossible to save a time_entry with hours=0 => transaction will be rolled back!
+      args[:started_on] = self.started_on
     end
     args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getlocal
 
