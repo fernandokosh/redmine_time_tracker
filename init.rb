@@ -15,12 +15,4 @@ Redmine::Plugin.register :chiliproject_time_tracker do
     permission :view_others_time_trackers, :time_trackers => :index
     permission :delete_others_time_trackers, :time_trackers => :delete
 
-    menu :account_menu, :time_tracker_menu, '',
-        {
-            :caption => '',
-            :html => { :id => 'time-tracker-menu' },
-            :first => true,
-            :param => :project_id,
-            :if => Proc.new { User.current.logged? }
-        }
 end

@@ -24,6 +24,7 @@ en:
   time_tracker_label_your_time_trackers: "Your time tracker"
   time_tracker_label_other_time_trackers: "Other user's time trackers"
   time_tracker_list_title: "Time trackers"
+  time_tracker_menu_title: "Time tracker"
   time_tracker_not_running: "Not running"
   time_tracker_refresh_rate: "Refresh rate"
   time_tracker_seconds: "seconds"

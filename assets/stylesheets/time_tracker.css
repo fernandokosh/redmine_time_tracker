@@ -19,6 +19,8 @@
 .icon-stop-action { background-image: url(../images/stop.png); }
 .icon-list-action { background-image: url(../images/list.png); }
 
+#time-tracker-embed-menu { margin: 8px 0; }
+
 #time-tracker-menu { margin-right: 8px; }
 #time-tracker-menu a { margin-right: 0px; }
 #time-tracker-menu .icon { padding-left: 20px; }

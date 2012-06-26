@@ -13,6 +13,7 @@ de:
   stop_time_tracker: "Stop"
   suspend_time_tracker: "Pausieren"
   suspend_time_tracker_error: "Pausieren gescheitert"
+  time_tracker_menu_title: "Zeiterfassung"
   time_tracker_admin_menu: "Zeiterfassung"
   time_tracker_admin_title: "Zeiterfassung"
   time_tracker_already_running_error: "Es läuft bereits eine Zeiterfassung."
