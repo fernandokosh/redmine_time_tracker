@@ -20,10 +20,25 @@
 .icon-stop-action { background-image: url(../images/stop.png); }
 .icon-list-action { background-image: url(../images/list.png); }
 
-#time-tracker-embed-menu { margin: 8px 0; }
+#time-tracker-menu { margin: 8px 0; }
 
-#time-tracker-menu { margin-right: 8px; }
-#time-tracker-menu a { margin-right: 0px; }
+#time-tracker-menu a.icon-action {
+    margin-right: 2px;
+    padding-bottom: 2px;
+    background-color: #7F7F7F;
+    -webkit-border-radius: 25%;
+    -moz-border-radius: 25%;
+    -ms-border-radius: 25%;
+    -o-border-radius: 25%;
+    border-radius: 25%;
+    margin: 0 2px;
+}
+
+#time-tracker-menu a.icon-action:hover {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
 #time-tracker-menu .icon { padding-left: 20px; }
 
 #time-tracker-admin td.start-date,
