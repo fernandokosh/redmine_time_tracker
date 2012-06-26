@@ -18,7 +18,7 @@ class TimeTrackersController < ApplicationController
             @time_tracker = TimeTracker.new({ :issue_id => @issue.id })
 
             if @time_tracker.save
-                apply_status_transition(@issue) unless Setting.plugin_redmine_time_tracker['status_transitions'] == nil
+                apply_status_transition(@issue) unless Setting.plugin_chiliproject_time_tracker['status_transitions'] == nil
                 render_menu
             else
                 flash[:error] = l(:start_time_tracker_error)
@@ -111,7 +111,7 @@ class TimeTrackersController < ApplicationController
     end
 
     def apply_status_transition(issue)
-        new_status_id = Setting.plugin_redmine_time_tracker['status_transitions'][issue.status_id.to_s]
+        new_status_id = Setting.plugin_chiliproject_time_tracker['status_transitions'][issue.status_id.to_s]
         new_status = IssueStatus.find(:first, :conditions => { :id => new_status_id })
         if issue.new_statuses_allowed_to(User.current).include?(new_status)
             journal = @issue.init_journal(User.current, notes = l(:time_tracker_label_transition_journal))
