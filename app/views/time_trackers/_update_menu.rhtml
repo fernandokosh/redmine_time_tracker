@@ -8,7 +8,7 @@ The span is populated with current time tracker state.
 -->
 <%= javascript_tag "document.observe('dom:loaded', function () {
     $('time-tracker-menu').replace(
-    '<span id=\"time-tracker-menu\">#{escape_javascript(((render :partial => 'time_trackers/embed_menu').delete "\n").strip)}</span>');
+        '#{escape_javascript(((render :partial => 'time_trackers/embed_menu').delete "\n").strip)}');
     });"
 %>
 
