@@ -1,7 +1,9 @@
-= Redmine Time Tracker plugin
+= ChiliProject Time Tracker plugin
 
-Time tracker is a Redmine plugin to ease time tracking when working on an issue.
+Time tracker is a ChiliProject plugin to ease time tracking when working on an issue.
 The plugin allows to start/suspend/resume/stop a timer on a per user basis.
+
+This is a fork of the official {Redmine Time Tracker plugin}[https://github.com/delaitre/redmine_time_tracker] from {delaitre}[https://github.com/delaitre].
 
 == Features
 
@@ -12,20 +14,20 @@ The plugin allows to start/suspend/resume/stop a timer on a per user basis.
 
 == Getting the plugin
 
-The newest version is always at {GitHub}[http://github.com/delaitre/redmine_time_tracker].
+The newest version is always at {GitHub}[https://github.com/magiclabs/chiliproject_time_tracker].
 
 == Install
 
-1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins Make sure the plugin is installed to <tt>vendor/plugins/redmine_time_tracker</tt>
+1. Follow the ChiliProject plugin installation steps at: https://www.chiliproject.org/projects/chiliproject/wiki/Plugin_Install Make sure the plugin is installed to <tt>vendor/plugins/chiliproject_time_tracker</tt>
 2. Setup the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
-3. Login to your Redmine install as an Administrator
+3. Login to your ChiliProject install as an Administrator
 4. Setup the 'log time' permissions for your roles
 5. Add "Time tracking" to the enabled modules for your project
 6. The link to the plugin should appear in the 'account' menu bar
 
 <b>Note:</b> if you don't see any stop/pause buttons after starting a time tracker, you will need
-to copy <tt>redmine_time_tracker/assets/*</tt> to <tt><redmine_root>/plugin_assets/redmine_time_tracker/</tt>
-or to make a symbolic link <tt><redmine_root>/plugin_assets/redmine_time_tracker</tt> pointing to <tt>redmine_time_tracker/assets</tt>
+to copy <tt>chiliproject_time_tracker/assets/*</tt> to <tt><chiliproject_root>/plugin_assets/chiliproject_time_tracker/</tt>
+or to make a symbolic link <tt><chiliproject_root>/plugin_assets/chiliproject_time_tracker</tt> pointing to <tt>chiliproject_time_tracker/assets</tt>
 
 == Usage
 
@@ -60,18 +62,17 @@ the 'New' status will automatically change it to 'In progress'.
 
 === Official release
 
-1. Download the last official release from the {Redmine plugin directory}[HTTP://Www.redmine.org/plugins/redmine_time_tracker]
-2. Replace your old Redmine's <tt>vendor/plugins/redmine_time_tracker</tt> folder with the one contained in the downloaded package
+1. Download the last official release from the {ChiliProject plugin directory}[HTTP://Www.chiliproject.org/plugins/chiliproject_time_tracker]
+2. Replace your old ChiliProject's <tt>vendor/plugins/chiliproject_time_tracker</tt> folder with the one contained in the downloaded package
 3. Update the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
-4. Restart your Redmine
+4. Restart your ChiliProject
 
-<b>Note:</b> if you have done a copy of the plugin assets into <tt><redmine_root>/plugin_assets/redmine_time_tracker</tt>
+<b>Note:</b> if you have done a copy of the plugin assets into <tt><chiliproject_root>/plugin_assets/chiliproject_time_tracker</tt>
 as explained in the _Install_ paragraph above, you will need to update these too.
 
 === Git
 
-1. Open a shell to your Redmine's <tt>vendor/plugins/redmine_time_tracker</tt> folder
+1. Open a shell to your ChiliProject's <tt>vendor/plugins/chiliproject_time_tracker</tt> folder
 2. Update your git copy with <tt>git pull</tt>
-3. Update the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
-4. Restart your Redmine
-
+3. Update the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production/ltt>
+4. Restart your ChiliProject
