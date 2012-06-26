@@ -3,9 +3,9 @@ require 'redmine'
 require_dependency 'time_tracker_hooks'
 
 Redmine::Plugin.register :redmine_time_tracker do
-    name 'Redmine Time Tracker plugin'
-    author 'Jérémie Delaitre'
-    description 'This is a plugin to track time in Redmine'
+    name 'ChiliProject Time Tracker plugin'
+    author 'Jérémie Delaitre, magic labs*'
+    description 'This is a plugin to track time in ChiliProject'
     version '0.4'
 
     requires_redmine :version_or_higher => '1.1.0'
