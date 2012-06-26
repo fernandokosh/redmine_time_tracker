@@ -10,7 +10,7 @@
       <% else %>
           <%= form_for @time_tracker, :url => {:action => :stop},
                        :html => {:class => "time-tracker-form",
-                                 :onchange => "updateForm($(this))"} do |f| %>
+                                 :onchange => "updateTTControllerForm($(this))"} do |f| %>
               <!-- TODO localize placeholders / add labels -->
               <h3><%= l(:time_tracker_label_current_task) %></h3>
 
@@ -31,9 +31,9 @@
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
                   <div class="task_form_input"><%= select_tag :project_id_select, proj_list, :onchange => "$('time_tracker_project_id').value=$(this).value", :disabled => !@time_tracker.issue_id.nil? %></div>
+                  <%= f.hidden_field :project_id %>
                 </div>
                 <div class="task_form_sub_fields">
-                  <%= f.hidden_field :project_id %>
                   <!--  TODO refactor conditions for disabling the Time-Inputs to use special Role-settings instead of admin only  -->
                   <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
                   <div class="task_form_input"><%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => "start", :disabled => !User.current.admin? %></div>
@@ -48,30 +48,3 @@
       <% end %>
   <% end %>
 </div>
-<script>
-    updateForm = function (form) {
-        new Ajax.Request('/time_trackers/update.json?' + Form.serializeElements(form.getInputs()),
-                {
-                    method:'put',
-                    onSuccess:function (transport) {
-                        var tt = transport.responseJSON.time_tracker;
-                        form.time_tracker_issue_id.value = tt.issue_id;
-                        (tt.issue_id == null) ? form.project_id_select.enable() : form.project_id_select.disable();
-                        form.time_tracker_comments.value = tt.comments;
-                        form.time_tracker_project_id.value = tt.project_id;
-                        select_options = form.project_id_select;
-                        for (i = 0; i < select_options.length; i++) {
-                            if (select_options[i].value == tt.project_id) select_options[i].selected = true;
-                        }
-                        dat = new Date(Date.parse(tt.started_on));
-                        //form.time_tracker_start_time.value = dat.getHours().toString()+':'+dat.getMinutes().toString();
-                        form.time_tracker_start_time.value = dat.toLocaleTimeString();
-                        year = dat.getFullYear().toString();
-                        month = dat.getMonth() + 1;
-                        (month < 10) ? month = '0' + month.toString() : month = month.toString();
-                        day = dat.getDate().toString();
-                        form.time_tracker_date.value = year + '-' + month + '-' + day;
-                    }
-                });
-    }
-</script>

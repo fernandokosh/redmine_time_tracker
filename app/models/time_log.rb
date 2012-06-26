@@ -1,7 +1,8 @@
 class TimeLog < ActiveRecord::Base
   unloadable
 
-  attr_accessible :user_id, :started_on, :stopped_at, :project_id, :comments
+  attr_accessible :user_id, :started_on, :stopped_at, :project_id, :comments, :issue_id, :spent_time
+  attr_accessor :issue_id, :spent_time
   belongs_to :user
   has_many :time_bookings
   has_many :time_entries, :through => :time_bookings
@@ -38,8 +39,16 @@ class TimeLog < ActiveRecord::Base
     ((time2.to_i - time1.to_i) / 3600.0).to_f
   end
 
-  def get_formatted_time(time1 = started_on, time2 = stopped_at)
-    time_dist2string(time2.to_i - time1.to_i)
+  def get_formatted_bookable_hours
+    time_dist2string((bookable_hours*3600).to_i)
+  end
+
+  def get_formatted_start_time
+    self.started_on.to_time.localtime.strftime("%H:%M:%S") unless self.started_on.nil?
+  end
+
+  def get_formatted_stop_time
+    self.stopped_at.to_time.localtime.strftime("%H:%M:%S") unless self.stopped_at.nil?
   end
 
   # TODO this method should be a helper hence it was used in TimeLog and TimeBooking the same way!
@@ -55,14 +64,13 @@ class TimeLog < ActiveRecord::Base
 
   def spent_time2float(st)
     ta = st.strip.split(':')
-    time = 0.0
     sec = 0
     i = 0
     ta.reverse_each do |t|
       sec += t.to_i * 60**i
       i += 1
     end
-    time = sec.to_f / 3600
+    sec.to_f / 3600
   end
 
   # returns the sum of bookable time of an time entry

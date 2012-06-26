@@ -9,9 +9,11 @@ class TimeLogsController < ApplicationController
 
   # TODO localize messages
   def add_booking
-    time_log = TimeLog.where(:id => params[:time_log_id]).first
-    issue = issue_from_id(params[:issue_id])
-    if time_log.add_booking(:spent_time => params[:spent_time], :comments => params[:comments], :issue => issue, :virtual => params[:virtual])
+    tl = params[:time_log]
+    time_log = TimeLog.where(:id => tl[:id]).first
+    issue = issue_from_id(tl[:issue_id])
+    if time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
+                            :comments => tl[:comments], :issue => issue, :project_id => params[:project_id_select])
       flash[:notice] = "success :D"
     else
       flash[:error] = "not allowed to do that.. :)"

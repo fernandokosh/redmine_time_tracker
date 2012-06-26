@@ -13,16 +13,15 @@ class TimeBooking < ActiveRecord::Base
   def initialize(args = {}, options = {})
     ActiveRecord::Base.transaction do
       super(nil)
-      if args[:issue].nil? && args[:virtual].nil?
-        false
-      elsif args[:virtual]
+      # without issue_id, create an virtual booking!
+      if args[:issue].nil?
         # create a virtual booking
         super({:virtual => true, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
         self.save
         # this part looks not very Rails like yet... should refactor it if any time to
         vcomment = VirtualComment.where(:time_booking_id => self.id).first_or_create
         vcomment.update_attributes(:comments => args[:comments])
-      elsif !args[:issue].nil?
+      else
         # create a normal booking
         # to enforce a user to "log time" the admin has to set the redmine permissions
         # current user could be the user himself or the admin. whoever it is, the peron needs the permission to do that
@@ -31,7 +30,8 @@ class TimeBooking < ActiveRecord::Base
         if User.current.allowed_to?(:log_time, args[:issue].project)
           # TODO check for user-specific setup (limitations for bookable times etc)
           # create a timeBooking to combine a timeLog-entry and a timeEntry
-          time_entry = args[:issue].time_entries.create(:comments => args[:comments], :spent_on => args[:started_on], :hours => args[:hours], :activity_id => args[:activity_id])
+          time_entry = args[:issue].time_entries.create({:comments => args[:comments], :spent_on => args[:started_on], :activity_id => args[:activity_id]})
+          time_entry.hours = args[:hours]
           # due to the mass-assignment security, we have to set the user_id extra
           time_entry.user_id = args[:user_id]
           time_entry.save

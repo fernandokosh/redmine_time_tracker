@@ -36,6 +36,7 @@ en:
   time_tracker_label_start_date: "Start date"
   time_tracker_label_start_time: "Start time"
   time_tracker_label_stop_date: "Stop date"
+  time_tracker_label_stop_time: "Stop time"
   time_tracker_label_transition_journal: "Status transition applied automatically due to the start of a time tracker."
   time_tracker_label_time_spent: "Time spent"
   time_tracker_label_your_time_trackers: "Your time tracker"

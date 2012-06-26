@@ -7,7 +7,7 @@ match '/time_trackers/show_report', :to => 'time_trackers#show_report', :via => 
 match '/time_trackers/delete', :to => 'time_trackers#delete', :via => [:get, :post]
 match '/time_trackers', :to => 'time_trackers#index', :via => [:get, :post]
 match '/time_logs', :to => 'time_logs#index', :via => [:get, :post]
-match '/time_logs/add_booking', :to => 'time_logs#add_booking', :via => [:get, :post]
+match '/time_logs/add_booking', :to => 'time_logs#add_booking', :via => [:get, :post, :put]
 match '/time_logs/show_booking', :to => 'time_logs#show_booking', :via => [:get, :post]
 match '/time_bookings', :to => 'time_bookings#index', :via => [:get, :post]
 match '/time_bookings/delete', :to => 'time_bookings#delete', :via => [:get, :post]
