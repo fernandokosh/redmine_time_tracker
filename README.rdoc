@@ -19,7 +19,7 @@ The newest version is always at {GitHub}[https://github.com/magiclabs/chiliproje
 == Install
 
 1. Follow the ChiliProject plugin installation steps at: https://www.chiliproject.org/projects/chiliproject/wiki/Plugin_Install Make sure the plugin is installed to <tt>vendor/plugins/chiliproject_time_tracker</tt>
-2. Setup the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
+2. Setup the database using the migrations. <tt>rake db:migrate:plugins RAILS_ENV=production</tt>
 3. Login to your ChiliProject install as an Administrator
 4. Setup the 'log time' permissions for your roles
 5. Add "Time tracking" to the enabled modules for your project
@@ -62,9 +62,9 @@ the 'New' status will automatically change it to 'In progress'.
 
 === Official release
 
-1. Download the last official release from the {ChiliProject plugin directory}[HTTP://Www.chiliproject.org/plugins/chiliproject_time_tracker]
+1. Download the last official release from the {ChiliProject plugin directory}[http://www.chiliproject.org/plugins/chiliproject_time_tracker]
 2. Replace your old ChiliProject's <tt>vendor/plugins/chiliproject_time_tracker</tt> folder with the one contained in the downloaded package
-3. Update the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
+3. Update the database using the migrations. <tt>rake db:migrate:plugins RAILS_ENV=production</tt>
 4. Restart your ChiliProject
 
 <b>Note:</b> if you have done a copy of the plugin assets into <tt><chiliproject_root>/plugin_assets/chiliproject_time_tracker</tt>
