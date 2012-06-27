@@ -74,5 +74,5 @@ as explained in the _Install_ paragraph above, you will need to update these too
 
 1. Open a shell to your ChiliProject's <tt>vendor/plugins/chiliproject_time_tracker</tt> folder
 2. Update your git copy with <tt>git pull</tt>
-3. Update the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production/ltt>
+3. Update the database using the migrations. <tt>rake db:migrate_plugins RAILS_ENV=production</tt>
 4. Restart your ChiliProject
