@@ -7,6 +7,8 @@ class TimeLog < ActiveRecord::Base
   has_many :time_bookings
   has_many :time_entries, :through => :time_bookings
 
+#  belongs_to :project
+
   def initialize(arguments = nil, *args)
     super(arguments)
   end

@@ -5,6 +5,7 @@ class TimeBooking < ActiveRecord::Base
   belongs_to :time_log
   belongs_to :time_entry, :dependent => :delete
   has_one :virtual_comment, :dependent => :delete
+  #has_one :project, :through => :time_entry
 
   validates_presence_of :time_log_id
   validates :time_entry_id, :presence => true, :unless => Proc.new { |tb| tb.virtual }
@@ -59,4 +60,30 @@ class TimeBooking < ActiveRecord::Base
     s<10 ? s="0#{s}" : s = s.to_s
     h + ":" + m + ":" + s
   end
+
+  # following methods are necessary to use the query_patch, so we can use the powerful filter options of redmine
+  # to show our booking lists => which will be the base for our invoices
+
+  def comments
+    if self.virtual
+      self.virtual_comment.comments
+    else
+      self.time_entry.comments
+    end
+  end
+
+  def project
+    if self.virtual
+      pid = self.time_log.project_id
+      Project.find(pid) unless pid.nil?
+      #self.time_log.project
+    else
+      self.time_entry.project
+    end
+  end
+
+  def user
+    self.time_log.user
+  end
+
 end

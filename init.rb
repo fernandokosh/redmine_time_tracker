@@ -10,6 +10,9 @@ User.send(:include, UserPatch)
 require 'menu_patch'
 Redmine::MenuManager::MenuHelper.send(:include, MenuPatch)
 
+require 'query_patch'
+Query.send(:include, QueryPatch)
+
 # workaround helping rails to find the helper-methods
 require File.join(File.dirname(__FILE__), "app", "helpers", "application_helper.rb")
 
@@ -44,7 +47,7 @@ Redmine::Plugin.register :redmine_time_tracker do
 
   Redmine::MenuManager.map :timetracker_menu do |menu|
     menu.push :time_tracker_menu_tab_overview, {:controller => 'time_trackers', :action => 'index'}, :caption => :time_tracker_label_menu_tab_overview, :if => Proc.new { User.current.logged? }
-    menu.push :time_tracker_menu_tab_logs, {:controller => 'time_logs', :action => 'index'}, :caption => :time_tracker_label_menu_tab_logs, :if => Proc.new { User.current.logged? }
+    menu.push :time_tracker_menu_tab_list, {:controller => 'time_list', :action => 'index'}, :caption => :time_tracker_label_menu_tab_logs, :if => Proc.new { User.current.logged? }
     #menu.push :time_tracker_menu_tab_stats, {:controller => 'time_logs', :action => 'index'}, :caption => :time_tracker_label_menu_tab_stats, :if => Proc.new { User.current.logged? }
   end
 end
