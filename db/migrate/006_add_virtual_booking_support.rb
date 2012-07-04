@@ -1,6 +1,10 @@
 class AddVirtualBookingSupport < ActiveRecord::Migration
-  change_table :time_bookings do |t|
-    t.boolean :virtual, :default => false
+  def up
+    add_column :time_bookings, :virtual, :boolean, :default => false
+    TimeBooking.update_all ["virtual = ?", false]
   end
-  TimeBooking.update_all ["virtual = ?", false]
+
+  def down
+    remove_column :time_bookings, :virtual
+  end
 end
