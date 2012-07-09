@@ -71,12 +71,20 @@ module QueryPatch
 
       # TODO figure out what benefits are coming with the joins and how to use them correctly
       #joins = (order_option && order_option.include?('authors')) ? "LEFT OUTER JOIN users authors ON authors.id = #{Issue.table_name}.author_id" : nil
-      #joins = "LEFT JOIN time_entries ON #{TimeEntry.table_name}.id = #{TimeBooking.table_name}.time_entry_id"
-      joins = nil
+      #joins = "LEFT JOIN #{TimeBooking.table_name} ON #{TimeEntry.table_name}.id = #{TimeBooking.table_name}.time_entry_id"
+      #joins = nil
+      joins = "LEFT OUTER JOIN #{Project.table_name} ON
+              (
+              #{TimeBooking.table_name}.virtual = 't' AND #{Project.table_name}.id = #{TimeLog.table_name}.project_id
+              OR
+              #{TimeBooking.table_name}.virtual = 'f' AND #{Project.table_name}.id = #{TimeEntry.table_name}.project_id
+              )"
 
-      TimeBooking.scoped(:conditions => options[:conditions]).find :all, :include => ([:time_entry => :project, :time_log => :user] + (options[:include] || [])).uniq,
+      #TimeBooking.scoped(:conditions => options[:conditions]).find :all, :include => ([:time_entry => :project, :time_log => [:user, :project]] + (options[:include] || [])).uniq,
+      TimeBooking.scoped(:conditions => options[:conditions]).find :all, :include => ([:time_entry, :time_log => :user] + (options[:include] || [])).uniq,
                                                                    :conditions => statement,
                                                                    :order => order_option,
+                                                                   #:joins => [:time_log, :time_entry],
                                                                    :joins => joins,
                                                                    :limit => options[:limit],
                                                                    :offset => options[:offset]
