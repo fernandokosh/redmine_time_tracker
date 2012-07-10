@@ -11,6 +11,9 @@ class TimeListController < ApplicationController
 
   def index
     retrieve_query
+    # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
+    # which depend on issues
+    @query.column_names = @query.column_names || [:id, :time_log_id, :time_entry_id, :comments, :user, :project]
     @query.filters.delete("status_id")
     @query.filters.delete("tracker_id")
 
