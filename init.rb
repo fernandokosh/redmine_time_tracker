@@ -7,6 +7,9 @@ require 'redmine'
 require 'user_patch'
 User.send(:include, UserPatch)
 
+require 'project_patch'
+Project.send(:include, ProjectPatch)
+
 require 'menu_patch'
 Redmine::MenuManager::MenuHelper.send(:include, MenuPatch)
 

@@ -14,25 +14,15 @@ class TimeListController < ApplicationController
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
     @query.column_names = @query.column_names || [:id, :time_log_id, :time_entry_id, :comments, :user, :project]
-    @query.filters.delete("status_id")
-    @query.filters.delete("tracker_id")
 
-    @query.group_by=nil
+    # temporarily limit the available filters for the view!
+    @query.available_filters.delete_if { |key,value| !key.to_s.start_with?('tt_') }
 
     sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
 
     if @query.valid?
       @limit = per_page_option
-
-      #@issue_count = @query.issue_count
-      #@issue_pages = Paginator.new self, @issue_count, @limit, params['page']
-      #@offset ||= @issue_pages.current.offset
-      #@issues = @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
-      #                        :order => sort_clause,
-      #                        :offset => @offset,
-      #                        :limit => @limit)
-      #@issue_count_by_group = @query.issue_count_by_group
 
       @booking_count = @query.booking_count
       @booking_pages = Paginator.new self, @booking_count, @limit, params['page']

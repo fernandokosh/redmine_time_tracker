@@ -1,11 +1,11 @@
 class TimeBooking < ActiveRecord::Base
   unloadable
 
-  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :virtual
+  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :virtual, :project
+  belongs_to :project
   belongs_to :time_log
   belongs_to :time_entry, :dependent => :delete
   has_one :virtual_comment, :dependent => :delete
-  #has_one :project, :through => :time_entry
 
   validates_presence_of :time_log_id
   validates :time_entry_id, :presence => true, :unless => Proc.new { |tb| tb.virtual }
@@ -17,7 +17,7 @@ class TimeBooking < ActiveRecord::Base
       # without issue_id, create an virtual booking!
       if args[:issue].nil?
         # create a virtual booking
-        super({:virtual => true, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
+        super({:virtual => true, :time_log_id => args[:time_log_id], :project_id => args[:project_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
         self.save
         # this part looks not very Rails like yet... should refactor it if any time to
         vcomment = VirtualComment.where(:time_booking_id => self.id).first_or_create
@@ -36,7 +36,7 @@ class TimeBooking < ActiveRecord::Base
           # due to the mass-assignment security, we have to set the user_id extra
           time_entry.user_id = args[:user_id]
           time_entry.save
-          super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
+          super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at, :project => args[:issue].project]})
         end
       end
     end
@@ -72,15 +72,15 @@ class TimeBooking < ActiveRecord::Base
     end
   end
 
-  def project
-    if self.virtual
-      pid = self.time_log.project_id
-      Project.find(pid) unless pid.nil?
-      #self.time_log.project
-    else
-      self.time_entry.project
-    end
-  end
+  #def project
+  #  if self.virtual
+  #    pid = self.time_log.project_id
+  #    Project.find(pid) unless pid.nil?
+  #    #self.time_log.project
+  #  else
+  #    self.time_entry.project
+  #  end
+  #end
 
   def user
     self.time_log.user

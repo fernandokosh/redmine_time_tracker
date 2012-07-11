@@ -4,7 +4,7 @@ class TimeLog < ActiveRecord::Base
   attr_accessible :user_id, :started_on, :stopped_at, :project_id, :comments, :issue_id, :spent_time
   attr_accessor :issue_id, :spent_time
   belongs_to :user
-  has_many :time_bookings
+  has_many :time_bookings, :dependent => :delete_all
   has_many :time_entries, :through => :time_bookings
 
 #  belongs_to :project
@@ -17,7 +17,7 @@ class TimeLog < ActiveRecord::Base
   # method returns true if all works well, false otherwise
   def add_booking(args = {})
     # TODO not set activity_id default value to 1 / only for testing because redmine requires activity_id
-    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil, :spent_time => nil, :virtual => false}
+    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil, :spent_time => nil, :virtual => false, :project_id => self.project_id}
     args = default_args.merge(args)
 
     # basic calculations are always the same
