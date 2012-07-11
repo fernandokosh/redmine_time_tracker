@@ -13,11 +13,12 @@ module QueryPatch
     base.send(:extend, ClassMethods)
     base.send(:include, InstanceMethods)
     base.class_eval do
-      alias_method_chain :available_filters, :time_tracker
+      attr_accessor :tt_query
+      @tt_query = false
 
-      base.add_available_column(QueryColumn.new(:id, :sortable => "#{TimeBooking.table_name}.id", :caption => :field_tt_booking_id))
-      base.add_available_column(QueryColumn.new(:time_log_id, :sortable => "#{TimeLog.table_name}.id", :caption => :field_tt_time_log_id))
-      base.add_available_column(QueryColumn.new(:time_entry_id, :sortable => "#{TimeEntry.table_name}.id", :caption => :field_tt_time_entry_id))
+      alias_method_chain :available_filters, :time_tracker
+      alias_method_chain :sortable_columns, :time_tracker
+
       base.add_available_column(QueryColumn.new(:comments, :sortable => "#{TimeEntry.table_name}.comments", :caption => :field_tt_comments))
       base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
     end
@@ -29,6 +30,21 @@ module QueryPatch
   # TODO refactor the instance methods!!
   module InstanceMethods
 
+    def tt_query?
+      self.tt_query
+    end
+
+    def sortable_columns_with_time_tracker
+      if tt_query?
+        {'id' => "#{TimeBooking.table_name}.id"}.merge(available_columns.inject({}) { |h, column|
+          h[column.name.to_s] = column.sortable
+          h
+        })
+      else
+        sortable_columns_without_time_tracker
+      end
+    end
+
     def available_filters_with_time_tracker
 
       # speedup for recursive calls, so we only calc the content for the query once!
@@ -39,12 +55,12 @@ module QueryPatch
       # use raw Query as template to get the content for two complex fields without copying the source
       tq = Query.new
 
-      @available_filters['tt_project'] = tq.available_filters_without_time_tracker["project_id"].clone       # :oder => 1
-      @available_filters['tt_start_date'] = { :type => :date, :order => 2 }
-      @available_filters['tt_due_date'] = { :type => :date, :order => 3 }
-      @available_filters['tt_issue'] = { :type => :list, :order => 4, :values => Issue.all.collect{|s| [s.subject, s.id.to_s] } }
-      @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone           # :oder => 5
-      @available_filters['tt_comments'] = { :type => :text, :order => 6 }
+      @available_filters['tt_project'] = tq.available_filters_without_time_tracker["project_id"].clone # :oder => 1
+      @available_filters['tt_start_date'] = {:type => :date, :order => 2}
+      @available_filters['tt_due_date'] = {:type => :date, :order => 3}
+      @available_filters['tt_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
+      @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone # :oder => 5
+      @available_filters['tt_comments'] = {:type => :text, :order => 6}
       @available_filters
     end
 

@@ -1,11 +1,5 @@
 # English strings go here for Rails i18n
 en:
-  #the first three entries are temporarily
-  field_tt_booking_id: "Time booking"
-  field_tt_time_entry_id: "Time entry"
-  field_tt_time_log_id: "Time log"
-
-  # regular translations:
   field_tt_comments: "Comments"
   field_tt_due_date: "Due date"
   field_tt_project: "Project"

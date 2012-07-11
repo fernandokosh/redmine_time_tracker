@@ -11,12 +11,14 @@ class TimeListController < ApplicationController
 
   def index
     retrieve_query
+    @query.tt_query = true
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
-    @query.column_names = @query.column_names || [:id, :time_log_id, :time_entry_id, :comments, :user, :project]
+    @query.column_names = @query.column_names || [:comments, :user, :project]
 
-    # temporarily limit the available filters for the view!
-    @query.available_filters.delete_if { |key,value| !key.to_s.start_with?('tt_') }
+    # temporarily limit the available filters and columns for the view!
+    @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
+    @query.available_columns.delete_if { |item| !([:id, :comments, :user, :project].include? item.name) }
 
     sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
