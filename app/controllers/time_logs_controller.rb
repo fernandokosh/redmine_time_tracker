@@ -4,6 +4,8 @@ class TimeLogsController < ApplicationController
   menu_item :time_tracker_menu_tab_logs
   before_filter :authorize_global
 
+  include TimeTrackersHelper
+
   def index
   end
 
@@ -24,12 +26,5 @@ class TimeLogsController < ApplicationController
   def show_booking
     @time_log = TimeLog.where(:id => params[:time_log_id]).first
     render :partial => 'booking_form'
-  end
-
-  private
-
-  # TODO move this function into a helper due to DRY
-  def issue_from_id(issue_id)
-    Issue.where(:id => issue_id).first
   end
 end

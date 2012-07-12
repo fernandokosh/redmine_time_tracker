@@ -36,7 +36,7 @@ class TimeBooking < ActiveRecord::Base
           # due to the mass-assignment security, we have to set the user_id extra
           time_entry.user_id = args[:user_id]
           time_entry.save
-          super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at, :project => args[:issue].project]})
+          super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at], :project => args[:issue].project})
         end
       end
     end
