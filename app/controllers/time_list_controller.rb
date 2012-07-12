@@ -8,10 +8,10 @@ class TimeListController < ApplicationController
   include QueriesHelper
   helper :sort
   include SortHelper
+  include TimeTrackersHelper
 
   def index
-    retrieve_query
-    @query.tt_query = true
+    tt_retrieve_query
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
     @query.column_names = @query.column_names || [:comments, :user, :project]

@@ -14,10 +14,11 @@ module QueryPatch
     base.send(:include, InstanceMethods)
     base.class_eval do
       attr_accessor :tt_query
-      @tt_query = false
 
+      alias_method_chain :initialize, :time_tracker
       alias_method_chain :available_filters, :time_tracker
       alias_method_chain :sortable_columns, :time_tracker
+      alias_method_chain :available_columns, :time_tracker
 
       base.add_available_column(QueryColumn.new(:comments, :sortable => "#{TimeEntry.table_name}.comments", :caption => :field_tt_comments))
       base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
@@ -34,6 +35,11 @@ module QueryPatch
       self.tt_query
     end
 
+    def initialize_with_time_tracker(attributes=nil, *args)
+      initialize_without_time_tracker attributes
+      self.filters.delete('status_id') if tt_query?
+    end
+
     def sortable_columns_with_time_tracker
       if tt_query?
         {'id' => "#{TimeBooking.table_name}.id"}.merge(available_columns.inject({}) { |h, column|
@@ -45,7 +51,20 @@ module QueryPatch
       end
     end
 
+    # we have to remove our new columns from the normal query-column-list, cause if we don't do that,
+    # the normal filter-menu at the issues-view will show columns which will lead in an error if used
+    def available_columns_with_time_tracker
+      @available_columns = available_columns_without_time_tracker
+      unless tt_query?
+        @available_columns.delete_if { |item| [:comments, :user].include? item.name }
+      end
+      @available_columns
+    end
+
+    # we also have to keep the filters clean in normal mode
     def available_filters_with_time_tracker
+      # only list the new filters if the time_tracker flag is set
+      return available_filters_without_time_tracker unless tt_query?
 
       # speedup for recursive calls, so we only calc the content for the query once!
       return @available_filters if @available_filters
