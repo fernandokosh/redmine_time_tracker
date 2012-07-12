@@ -87,7 +87,7 @@ module QueryPatch
       # TODO refactor includes
       # for some reason including the :project will result in an "ambiguous column" - error if we try to group by "project"
       #TimeBooking.count(:include => [:project, :virtual_comment, :time_entry, :time_log => :user], :conditions => statement)
-      TimeBooking.count(:include => [:virtual_comment, :time_entry, :time_log => :user], :conditions => statement)
+      TimeBooking.count(:include => [:virtual_comment, :time_entry => :issue, :time_log => :user], :conditions => statement)
     rescue ::ActiveRecord::StatementInvalid => e
       raise StatementInvalid.new(e.message)
     end
@@ -98,7 +98,7 @@ module QueryPatch
       if grouped?
         begin
           # Rails3 will raise an (unexpected) RecordNotFound if there's only a nil group value
-          r = TimeBooking.count(:group => group_by_statement, :include => [:virtual_comment, :time_entry, :time_log => :user], :conditions => statement)
+          r = TimeBooking.count(:group => group_by_statement, :include => [:virtual_comment, :time_entry => :issue, :time_log => :user], :conditions => statement)
         rescue ActiveRecord::RecordNotFound
           r = {nil => booking_count}
         end
@@ -118,8 +118,8 @@ module QueryPatch
       order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
       order_option = nil if order_option.blank?
 
-      TimeBooking.scoped(:conditions => options[:conditions]).
-          includes(([:project, :virtual_comment, :time_entry, :time_log => :user] + (options[:include] || [])).uniq).
+      TimeBooking.
+          includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
           where(statement).
           order(order_option).
           limit(options[:limit]).
@@ -152,7 +152,7 @@ module QueryPatch
     end
 
     def sql_for_tt_issue_field(field, operator, value)
-      # stub
+      "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
     end
 
     def sql_for_tt_user_field(field, operator, value)
