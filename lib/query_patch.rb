@@ -85,9 +85,10 @@ module QueryPatch
     # Returns the bookings count
     def booking_count
       # TODO refactor includes
-      # for some reason including the :project will result in an "ambiguous column" - error if we try to group by "project"
-      #TimeBooking.count(:include => [:project, :virtual_comment, :time_entry, :time_log => :user], :conditions => statement)
-      TimeBooking.count(:include => [:virtual_comment, :time_entry => :issue, :time_log => :user], :conditions => statement)
+      TimeBooking.
+          includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+          where(statement).
+          count(:id)
     rescue ::ActiveRecord::StatementInvalid => e
       raise StatementInvalid.new(e.message)
     end
@@ -98,7 +99,16 @@ module QueryPatch
       if grouped?
         begin
           # Rails3 will raise an (unexpected) RecordNotFound if there's only a nil group value
-          r = TimeBooking.count(:group => group_by_statement, :include => [:virtual_comment, :time_entry => :issue, :time_log => :user], :conditions => statement)
+          # for some reason including the :project will result in an "ambiguous column" - error if we try to group by
+          # "project" and additionally filter by issue. so we have to use a small workaround
+          # todo figure out the 'rails-way' to avoid ambiguous columns
+          gbs = group_by_statement
+          gbs = "projects.id" if gbs == "project"
+          r = TimeBooking.
+              includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+              group(gbs).
+              where(statement).
+              count(:id)
         rescue ActiveRecord::RecordNotFound
           r = {nil => booking_count}
         end
