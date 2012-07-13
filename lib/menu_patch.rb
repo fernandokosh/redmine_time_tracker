@@ -32,7 +32,7 @@ module MenuPatch
       if (project && !project.new_record?)
         :project_menu
       else
-        if params[:controller] == "time_trackers" || params[:controller] == "time_logs"
+        if %w(time_trackers time_logs time_list).include? params[:controller]
           :timetracker_menu
         else
           :application_menu

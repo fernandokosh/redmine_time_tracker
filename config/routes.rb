@@ -12,3 +12,4 @@ match '/time_logs/show_booking', :to => 'time_logs#show_booking', :via => [:get,
 match '/time_bookings', :to => 'time_bookings#index', :via => [:get, :post]
 match '/time_bookings/delete', :to => 'time_bookings#delete', :via => [:get, :post]
 match '/time_bookings/continue', :to => 'time_bookings#continue', :via => [:get, :post]
+match '/time_list', :to => 'time_list#index', :via => [:get, :post]

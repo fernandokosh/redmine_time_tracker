@@ -1,7 +1,8 @@
 class TimeBooking < ActiveRecord::Base
   unloadable
 
-  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :virtual
+  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :virtual, :project
+  belongs_to :project
   belongs_to :time_log
   belongs_to :time_entry, :dependent => :delete
   has_one :virtual_comment, :dependent => :delete
@@ -16,7 +17,7 @@ class TimeBooking < ActiveRecord::Base
       # without issue_id, create an virtual booking!
       if args[:issue].nil?
         # create a virtual booking
-        super({:virtual => true, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
+        super({:virtual => true, :time_log_id => args[:time_log_id], :project_id => args[:project_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
         self.save
         # this part looks not very Rails like yet... should refactor it if any time to
         vcomment = VirtualComment.where(:time_booking_id => self.id).first_or_create
@@ -35,7 +36,7 @@ class TimeBooking < ActiveRecord::Base
           # due to the mass-assignment security, we have to set the user_id extra
           time_entry.user_id = args[:user_id]
           time_entry.save
-          super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
+          super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at], :project => args[:issue].project})
         end
       end
     end
@@ -59,4 +60,24 @@ class TimeBooking < ActiveRecord::Base
     s<10 ? s="0#{s}" : s = s.to_s
     h + ":" + m + ":" + s
   end
+
+  # following methods are necessary to use the query_patch, so we can use the powerful filter options of redmine
+  # to show our booking lists => which will be the base for our invoices
+
+  def comments
+    if self.virtual
+      self.virtual_comment.comments
+    else
+      self.time_entry.comments
+    end
+  end
+
+  def date
+    self.started_on.to_date.to_s(:db)
+  end
+
+  def user
+    self.time_log.user
+  end
+
 end

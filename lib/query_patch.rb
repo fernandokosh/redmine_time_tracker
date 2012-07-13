@@ -1,0 +1,183 @@
+require_dependency 'query'
+require_dependency 'project'
+require_dependency 'active_record'
+require_dependency 'plugins/redmine_time_tracker/app/models/time_booking'
+require_dependency 'plugins/redmine_time_tracker/app/models/time_log'
+
+# TODO write a declarative comment
+module QueryPatch
+  class StatementInvalid < ::ActiveRecord::StatementInvalid
+  end
+
+  def self.included(base)
+    base.send(:extend, ClassMethods)
+    base.send(:include, InstanceMethods)
+    base.class_eval do
+      attr_accessor :tt_query
+
+      alias_method_chain :initialize, :time_tracker
+      alias_method_chain :available_filters, :time_tracker
+      alias_method_chain :sortable_columns, :time_tracker
+      alias_method_chain :available_columns, :time_tracker
+
+      base.add_available_column(QueryColumn.new(:comments, :caption => :field_tt_comments))
+      base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
+      base.add_available_column(QueryColumn.new(:date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => true))
+      base.add_available_column(QueryColumn.new(:get_formatted_time, :caption => :field_tt_time))
+    end
+  end
+
+  module ClassMethods
+  end
+
+  module InstanceMethods
+
+    def tt_query?
+      self.tt_query
+    end
+
+    def initialize_with_time_tracker(attributes=nil, *args)
+      initialize_without_time_tracker attributes
+      self.filters.delete('status_id') if tt_query?
+    end
+
+    def sortable_columns_with_time_tracker
+      if tt_query?
+        {'id' => "#{TimeBooking.table_name}.id"}.merge(available_columns.inject({}) { |h, column|
+          h[column.name.to_s] = column.sortable
+          h
+        })
+      else
+        sortable_columns_without_time_tracker
+      end
+    end
+
+    # we have to remove our new columns from the normal query-column-list, cause if we don't do that,
+    # the normal filter-menu at the issues-view will show columns which will lead in an error if used
+    def available_columns_with_time_tracker
+      @available_columns = available_columns_without_time_tracker
+      unless tt_query?
+        @available_columns.delete_if { |item| [:comments, :user, :date, :get_formatted_time].include? item.name }
+      end
+      @available_columns
+    end
+
+    # we also have to keep the filters clean in normal mode
+    def available_filters_with_time_tracker
+      # only list the new filters if the time_tracker flag is set
+      return available_filters_without_time_tracker unless tt_query?
+
+      # speedup for recursive calls, so we only calc the content for the query once!
+      return @available_filters if @available_filters
+
+      @available_filters = available_filters_without_time_tracker
+
+      # use raw Query as template to get the content for two complex fields without copying the source
+      tq = Query.new
+
+      @available_filters['tt_project'] = tq.available_filters_without_time_tracker["project_id"].clone # :oder => 1
+      @available_filters['tt_start_date'] = {:type => :date, :order => 2}
+      @available_filters['tt_due_date'] = {:type => :date, :order => 3}
+      @available_filters['tt_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
+      @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone # :oder => 5
+      @available_filters['tt_comments'] = {:type => :text, :order => 6}
+      @available_filters
+    end
+
+    # Returns the bookings count
+    def booking_count
+      # TODO refactor includes
+      TimeBooking.
+          includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+          where(statement).
+          count(:id)
+    rescue ::ActiveRecord::StatementInvalid => e
+      raise StatementInvalid.new(e.message)
+    end
+
+    # Returns the bookings count by group or nil if query is not grouped
+    def booking_count_by_group
+      r = nil
+      if grouped?
+        begin
+          # Rails3 will raise an (unexpected) RecordNotFound if there's only a nil group value
+          # for some reason including the :project will result in an "ambiguous column" - error if we try to group by
+          # "project" and additionally filter by issue. so we have to use a small workaround
+          # todo figure out the 'rails-way' to avoid ambiguous columns
+          gbs = group_by_statement
+          gbs = "#{Project.table_name}.id" if gbs == "project"
+          # not an ambiguous column, but 'date' is not a regular column in the db, so we work around that too
+          gbs = "#{TimeBooking.table_name}.started_on" if gbs == "date"
+          r = TimeBooking.
+              includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+              group(gbs).
+              where(statement).
+              count(:id)
+        rescue ActiveRecord::RecordNotFound
+          r = {nil => booking_count}
+        end
+        c = group_by_column
+        if c.is_a?(QueryCustomFieldColumn)
+          r = r.keys.inject({}) { |h, k| h[c.custom_field.cast_value(k)] = r[k]; h }
+        end
+      end
+      r
+    rescue ::ActiveRecord::StatementInvalid => e
+      raise StatementInvalid.new(e.message)
+    end
+
+    # Returns the bookings
+    # Valid options are :order, :offset, :limit, :include, :conditions
+    def bookings(options={})
+      order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
+      order_option = nil if order_option.blank?
+
+      TimeBooking.
+          includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+          where(statement).
+          order(order_option).
+          limit(options[:limit]).
+          offset(options[:offset])
+
+    rescue ::ActiveRecord::StatementInvalid => e
+      raise StatementInvalid.new(e.message)
+    end
+
+    # sql statements for where clauses have to be in an "sql_for_#{filed-name}_field" method
+    # so we have to implement some where-clauses for every new filter here
+    # todo implement all filters
+    def sql_for_tt_project_field(field, operator, value)
+      if value.delete('mine')
+        value += User.current.memberships.map(&:project_id).map(&:to_s)
+      end
+      if operator == "="
+        "( #{TimeBooking.table_name}.project_id IN (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+      else
+        "( #{TimeBooking.table_name}.project_id NOT IN (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") OR #{TimeBooking.table_name}.project_id IS NULL )"
+      end
+    end
+
+    def sql_for_tt_start_date_field(field, operator, value)
+      # stub
+    end
+
+    def sql_for_tt_due_date_field(field, operator, value)
+      # stub
+    end
+
+    def sql_for_tt_issue_field(field, operator, value)
+      "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+    end
+
+    def sql_for_tt_user_field(field, operator, value)
+      if value.delete('me')
+        value += User.current.id.to_s.to_a
+      end
+      "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+    end
+
+    def sql_for_tt_comments_field(field, operator, value)
+      # stub
+    end
+  end
+end
