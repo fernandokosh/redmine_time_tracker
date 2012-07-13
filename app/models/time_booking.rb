@@ -72,15 +72,9 @@ class TimeBooking < ActiveRecord::Base
     end
   end
 
-  #def project
-  #  if self.virtual
-  #    pid = self.time_log.project_id
-  #    Project.find(pid) unless pid.nil?
-  #    #self.time_log.project
-  #  else
-  #    self.time_entry.project
-  #  end
-  #end
+  def date
+    self.started_on.to_date.to_s(:db)
+  end
 
   def user
     self.time_log.user
