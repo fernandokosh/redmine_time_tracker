@@ -22,8 +22,9 @@ module QueryPatch
 
       base.add_available_column(QueryColumn.new(:comments, :caption => :field_tt_comments))
       base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
-      base.add_available_column(QueryColumn.new(:date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => true))
+      base.add_available_column(QueryColumn.new(:date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "#{TimeBooking.table_name}.started_on"))
       base.add_available_column(QueryColumn.new(:get_formatted_time, :caption => :field_tt_time))
+      base.add_available_column(QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_issue, :groupable => "#{Issue.table_name}.subject"))
     end
   end
 
@@ -57,7 +58,7 @@ module QueryPatch
     def available_columns_with_time_tracker
       @available_columns = available_columns_without_time_tracker
       unless tt_query?
-        @available_columns.delete_if { |item| [:comments, :user, :date, :get_formatted_time].include? item.name }
+        @available_columns.delete_if { |item| [:issue, :comments, :user, :date, :get_formatted_time].include? item.name }
       end
       @available_columns
     end
@@ -105,9 +106,7 @@ module QueryPatch
           # "project" and additionally filter by issue. so we have to use a small workaround
           # todo figure out the 'rails-way' to avoid ambiguous columns
           gbs = group_by_statement
-          gbs = "#{Project.table_name}.id" if gbs == "project"
-          # not an ambiguous column, but 'date' is not a regular column in the db, so we work around that too
-          gbs = "#{TimeBooking.table_name}.started_on" if gbs == "date"
+          gbs = "#{Project.table_name}.name" if gbs == "project"
           r = TimeBooking.
               includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
               group(gbs).

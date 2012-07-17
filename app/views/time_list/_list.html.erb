@@ -16,20 +16,39 @@
         </thead>
         <% previous_group = false %>
         <tbody>
-        <% bookings.each do |entry| -%>
-            <% if @query.grouped? && (group = @query.group_by_column.value(entry)) != previous_group %>
-                <% reset_cycle %>
-                <tr class="group open">
-                  <td colspan="<%= query.columns.size + 2 %>">
-                    <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
-                    <%= group.blank? ? 'None' : column_content(@query.group_by_column, entry) %>
-                    <span class="count">(<%= @booking_count_by_group[group] %>)</span>
-                    <!-- TODO rewrite function-call -->
-                    <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}", "toggleAllRowGroups(this)", :class => 'toggle-all') %>
-                  </td>
-                </tr>
-                <% previous_group = group %>
+        <% bookings.each_with_index do |entry, index| -%>
+            <%	 # workaround to enable group_by function with special columns %>
+            <% if @query.grouped? %>
+                <% gb_col = @query.group_by_column %>
+                <% if entry.send(gb_col.name).nil?
+                     group = nil
+                   else
+                     group = case gb_col.name
+                               when :project then
+                                 @query.group_by_column.value(entry).to_s
+                               when :date then
+                                 entry.send('started_on').send('localtime')
+                               when :issue then
+                                 entry.send('issue').send('subject') unless entry.send('issue') == l(:time_tracker_label_none)
+                             end
+                   end
+                %>
+                <% if group != previous_group %>
+                    <% reset_cycle %>
+                    <tr class="group open">
+                      <td colspan="<%= query.columns.size + 2 %>">
+                        <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
+                        <%= group.blank? ? 'None' : column_content(@query.group_by_column, entry) %>
+                        <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : @booking_count_by_group[group] %>
+                          )</span>
+                        <!-- TODO rewrite function-call -->
+                        <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}", "toggleAllRowGroups(this)", :class => 'toggle-all') %>
+                      </td>
+                    </tr>
+                    <% previous_group = group %>
+                <% end %>
             <% end %>
+
             <!-- look at issues\_list! the following line contains a method to add css-classes dynamically there.. -->
             <tr id="entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
               <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>

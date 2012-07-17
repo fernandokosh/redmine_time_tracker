@@ -72,6 +72,14 @@ class TimeBooking < ActiveRecord::Base
     end
   end
 
+  def issue
+    if self.time_entry.nil?
+      l(:time_tracker_label_none)
+    else
+      self.time_entry.issue
+    end
+  end
+
   def date
     self.started_on.to_date.to_s(:db)
   end
