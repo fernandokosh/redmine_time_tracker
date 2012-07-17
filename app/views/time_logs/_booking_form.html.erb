@@ -5,7 +5,7 @@
 
         <div class="task_form_sub_fields">
           <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-          <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject($('edit_time_log_#{@time_log.id}'))" %></div>
+          <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onkeyup => "updateBookingProject($('edit_time_log_#{@time_log.id}'))" %></div>
         </div>
         <div class="task_form_sub_fields">
           <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>

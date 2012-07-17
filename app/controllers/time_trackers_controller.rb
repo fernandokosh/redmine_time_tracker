@@ -89,6 +89,15 @@ class TimeTrackersController < ApplicationController
       format.xml { render :xml => @time_tracker }
       format.json { render :json => @time_tracker }
     end
+  # if something went wrong, return the original object
+  rescue
+    @time_tracker = get_current
+    respond_to do |format|
+      format.html { render :nothing => true }
+      format.xml { render :xml => @time_tracker }
+      format.json { render :json => @time_tracker }
+    end
+
   end
 
   def add_status_transition
