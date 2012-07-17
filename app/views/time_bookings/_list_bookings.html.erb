@@ -21,7 +21,7 @@
               <% @user_bookings.each do |time_booking| %>
                   <% if time_booking.virtual %>
                       <tr id="booking_id<%= time_booking.id %>" class="<%= cycle('odd', 'even') %>">
-                        <td class="issue" style="font-style:italic">virtual booking</td>
+                        <td class="issue" style="font-style:italic"><%= l(:time_tracker_label_none) %></td>
                         <td class="comments"><%= time_booking.virtual_comment.comments %></td>
                         <td class="spent-time"><%= time_booking.get_formatted_time %></td>
                         <td class="actions">
