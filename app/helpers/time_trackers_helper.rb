@@ -25,6 +25,7 @@ module TimeTrackersHelper
     else
       # retrieve from session
       @query = Query.find_by_id(session[:tt_query][:id]) if session[:tt_query][:id]
+      @query.tt_query = true if @query
       @query ||= Query.new(:tt_query => true, :name => "_", :filters => session[:tt_query][:filters], :group_by => session[:tt_query][:group_by], :column_names => session[:tt_query][:column_names])
       @query.project = @project
     end
