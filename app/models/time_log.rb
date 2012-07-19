@@ -1,3 +1,10 @@
+class BookingError < StandardError
+  attr_reader :message
+  def initialize(message)
+    @message = message
+  end
+end
+
 class TimeLog < ActiveRecord::Base
   unloadable
 
@@ -22,13 +29,10 @@ class TimeLog < ActiveRecord::Base
 
     # basic calculations are always the same
     args[:spent_time].nil? ? args[:hours] = hours_spent(args[:started_on], args[:stopped_at]) : args[:hours] = spent_time2float(args[:spent_time])
-    # limit the booking to maximum bookable time
-    if args[:hours] > bookable_hours
-      args[:hours] = bookable_hours
-    elsif args[:hours] < 0
-      args[:hours] = 0  # impossible to save a time_entry with hours=0 => transaction will be rolled back!
-      args[:started_on] = self.started_on
-    end
+
+    raise BookingError, l(:error_booking_negative_time) if args[:hours] <= 0
+    raise BookingError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
+
     args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getlocal
 
     args[:time_log_id] = self.id

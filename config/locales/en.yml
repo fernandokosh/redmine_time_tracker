@@ -1,5 +1,7 @@
 # English strings go here for Rails i18n
 en:
+  error_booking_negative_time: "Not allowed to book time less than or equal to zero!"
+  error_booking_to_much_time: "Not allowed to book more time than available!"
   field_tt_comments: "Comments"
   field_tt_date: "Date"
   field_tt_due_date: "Due date"
@@ -24,6 +26,7 @@ en:
   stop_time_tracker_error: "Fail to stop the time tracker"
   suspend_time_tracker: "suspend"
   suspend_time_tracker_error: "Fail to suspend the time tracker"
+  success_add_booking: "Successful added booking"
   time_tracker_already_running_error: "A time tracker is already running"
   time_tracker_continue_booking_fail: "Time Tracker could not be continued"
   time_tracker_delete_fail: "The time tracker has already been closed/deleted"

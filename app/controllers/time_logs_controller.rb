@@ -14,12 +14,12 @@ class TimeLogsController < ApplicationController
     tl = params[:time_log]
     time_log = TimeLog.where(:id => tl[:id]).first
     issue = issue_from_id(tl[:issue_id])
-    if time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
-                            :comments => tl[:comments], :issue => issue, :project_id => params[:project_id_select])
-      flash[:notice] = "success :D"
-    else
-      flash[:error] = "not allowed to do that.. :)"
-    end
+    time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
+                         :comments => tl[:comments], :issue => issue, :project_id => params[:project_id_select])
+    flash[:notice] = l(:success_add_booking)
+  rescue BookingError => e
+    flash[:error] = e.message
+  ensure
     redirect_to '/time_trackers'
   end
 
