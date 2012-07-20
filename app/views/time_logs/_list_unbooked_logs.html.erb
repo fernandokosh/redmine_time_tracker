@@ -1,9 +1,7 @@
 <div id="user-time-logs-list">
-  <h2><%= l(:time_tracker_bookinglist_title) %></h2>
-
-  <% unless @bookings.nil? %>
+  <% unless @logs.nil? %>
       <h3><%= l(:time_tracker_label_your_time_bookings) %></h3>
-      <% if @bookings.empty? %>
+      <% if @logs.empty? %>
           <p class="msg"><%= l(:no_time_bookings) %></p>
       <% else %>
           <%= form_tag({}) do -%>
@@ -24,7 +22,7 @@
                   </thead>
                   <% previous_group = false %>
                   <tbody>
-                  <% bookings.each_with_index do |entry, index| -%>
+                  <% logs.each_with_index do |entry, index| -%>
                       <% # workaround to enable group_by function with special columns   %>
                       <% if query.grouped? %>
                           <% gb_col = query.group_by_column %>

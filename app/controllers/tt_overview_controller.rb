@@ -14,6 +14,7 @@ class TtOverviewController < ApplicationController
   def index
     @time_tracker = get_current_time_tracker
 
+    @limit = 15 # limit for both lists
     # time_log list  =======================
 
     @query_give_logs = true
@@ -32,13 +33,13 @@ class TtOverviewController < ApplicationController
     tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")
 
     if @query_logs.valid?
-      @limit = per_page_option
+      #@limit = per_page_option
 
       @log_count = @query_logs.booking_count
-      @log_pages = Paginator.new self, @booking_count, @limit, params['page']
-      @offset ||= @log_pages.current.offset
+      @log_pages = Paginator.new self, @log_count, @limit, params['page_logs']
+      @log_offset ||= @log_pages.current.offset
       @logs = @query_logs.bookings(:order => sort_logs_clause,
-                                   :offset => @offset,
+                                   :offset => @log_offset,
                                    :limit => @limit)
       @log_count_by_group = @query_logs.booking_count_by_group
     end
@@ -61,13 +62,13 @@ class TtOverviewController < ApplicationController
     tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
 
     if @query_bookings.valid?
-      @limit = per_page_option
+      #@limit = per_page_option
 
       @booking_count = @query_bookings.booking_count
-      @booking_pages = Paginator.new self, @booking_count, @limit, params['page']
-      @offset ||= @booking_pages.current.offset
+      @booking_pages = Paginator.new self, @booking_count, @limit, params['page_bookings']
+      @booking_offset ||= @booking_pages.current.offset
       @bookings = @query_bookings.bookings(:order => sort_bookings_clause,
-                                           :offset => @offset,
+                                           :offset => @booking_offset,
                                            :limit => @limit)
       @booking_count_by_group = @query_bookings.booking_count_by_group
     end
