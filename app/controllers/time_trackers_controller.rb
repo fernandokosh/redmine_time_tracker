@@ -51,7 +51,7 @@ class TimeTrackersController < ApplicationController
     else
       flash[:error] = l(:time_tracker_already_running_error)
     end
-    redirect_to "/time_trackers"
+    redirect_to "/tt_overview"
   end
 
   def stop
@@ -67,7 +67,7 @@ class TimeTrackersController < ApplicationController
       @time_tracker.stop
       flash[:error] = l(:stop_time_tracker_error) unless @time_tracker.destroyed?
       @time_tracker = get_current
-      redirect_to "/time_trackers"
+      redirect_to "/tt_overview"
     end
   end
 

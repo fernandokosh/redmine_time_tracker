@@ -1,36 +1,74 @@
 <div id="user-time-logs-list">
-  <h2><%= l(:time_tracker_loglist_title) %></h2>
+  <h2><%= l(:time_tracker_bookinglist_title) %></h2>
 
-  <% unless @bookable_logs.nil? %>
-      <h3><%= l(:time_tracker_label_your_time_logs) -%></h3>
-      <% if @bookable_logs.empty? %>
-          <p class="msg"><%= l(:no_time_logs) -%></p>
+  <% unless @bookings.nil? %>
+      <h3><%= l(:time_tracker_label_your_time_bookings) %></h3>
+      <% if @bookings.empty? %>
+          <p class="msg"><%= l(:no_time_bookings) %></p>
       <% else %>
-          <div class="autoscroll">
-            <table class="list">
-              <thead>
-              <tr>
-                <th class="comments"><%= l(:time_tracker_label_comments) -%></th>
-                <th class="spent-time"><%= l(:time_tracker_label_time_spent) -%></th>
-                <th class="actions"><%= l(:time_tracker_label_action) -%></th>
-              </tr>
-              </thead>
-
-              <tbody>
-              <% @bookable_logs.each do |time_log| %>
-                  <tr class="<%= cycle('odd', 'even') -%>">
-                    <td id="user-log-comment<%= time_log.id -%>" class="comments"><%= time_log.comments -%></td>
-                    <td class="spent-time"><%= time_log.get_formatted_bookable_hours -%></td>
-                    <td class="buttons">
-                      <!-- TODO localize link-labels! -->
-                      <%= link_to_remote 'book', :update => 'user-log-comment'+time_log.id.to_s, :url => {:controller => 'time_logs', :action => 'show_booking', :time_log_id => time_log.id} %>
-                    </td>
+          <%= form_tag({}) do -%>
+              <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+              <div class="autoscroll">
+                <table class="list">
+                  <thead>
+                  <tr>
+                    <!-- TODO check if following JS function works with my entries instead of issues as well -->
+                    <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(Element.up(this, "form")); return false;',
+                                                                     :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
+                    </th>
+                    <%= tt_sort_header_tag(:sort_logs, 'id', :caption => '#', :default_order => 'desc') %>
+                    <% query.columns.each do |column| %>
+                        <%= tt_column_header(column, :sort_logs) %>
+                    <% end %>
                   </tr>
-              <% end %>
-              </tbody>
-            </table>
-          </div>
-          <p class="pagination"><%= pagination_links_full @unbooked_logs_pages, @unbooked_logs_count, :page_param => :page_unbooked, :per_page_links => false %></p>
+                  </thead>
+                  <% previous_group = false %>
+                  <tbody>
+                  <% bookings.each_with_index do |entry, index| -%>
+                      <% # workaround to enable group_by function with special columns   %>
+                      <% if query.grouped? %>
+                          <% gb_col = query.group_by_column %>
+                          <% if entry.send(gb_col.name).nil?
+                               group = nil
+                             else
+                               group = case gb_col.name
+                                         when :project then
+                                           query.group_by_column.value(entry).to_s
+                                         when :date then
+                                           entry.send('started_on').send('localtime')
+                                         when :issue then
+                                           entry.send('issue').send('subject') unless entry.send('issue') == l(:time_tracker_label_none)
+                                       end
+                             end
+                          %>
+                          <% if group != previous_group %>
+                              <% reset_cycle %>
+                              <tr class="group open">
+                                <td colspan="<%= query.columns.size + 2 %>">
+                                  <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
+                                  <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
+                                  <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : @booking_count_by_group[group] %>
+                                    )</span>
+                                  <!-- TODO rewrite function-call -->
+                                  <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}", "toggleAllRowGroups(this)", :class => 'toggle-all') %>
+                                </td>
+                              </tr>
+                              <% previous_group = group %>
+                          <% end %>
+                      <% end %>
+
+                      <!-- look at issues\_list! the following line contains a method to add css-classes dynamically there.. -->
+                      <tr id="entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
+                        <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
+                        <!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
+                        <td class="id"><%= entry.id %></td>
+                        <%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
+                      </tr>
+                  <% end -%>
+                  </tbody>
+                </table>
+              </div>
+          <% end -%>
       <% end %>
   <% end %>
 </div>
