@@ -22,7 +22,7 @@ module QueryPatch
 
       base.add_available_column(QueryColumn.new(:comments, :caption => :field_tt_comments))
       base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
-      base.add_available_column(QueryColumn.new(:date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "#{TimeBooking.table_name}.started_on"))
+      base.add_available_column(QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "#{TimeBooking.table_name}.started_on"))
       base.add_available_column(QueryColumn.new(:get_formatted_time, :caption => :field_tt_time))
       base.add_available_column(QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_issue, :groupable => "#{Issue.table_name}.subject"))
     end
@@ -58,7 +58,7 @@ module QueryPatch
     def available_columns_with_time_tracker
       @available_columns = available_columns_without_time_tracker
       unless tt_query?
-        @available_columns.delete_if { |item| [:issue, :comments, :user, :date, :get_formatted_time].include? item.name }
+        @available_columns.delete_if { |item| [:issue, :comments, :user, :tt_booking_date, :get_formatted_time].include? item.name }
       end
       @available_columns
     end

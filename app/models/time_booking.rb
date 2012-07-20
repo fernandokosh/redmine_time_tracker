@@ -80,7 +80,7 @@ class TimeBooking < ActiveRecord::Base
     end
   end
 
-  def date
+  def tt_booking_date
     self.started_on.to_date.to_s(:db)
   end
 
