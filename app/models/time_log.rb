@@ -8,11 +8,13 @@ end
 class TimeLog < ActiveRecord::Base
   unloadable
 
-  attr_accessible :user_id, :started_on, :stopped_at, :project_id, :comments, :issue_id, :spent_time
+  attr_accessible :user_id, :started_on, :stopped_at, :project_id, :comments, :issue_id, :spent_time, :bookable
   attr_accessor :issue_id, :spent_time
   belongs_to :user
   has_many :time_bookings, :dependent => :delete_all
   has_many :time_entries, :through => :time_bookings
+
+  scope :bookable, where(:bookable => true)
 
 #  belongs_to :project
 
@@ -40,7 +42,10 @@ class TimeLog < ActiveRecord::Base
     args[:user_id] = self.user_id
     tb = TimeBooking.create(args)
     # tb.persisted? will be true if transaction was successfully completed
-    tb.persisted?
+    if tb.persisted?
+      self.bookable_hours = (bookable_hours > 0)
+      self.save!
+    end
   end
 
   # returns the hours between two timestamps

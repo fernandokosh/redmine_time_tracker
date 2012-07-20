@@ -149,7 +149,7 @@ module QueryPatch
 
     # Returns the logs count
     def log_count
-      TimeLog.
+      TimeLog.bookable.
           includes(:user).
           where(statement).
           count(:id)
@@ -162,7 +162,7 @@ module QueryPatch
       order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
       order_option = nil if order_option.blank?
 
-      TimeLog.
+      TimeLog.bookable.
           #includes([:project, :issue, :user]).
           includes(:user).
           where(statement).
