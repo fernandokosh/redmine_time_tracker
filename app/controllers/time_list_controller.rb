@@ -20,7 +20,7 @@ class TimeListController < ApplicationController
     @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
     @query.available_columns.delete_if { |item| !([:id, :comments, :issue, :user, :project, :tt_booking_date, :get_formatted_time].include? item.name) }
 
-    sort_init(@query.sort_criteria.empty? ? [['id', 'desc']] : @query.sort_criteria)
+    sort_init(@query.sort_criteria.empty? ? [['tt_booking_id', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
 
     if @query.valid?

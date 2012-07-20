@@ -15,6 +15,7 @@ class TtOverviewController < ApplicationController
     @time_tracker = get_current_time_tracker
 
     @limit = 15 # limit for both lists
+
     # time_log list  =======================
 
     @query_give_logs = true
@@ -22,24 +23,26 @@ class TtOverviewController < ApplicationController
     tt_retrieve_query
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
-    @query_logs.column_names = @query_logs.column_names || [:tt_booking_date, :comments, :issue, :get_formatted_time, :user]
+    @query_logs.column_names = @query_logs.column_names || [:tt_log_date, :comments, :get_formatted_bookable_hours, :user]
+    @query_logs.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}}
 
     # temporarily limit the available filters and columns for the view!
     @query_logs.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
-    @query_logs.available_columns.delete_if { |item| !([:id, :comments, :issue, :user, :project, :tt_booking_date, :get_formatted_time].include? item.name) }
+    @query_logs.available_columns.delete_if { |item| !([:id, :comments, :user, :tt_log_date, :get_formatted_bookable_hours].include? item.name) }
 
-    sort_init(@query_logs.sort_criteria.empty? ? [['id', 'desc']] : @query_logs.sort_criteria)
+    sort_init(@query_logs.sort_criteria.empty? ? [['tt_log_id', 'desc']] : @query_logs.sort_criteria)
     tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")
 
     if @query_logs.valid?
       #@limit = per_page_option
-      @log_count = @query_logs.booking_count
+      @log_count = @query_logs.log_count
       @log_pages = Paginator.new self, @log_count, @limit, params['page_logs']
       @log_offset ||= @log_pages.current.offset
-      @logs = @query_logs.bookings(:order => sort_logs_clause,
-                                   :offset => @log_offset,
-                                   :limit => @limit)
-      @log_count_by_group = @query_logs.booking_count_by_group
+      @logs = @query_logs.logs(:order => sort_logs_clause,
+                               :offset => @log_offset,
+                               :limit => @limit)
+      #@log_count_by_group = @query_logs.log_count_by_group
+      @log_count_by_group = 0
     end
 
     # time_bookings list  =======================
@@ -50,12 +53,13 @@ class TtOverviewController < ApplicationController
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
     @query_bookings.column_names = @query_bookings.column_names || [:tt_booking_date, :comments, :issue, :get_formatted_time, :user]
+    @query_bookings.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}}
 
     # temporarily limit the available filters and columns for the view!
     @query_bookings.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
     @query_bookings.available_columns.delete_if { |item| !([:id, :comments, :issue, :user, :project, :tt_booking_date, :get_formatted_time].include? item.name) }
 
-    sort_init(@query_bookings.sort_criteria.empty? ? [['id', 'desc']] : @query_bookings.sort_criteria)
+    sort_init(@query_bookings.sort_criteria.empty? ? [['tt_bookings_id', 'desc']] : @query_bookings.sort_criteria)
     tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
 
     if @query_bookings.valid?

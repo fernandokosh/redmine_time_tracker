@@ -1,8 +1,8 @@
 <div id="user-time-logs-list">
   <% unless @logs.nil? %>
-      <h3><%= l(:time_tracker_label_your_time_bookings) %></h3>
+      <h3><%= l(:time_tracker_label_your_time_logs) %></h3>
       <% if @logs.empty? %>
-          <p class="msg"><%= l(:no_time_bookings) %></p>
+          <p class="msg"><%= l(:no_time_logss) %></p>
       <% else %>
           <%= form_tag({}) do -%>
               <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
@@ -14,7 +14,7 @@
                     <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(Element.up(this, "form")); return false;',
                                                                      :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
                     </th>
-                    <%= tt_sort_header_tag(:sort_logs, 'id', :caption => '#', :default_order => 'desc') %>
+                    <%= tt_sort_header_tag(:sort_logs, 'tt_log_id', :caption => '#', :default_order => 'desc') %>
                     <% query.columns.each do |column| %>
                         <%= tt_column_header(column, :sort_logs) %>
                     <% end %>
@@ -32,7 +32,7 @@
                                group = case gb_col.name
                                          when :project then
                                            query.group_by_column.value(entry).to_s
-                                         when :tt_booking_date then
+                                         when :tt_log_date then
                                            entry.send('started_on').send('localtime')
                                          when :issue then
                                            entry.send('issue').send('subject') unless entry.send('issue') == l(:time_tracker_label_none)
@@ -45,7 +45,7 @@
                                 <td colspan="<%= query.columns.size + 2 %>">
                                   <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                                   <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
-                                  <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : @booking_count_by_group[group] %>
+                                  <span class="count">(<%= group.nil? ? @log_count_by_group[nil] : @log_count_by_group[group] %>
                                     )</span>
                                   <!-- TODO rewrite function-call -->
                                   <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}", "toggleAllRowGroups(this)", :class => 'toggle-all') %>

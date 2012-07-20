@@ -23,7 +23,9 @@ module QueryPatch
       base.add_available_column(QueryColumn.new(:comments, :caption => :field_tt_comments))
       base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
       base.add_available_column(QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "#{TimeBooking.table_name}.started_on"))
+      base.add_available_column(QueryColumn.new(:tt_log_date, :sortable => "#{TimeLog.table_name}.started_on", :caption => :field_tt_date, :groupable => "#{TimeLog.table_name}.started_on"))
       base.add_available_column(QueryColumn.new(:get_formatted_time, :caption => :field_tt_time))
+      base.add_available_column(QueryColumn.new(:get_formatted_bookable_hours, :caption => :field_tt_time))
       base.add_available_column(QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_issue, :groupable => "#{Issue.table_name}.subject"))
     end
   end
@@ -44,7 +46,7 @@ module QueryPatch
 
     def sortable_columns_with_time_tracker
       if tt_query?
-        {'id' => "#{TimeBooking.table_name}.id"}.merge(available_columns.inject({}) { |h, column|
+        {'tt_booking_id' => "#{TimeBooking.table_name}.id", 'tt_log_id' => "#{TimeLog.table_name}.id"}.merge(available_columns.inject({}) { |h, column|
           h[column.name.to_s] = column.sortable
           h
         })
@@ -58,7 +60,7 @@ module QueryPatch
     def available_columns_with_time_tracker
       @available_columns = available_columns_without_time_tracker
       unless tt_query?
-        @available_columns.delete_if { |item| [:issue, :comments, :user, :tt_booking_date, :get_formatted_time].include? item.name }
+        @available_columns.delete_if { |item| [:issue, :comments, :user, :tt_booking_date, :tt_log_date, :get_formatted_time].include? item.name }
       end
       @available_columns
     end
@@ -133,6 +135,36 @@ module QueryPatch
 
       TimeBooking.
           includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+          where(statement).
+          order(order_option).
+          limit(options[:limit]).
+          offset(options[:offset])
+
+    rescue ::ActiveRecord::StatementInvalid => e
+      raise StatementInvalid.new(e.message)
+    end
+
+    # same things for logs === later we should combine both parts to more flexible/general methods
+    # even better would be to generalize the whole Query class from redmine
+
+    # Returns the logs count
+    def log_count
+      TimeLog.
+          includes(:user).
+          where(statement).
+          count(:id)
+    rescue ::ActiveRecord::StatementInvalid => e
+      raise StatementInvalid.new(e.message)
+    end
+
+    # Returns the bookings
+    def logs(options={})
+      order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
+      order_option = nil if order_option.blank?
+
+      TimeLog.
+          #includes([:project, :issue, :user]).
+          includes(:user).
           where(statement).
           order(order_option).
           limit(options[:limit]).

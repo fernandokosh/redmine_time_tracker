@@ -60,6 +60,10 @@ class TimeLog < ActiveRecord::Base
     self.stopped_at.to_time.localtime.strftime("%H:%M:%S") unless self.stopped_at.nil?
   end
 
+  def tt_log_date
+    self.started_on.to_date.to_s(:db)
+  end
+
   # TODO this method should be a helper hence it was used in TimeLog and TimeBooking the same way!
   def time_dist2string(dist)
     h = dist / 3600
