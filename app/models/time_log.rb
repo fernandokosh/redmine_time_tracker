@@ -1,5 +1,6 @@
 class BookingError < StandardError
   attr_reader :message
+
   def initialize(message)
     @message = message
   end
@@ -43,8 +44,10 @@ class TimeLog < ActiveRecord::Base
     tb = TimeBooking.create(args)
     # tb.persisted? will be true if transaction was successfully completed
     if tb.persisted?
-      self.bookable_hours = (bookable_hours > 0)
+      self.bookable = (bookable_hours - tb.hours_spent > 0)
       self.save!
+    else
+      false
     end
   end
 
@@ -100,5 +103,10 @@ class TimeLog < ActiveRecord::Base
       time_booked += tb.hours_spent
     end
     hours_spent - time_booked
+  end
+
+  def check_bookable
+    self.bookable = (bookable_hours > 0)
+    self.save!
   end
 end

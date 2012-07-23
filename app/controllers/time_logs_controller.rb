@@ -20,7 +20,7 @@ class TimeLogsController < ApplicationController
   rescue BookingError => e
     flash[:error] = e.message
   ensure
-    redirect_to '/time_trackers'
+    redirect_to '/tt_overview'
   end
 
   def show_booking

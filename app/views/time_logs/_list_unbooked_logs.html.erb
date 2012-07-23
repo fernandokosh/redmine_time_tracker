@@ -18,6 +18,7 @@
                     <% query.columns.each do |column| %>
                         <%= tt_column_header(column, :sort_logs) %>
                     <% end %>
+                    <th class="actions"><%= l(:time_tracker_label_action) %></th>
                   </tr>
                   </thead>
                   <% previous_group = false %>
@@ -61,6 +62,10 @@
                         <!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
                         <td class="id"><%= entry.id %></td>
                         <%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
+                        <td class="buttons">
+                          <!-- TODO localize link-labels! -->
+                          <%= link_to_remote 'book', :update => 'entry-'+entry.id.to_s, :url => {:controller => 'time_logs', :action => 'show_booking', :time_log_id => entry.id} %>
+                        </td>
                       </tr>
                   <% end -%>
                   </tbody>
