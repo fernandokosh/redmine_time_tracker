@@ -43,18 +43,7 @@ class TimeTracker < ActiveRecord::Base
     # the following updates should only happen if the controller calls this method after an ui-input
     # in all other cases, the fields "start_time" and "date" might be empty
     unless self.start_time.nil? && self.date.nil?
-      act_time = self.started_on.to_a
-      # time
-      ts = self.start_time.to_s.strip.split(':')
-      act_time[2] = ts[0].to_i
-      act_time[1] = ts[1].to_i
-      act_time[0] = ts[2].to_i
-      # date
-      ds = self.date.to_s.strip.split('-')
-      act_time[5] = ds[0].to_i
-      act_time[4] = ds[1].to_i
-      act_time[3] = ds[2].to_i
-      self.started_on = Time.local(*act_time)
+      self.started_on = Time.parse(self.date.to_s + " " + self.start_time.to_s)
     end
   end
 
