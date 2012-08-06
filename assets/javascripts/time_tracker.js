@@ -30,7 +30,8 @@ function updateTTControllerForm (form) {
                 year = dat.getFullYear().toString();
                 month = dat.getMonth() + 1;
                 (month < 10) ? month = '0' + month.toString() : month = month.toString();
-                day = dat.getDate().toString();
+                day = dat.getDate();
+                (day < 10) ? day = '0' + dat.getDate().toString() : day = dat.getDate().toString();
                 form.time_tracker_date.value = year + '-' + month + '-' + day;
             }
         });

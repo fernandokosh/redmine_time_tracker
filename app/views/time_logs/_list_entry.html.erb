@@ -3,7 +3,7 @@
 <td class="id"><%= entry.id %></td>
 <%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
 <% if button == :book %>
-    <td class="buttons">
+    <td class="actions">
       <!-- TODO localize link-labels! -->
       <%= link_to_remote 'book', :update => 'entry-'+entry.id.to_s, :url => {:controller => 'time_logs', :action => 'show_booking', :time_log_id => entry.id} %>
     </td>

@@ -24,7 +24,7 @@ class TimeTracker < ActiveRecord::Base
   # TODO specify all necessary validations
   # TODO add auto completion for input fields
   VALID_TIME_REGEX = /\A([01]?\d?|2[0123]):[012345]?\d?:[012345]?\d?\z/ # hour:min
-  VALID_DATE_REGEX = /\A\d{4}-(0?\d?|1[012])-([012]?\d?|3[01])\z/ # day:month:year
+  VALID_DATE_REGEX = /\A\d{4}-(0?\d?|1[012])-([012]?\d?|3[01])\z/ # year:month:day
   validates :comments, :length => {:maximum => 150}, :allow_blank => true
   validates :project_id, :numericality => true, :allow_blank => true
   validates :issue_id, :numericality => true, :allow_blank => true

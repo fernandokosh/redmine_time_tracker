@@ -38,7 +38,7 @@ Redmine::Plugin.register :redmine_time_tracker do
   # following permission-setting will be found in a plugin-specific field within the roles-settings
   project_module :redmine_timetracker_plugin_settings do
     permission :use_time_tracker_plugin, {:time_trackers => [:start, :stop, :delete],
-                                          :time_logs => [:index, :add_booking, :show_booking],
+                                          :time_logs => [:index, :add_booking, :show_booking, :get_list_entry],
                                           :tt_overview => :index,
                                           :time_bookings => [:index, :delete]},
                :require => :loggedin
