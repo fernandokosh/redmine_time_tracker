@@ -58,14 +58,7 @@
 
                       <!-- look at issues\_list! the following line contains a method to add css-classes dynamically there.. -->
                       <tr id="entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
-                        <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
-                        <!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
-                        <td class="id"><%= entry.id %></td>
-                        <%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
-                        <td class="buttons">
-                          <!-- TODO localize link-labels! -->
-                          <%= link_to_remote 'book', :update => 'entry-'+entry.id.to_s, :url => {:controller => 'time_logs', :action => 'show_booking', :time_log_id => entry.id} %>
-                        </td>
+                        <%= render :partial => 'time_logs/list_entry', :locals => {:entry => entry, :query => query, :button => :book} %>
                       </tr>
                   <% end -%>
                   </tbody>

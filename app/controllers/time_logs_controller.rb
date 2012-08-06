@@ -27,4 +27,12 @@ class TimeLogsController < ApplicationController
     @time_log = TimeLog.where(:id => params[:time_log_id]).first
     render :partial => 'booking_form'
   end
+
+  def get_list_entry
+    # prepare query for time_logs
+    time_logs_query
+
+    entry = TimeLog.where(:id => params[:time_log_id]).first
+    render :partial => 'list_entry', :locals => {:entry => entry, :query => @query_logs, :button => :book}
+  end
 end

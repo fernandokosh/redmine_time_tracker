@@ -1,0 +1,11 @@
+<td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
+<!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
+<td class="id"><%= entry.id %></td>
+<%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
+<% if button == :book %>
+    <td class="buttons">
+      <!-- TODO localize link-labels! -->
+      <%= link_to_remote 'book', :update => 'entry-'+entry.id.to_s, :url => {:controller => 'time_logs', :action => 'show_booking', :time_log_id => entry.id} %>
+    </td>
+<% end %>
+

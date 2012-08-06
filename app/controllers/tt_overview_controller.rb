@@ -18,17 +18,8 @@ class TtOverviewController < ApplicationController
 
     # time_log list  =======================
 
-    @query_give_logs = true
-    @query_give_bookings = false
-    tt_retrieve_query
-    # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
-    # which depend on issues
-    @query_logs.column_names = @query_logs.column_names || [:tt_log_date, :comments, :get_formatted_bookable_hours]
-    @query_logs.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}}
-
-    # temporarily limit the available filters and columns for the view!
-    @query_logs.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
-    @query_logs.available_columns.delete_if { |item| !([:id, :comments, :user, :tt_log_date, :get_formatted_bookable_hours].include? item.name) }
+    # prepare query for time_logs
+    time_logs_query
 
     sort_init(@query_logs.sort_criteria.empty? ? [['tt_log_id', 'desc']] : @query_logs.sort_criteria)
     tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")

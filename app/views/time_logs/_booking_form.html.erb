@@ -49,4 +49,8 @@
           <%= f.submit "book" %>
       <% end %>
     </td>
+    <td class="buttons">
+      <!-- TODO localize link-labels! -->
+      <%= link_to_remote 'cancel', :update => 'entry-'+@time_log.id.to_s, :url => {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => @time_log.id} %>
+    </td>
 <% end %>
