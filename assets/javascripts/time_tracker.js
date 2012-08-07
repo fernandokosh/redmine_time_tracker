@@ -10,7 +10,7 @@ function updateElementIfChanged(id, newContent) {
 
 // ================== time_tracker_controller helpers ============================
 
-function updateTTControllerForm (form) {
+function updateTTControllerForm(form) {
     new Ajax.Request('/time_trackers/update.json?' + Form.serializeElements(form.getInputs()),
         {
             method:'put',
@@ -39,7 +39,7 @@ function updateTTControllerForm (form) {
 
 // ================== booking_form helpers ============================
 
-function updateBookingHours (form) {
+function updateBookingHours(form) {
     start = form.time_log_start_time.value;
     stop = form.time_log_stop_time.value;
     if (timeString2sec(stop) < timeString2sec(start)) {
@@ -56,7 +56,7 @@ function updateBookingStop (form) {
     form.time_log_stop_time.value = calcBookingHelper(form.time_log_start_time.value, form.time_log_spent_time.value, 2);
 }
 
-function updateBookingProject (form) {
+function updateBookingProject(form) {
     issue_id = form.time_log_issue_id.value;
     if (issue_id.blank()) {
         form.project_id_select.enable();
@@ -87,12 +87,27 @@ function updateBookingProject (form) {
     }
 }
 
-function timeString2sec (str) {
-    arr = str.strip().split(':');
-    return new Number(arr[0]) * 3600 + new Number(arr[1]) * 60 + new Number(arr[2]);
+function timeString2sec(str) {
+    if (str.match(/\d\d?:\d\d?:\d\d?/)) {     //parse general input form hh:mm:ss
+        var arr = str.strip().split(':');
+        return new Number(arr[0]) * 3600 + new Number(arr[1]) * 60 + new Number(arr[2]);
+    }
+    // more flexible parsing for inputs like:  12d 23sec 5min
+    var time_factor = new Hash({"s":1, "sec":1, "m":60, "min":60, "h":3600, "d":86400});
+    var sec = 0;
+    var time_arr = str.match(/\d+\s*\D+/g);
+    time_arr.each(function (item) {
+        item = item.strip();
+        var num = item.match(/\d+/);
+        var fac = item.match(/\D+/);
+        if (time_factor.get(fac)) {
+            sec += num * time_factor.get(fac);
+        }
+    });
+    return sec;
 }
 
-function calcBookingHelper (ele1, ele2, calc) {
+function calcBookingHelper(ele1, ele2, calc) {
     sec1 = timeString2sec(ele1);
     sec2 = timeString2sec(ele2);
     if (calc == 1) {
@@ -107,5 +122,6 @@ function calcBookingHelper (ele1, ele2, calc) {
     h < 10 ? h = "0" + h.toString() : h = h.toString();
     m < 10 ? m = "0" + m.toString() : m = m.toString();
     s < 10 ? s = "0" + s.toString() : s = s.toString();
+    if (calc == 2 && h > 23) h = h - h / 24;    //stop_time should be between 0-24 o clock
     return h + ":" + m + ":" + s;
 }

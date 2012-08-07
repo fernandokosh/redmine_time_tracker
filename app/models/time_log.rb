@@ -30,13 +30,16 @@ class TimeLog < ActiveRecord::Base
     default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil, :spent_time => nil, :virtual => false, :project_id => self.project_id}
     args = default_args.merge(args)
 
+    # TODO check time boundaries
+    args[:started_on] = Time.parse(tt_log_date + " " + args[:start_time]) if args[:start_time].is_a? String
+    args[:stopped_at] = Time.parse(tt_log_date + " " + args[:stop_time]) if args[:stop_time].is_a? String
+
     # basic calculations are always the same
-    args[:spent_time].nil? ? args[:hours] = hours_spent(args[:started_on], args[:stopped_at]) : args[:hours] = spent_time2float(args[:spent_time])
+    args[:spent_time].nil? ? args[:hours] = hours_spent(args[:started_on], args[:stopped_at]) : args[:hours] = time_string2hour(args[:spent_time])
+    args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getlocal
 
     raise BookingError, l(:error_booking_negative_time) if args[:hours] <= 0
     raise BookingError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
-
-    args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getlocal
 
     args[:time_log_id] = self.id
     # userid of booking will be set to the user who created timeLog, even if the admin will create the booking
@@ -83,16 +86,26 @@ class TimeLog < ActiveRecord::Base
     h + ":" + m + ":" + s
   end
 
-  def spent_time2float(st)
-    ta = st.strip.split(':')
+  def time_string2hour(str)
     sec = 0
-    i = 0
-    ta.reverse_each do |t|
-      sec += t.to_i * 60**i
-      i += 1
+    if str.match(/\d\d?:\d\d?:\d\d?/) #parse general input form hh:mm:ss
+      arr = str.strip.split(':')
+      sec = arr[0].to_i * 3600 + arr[1].to_i * 60 + arr[2].to_i
+    else
+      # more flexible parsing for inputs like:  12d 23sec 5min
+      time_factor = {:s => 1, :sec => 1, :m => 60, :min => 60, :h => 3600, :d => 86400}
+      str.partition(/\A\d+\s*\D+/).each do |item|
+        item=item.strip
+        item.match(/\d+/).nil? ? num = nil : num = item.match(/\d+/)[0].to_i
+        item.match(/\D+/).nil? ? fac = nil : fac = item.match(/\D+/)[0].to_sym
+        if time_factor.has_key?(fac)
+          sec += num * time_factor.fetch(fac)
+        end
+      end
     end
     sec.to_f / 3600
   end
+
 
   # returns the sum of bookable time of an time entry
   # if log was not booked at all, so the whole time is bookable
