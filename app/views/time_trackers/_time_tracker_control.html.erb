@@ -8,6 +8,7 @@
               <%= f.submit l(:start_time_tracker) %>
           <% end %>
       <% else %>
+          <%= javascript_tag("function callUpdate(){updateTTControllerForm(document.getElementById('edit_time_tracker_#{@time_tracker.id.to_s}'));}") %>
           <%= form_for @time_tracker, :url => {:controller => :time_trackers, :action => :stop},
                        :html => {:class => "time-tracker-form",
                                  :onchange => "updateTTControllerForm($(this))"} do |f| %>
@@ -43,7 +44,10 @@
                 </div>
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_start_date) %></div>
-                  <div class="task_form_input"><%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date", :disabled => !User.current.admin? %></div>
+                  <div class="task_form_input">
+                    <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date", :disabled => !User.current.admin? %>
+                    <%= calendar_for_tt('time_tracker_date') %>
+                  </div>
                 </div>
               </div>
               <%= f.submit l(:stop_time_tracker) %>

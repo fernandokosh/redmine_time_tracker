@@ -39,6 +39,12 @@ module TimeTrackersHelper
     @sort_bookings_criteria.to_sql
   end
 
+  def calendar_for_tt(field_id)
+    include_calendar_headers_tags
+    image_tag("calendar.png", {:id => "#{field_id}_trigger",:class => "calendar-trigger"}) +
+        javascript_tag("Calendar.setup({inputField : '#{field_id}', ifFormat : '%Y-%m-%d', button : '#{field_id}_trigger', onUpdate : callUpdate });")
+  end
+
   def tt_retrieve_query
     if !params[:query_id].blank?
       cond = "project_id IS NULL"
