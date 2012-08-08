@@ -34,7 +34,7 @@
                                          when :project then
                                            query.group_by_column.value(entry).to_s
                                          when :tt_booking_date then
-                                           entry.send('started_on').send('localtime')
+                                           entry.send('started_on').send('localtime').to_date.to_s
                                          when :issue then
                                            entry.send('issue').send('subject') unless entry.send('issue') == l(:time_tracker_label_none)
                                        end

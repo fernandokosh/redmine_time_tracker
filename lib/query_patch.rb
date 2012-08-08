@@ -22,8 +22,8 @@ module QueryPatch
 
       base.add_available_column(QueryColumn.new(:comments, :caption => :field_tt_comments))
       base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
-      base.add_available_column(QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "#{TimeBooking.table_name}.started_on"))
-      base.add_available_column(QueryColumn.new(:tt_log_date, :sortable => "#{TimeLog.table_name}.started_on", :caption => :field_tt_date, :groupable => "#{TimeLog.table_name}.started_on"))
+      base.add_available_column(QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeBooking.table_name}.started_on)"))
+      base.add_available_column(QueryColumn.new(:tt_log_date, :sortable => "#{TimeLog.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeLog.table_name}.started_on)"))
       base.add_available_column(QueryColumn.new(:get_formatted_time, :caption => :field_tt_time))
       base.add_available_column(QueryColumn.new(:get_formatted_bookable_hours, :caption => :field_tt_time))
       base.add_available_column(QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_issue, :groupable => "#{Issue.table_name}.subject"))
@@ -157,7 +157,31 @@ module QueryPatch
       raise StatementInvalid.new(e.message)
     end
 
-    # Returns the bookings
+    # Returns the logs count by group or nil if query is not grouped
+    def log_count_by_group
+      r = nil
+      if grouped?
+        begin
+          gbs = group_by_statement
+          r = TimeLog.bookable.
+              includes(:user).
+              group(gbs).
+              where(statement).
+              count(:id)
+        rescue ActiveRecord::RecordNotFound
+          r = {nil => log_count}
+        end
+        c = group_by_column
+        if c.is_a?(QueryCustomFieldColumn)
+          r = r.keys.inject({}) { |h, k| h[c.custom_field.cast_value(k)] = r[k]; h }
+        end
+      end
+      r
+    rescue ::ActiveRecord::StatementInvalid => e
+      raise StatementInvalid.new(e.message)
+    end
+
+    # Returns the logs
     def logs(options={})
       order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
       order_option = nil if order_option.blank?
