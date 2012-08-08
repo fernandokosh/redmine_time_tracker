@@ -16,7 +16,7 @@
         </thead>
         <% previous_group = false %>
         <tbody>
-        <% bookings.each_with_index do |entry, index| -%>
+        <% bookings.each do |entry| -%>
             <% # workaround to enable group_by function with special columns  %>
             <% if @query.grouped? %>
                 <% gb_col = @query.group_by_column %>
