@@ -8,7 +8,6 @@
               <%= f.submit l(:start_time_tracker) %>
           <% end %>
       <% else %>
-          <%= javascript_tag("function callUpdate(){updateTTControllerForm(document.getElementById('edit_time_tracker_#{@time_tracker.id.to_s}'));}") %>
           <%= form_for @time_tracker, :url => {:controller => :time_trackers, :action => :stop},
                        :html => {:class => "time-tracker-form",
                                  :onchange => "updateTTControllerForm($(this))"} do |f| %>

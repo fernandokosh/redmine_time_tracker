@@ -27,7 +27,7 @@ module TimeTrackersHelper
 
   def tt_column_header(column, sort_arg)
     column.sortable ? tt_sort_header_tag(sort_arg, column.name.to_s, :caption => column.caption,
-                                      :default_order => column.default_order) :
+                                         :default_order => column.default_order) :
         content_tag('th', h(column.caption))
   end
 
@@ -41,8 +41,8 @@ module TimeTrackersHelper
 
   def calendar_for_tt(field_id)
     include_calendar_headers_tags
-    image_tag("calendar.png", {:id => "#{field_id}_trigger",:class => "calendar-trigger"}) +
-        javascript_tag("Calendar.setup({inputField : '#{field_id}', ifFormat : '%Y-%m-%d', button : '#{field_id}_trigger', onUpdate : callUpdate });")
+    image_tag("calendar.png", {:id => "#{field_id}_trigger", :class => "calendar-trigger"}) +
+        javascript_tag("Calendar.setup({inputField : '#{field_id}', ifFormat : '%Y-%m-%d', button : '#{field_id}_trigger', onUpdate : updateTTControllerForm });")
   end
 
   def tt_retrieve_query
