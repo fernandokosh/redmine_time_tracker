@@ -21,7 +21,7 @@ class TtOverviewController < ApplicationController
     # prepare query for time_logs
     time_logs_query
     # group list by date per default // TODO replace this with some kind of user-settings later!
-    session[:tt_user_logs_query][:group_by] = "tt_log_date"
+    @query_logs.group_by ||= "tt_log_date"
 
     sort_init(@query_logs.sort_criteria.empty? ? [['tt_log_id', 'desc']] : @query_logs.sort_criteria)
     tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")
@@ -43,8 +43,10 @@ class TtOverviewController < ApplicationController
     @query_give_logs = false
     @query_give_bookings = true
     tt_retrieve_query
+
     # group list by date per default // TODO replace this with some kind of user-settings later!
-    session[:tt_user_bookings_query][:group_by] = "tt_booking_date"
+    @query_bookings.group_by ||= "tt_booking_date"
+
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
     @query_bookings.column_names = @query_bookings.column_names || [:tt_booking_date, :comments, :issue, :get_formatted_time]
