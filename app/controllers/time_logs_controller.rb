@@ -23,6 +23,23 @@ class TimeLogsController < ApplicationController
     redirect_to '/tt_overview'
   end
 
+  def delete
+    if User.current.admin?
+      time_log = TimeLog.where(:id => params[:time_log_id]).first
+      unless time_log.nil?
+        if time_log.time_bookings.count == 0
+          time_log.destroy
+        else
+          booked_time = time_log.hours_spent - time_log.bookable_hours
+          time_log.stopped_at = time_log.started_on + booked_time.hours
+          time_log.bookable = false
+          time_log.save!
+        end
+      end
+    end
+    redirect_to '/tt_overview'
+  end
+
   def show_booking
     @time_log = TimeLog.where(:id => params[:time_log_id]).first
     render :partial => 'booking_form'

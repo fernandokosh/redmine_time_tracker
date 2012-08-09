@@ -6,6 +6,7 @@ match '/time_trackers/delete_status_transition', :to => 'time_trackers#delete_st
 match '/time_trackers/show_report', :to => 'time_trackers#show_report', :via => [:get, :post]
 match '/time_trackers/delete', :to => 'time_trackers#delete', :via => [:get, :post]
 match '/time_logs', :to => 'time_logs#index', :via => [:get, :post]
+match '/time_logs/delete', :to => 'time_logs#delete', :via => [:get, :post]
 match '/time_logs/add_booking', :to => 'time_logs#add_booking', :via => [:get, :post, :put]
 match '/time_logs/show_booking', :to => 'time_logs#show_booking', :via => [:get, :post]
 match '/time_logs/get_list_entry', :to => 'time_logs#get_list_entry', :via => [:get, :post]

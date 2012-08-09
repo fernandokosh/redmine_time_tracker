@@ -221,6 +221,7 @@ module QueryPatch
     end
 
     def sql_for_tt_start_date_field(field, operator, value)
+      # TODO complete the operator handling
       # stub    :date => [ "=", ">=", "<=", "><", "<t+", ">t+", "t+", "t", "w", ">t-", "<t-", "t-", "!*", "*" ],
       case operator
         when "="
