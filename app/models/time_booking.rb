@@ -11,6 +11,8 @@ class TimeBooking < ActiveRecord::Base
   validates :time_entry_id, :presence => true, :unless => Proc.new { |tb| tb.virtual }
   validates_associated :virtual_comment, :if => Proc.new { |tb| tb.virtual }
 
+  # scope :last_two_weeks, where("started_on > ? ", (Time.now-2.weeks).beginning_of_day)
+
   def initialize(args = {}, options = {})
     ActiveRecord::Base.transaction do
       super(nil)

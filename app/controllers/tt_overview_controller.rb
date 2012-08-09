@@ -50,7 +50,8 @@ class TtOverviewController < ApplicationController
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
     @query_bookings.column_names = @query_bookings.column_names || [:tt_booking_date, :comments, :issue, :get_formatted_time]
-    @query_bookings.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}}
+    #show only the actual users entries from the last 2 weeks
+    @query_bookings.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}, :tt_start_date => {:operator => ">=", :values => [(Time.now-2.weeks).beginning_of_day.to_s]}}
 
     # temporarily limit the available filters and columns for the view!
     @query_bookings.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }

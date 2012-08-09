@@ -221,7 +221,17 @@ module QueryPatch
     end
 
     def sql_for_tt_start_date_field(field, operator, value)
-      # stub
+      # stub    :date => [ "=", ">=", "<=", "><", "<t+", ">t+", "t+", "t", "w", ">t-", "<t-", "t-", "!*", "*" ],
+      case operator
+        when "="
+          "#{TimeBooking.table_name}.started_on = '#{Time.parse(value[0]).to_date}'"
+        when ">="
+          "#{TimeBooking.table_name}.started_on >= '#{Time.parse(value[0]).to_date}'"
+        when "<="
+          "#{TimeBooking.table_name}.started_on <= '#{Time.parse(value[0]).to_date}'"
+        else
+          "#{TimeBooking.table_name}.started_on = '#{(Time.now-2.weeks).beginning_of_day.to_date}'"
+      end
     end
 
     def sql_for_tt_due_date_field(field, operator, value)
