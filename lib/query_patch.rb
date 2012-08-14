@@ -70,7 +70,7 @@ module QueryPatch
     def available_columns_with_time_tracker
       @available_columns = available_columns_without_time_tracker
       unless tt_query?
-        @available_columns.delete_if { |item| [:issue, :comments, :user, :tt_booking_date, :tt_log_date, :get_formatted_time].include? item.name }
+        @available_columns.delete_if { |item| [:issue, :comments, :user, :tt_booking_date, :tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :get_formatted_time, :get_formatted_bookable_hours].include? item.name }
       end
       @available_columns
     end
