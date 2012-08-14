@@ -52,6 +52,14 @@ class TimeBooking < ActiveRecord::Base
     time_dist2string(time2.to_i - time1.to_i)
   end
 
+  def get_formatted_start_time
+    self.started_on.to_time.localtime.strftime("%H:%M:%S") unless self.started_on.nil?
+  end
+
+  def get_formatted_stop_time
+    self.stopped_at.to_time.localtime.strftime("%H:%M:%S") unless self.stopped_at.nil?
+  end
+
   # TODO this method should be a helper hence it was used in TimeLog and TimeBooking the same way!
   def time_dist2string(dist)
     h = dist / 3600

@@ -14,13 +14,13 @@ class TimeListController < ApplicationController
     tt_retrieve_query
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
-    @query.column_names = @query.column_names || [:tt_booking_date, :comments, :issue, :get_formatted_time, :user]
+    @query.column_names = @query.column_names || [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
 
     # temporarily limit the available filters and columns for the view!
     @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
-    @query.available_columns.delete_if { |item| !([:id, :comments, :issue, :user, :project, :tt_booking_date, :get_formatted_time].include? item.name) }
+    @query.available_columns.delete_if { |item| !([:id, :user,:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
 
-    sort_init(@query.sort_criteria.empty? ? [['tt_booking_id', 'desc']] : @query.sort_criteria)
+    sort_init(@query.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
 
     if @query.valid?

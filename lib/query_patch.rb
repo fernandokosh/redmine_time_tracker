@@ -25,8 +25,10 @@ module QueryPatch
       base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
       base.add_available_column(QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeBooking.table_name}.started_on)"))
       base.add_available_column(QueryColumn.new(:tt_log_date, :sortable => "#{TimeLog.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeLog.table_name}.started_on)"))
+      base.add_available_column(QueryColumn.new(:get_formatted_start_time, :caption => :field_tt_start))
+      base.add_available_column(QueryColumn.new(:get_formatted_stop_time, :caption => :field_tt_stop))
       base.add_available_column(QueryColumn.new(:get_formatted_time, :caption => :field_tt_time))
-      base.add_available_column(QueryColumn.new(:get_formatted_bookable_hours, :caption => :field_tt_time))
+      base.add_available_column(QueryColumn.new(:get_formatted_bookable_hours, :caption => :field_tt_bookable))
       base.add_available_column(QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_issue, :groupable => "#{Issue.table_name}.subject"))
     end
   end

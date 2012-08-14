@@ -14,7 +14,6 @@
                     <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(Element.up(this, "form")); return false;',
                                                                      :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
                     </th>
-                    <%= tt_sort_header_tag(:sort_logs, 'tt_log_id', :caption => '#', :default_order => 'desc') %>
                     <% query.columns.each do |column| %>
                         <%= tt_column_header(column, :sort_logs) %>
                     <% end %>
@@ -43,7 +42,7 @@
                           <% if group != previous_group %>
                               <% reset_cycle %>
                               <tr class="group open">
-                                <td colspan="<%= query.columns.size + 2 %>">
+                                <td colspan="<%= query.columns.size + 1 %>">
                                   <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                                   <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
                                   <span class="count">(<%= group.nil? ? @log_count_by_group[nil] : @log_count_by_group[group] %>

@@ -88,6 +88,15 @@ tr.entry {
     padding-left: 20px;
 }
 
+#user-time-bookings-list td.issue,
+#user-time-bookings-list td.comments,
+#tt-time-list td.issue,
+#tt-time-list td.comments,
+#user-time-logs-list td.comments {
+    text-align: left;
+}
+
+
 #time_tracker_list td.start-date,
 #time_tracker_list td.spent-time,
 #time_tracker_list p.msg,

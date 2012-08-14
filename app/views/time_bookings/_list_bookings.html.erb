@@ -14,7 +14,6 @@
                     <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(Element.up(this, "form")); return false;',
                                                                      :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
                     </th>
-                    <%= tt_sort_header_tag(:sort_bookings, 'tt_booking_id', :caption => '#', :default_order => 'desc') %>
                     <% query.columns.each do |column| %>
                         <%= tt_column_header(column, :sort_bookings) %>
                     <% end %>
@@ -43,7 +42,7 @@
                           <% if group != previous_group %>
                               <% reset_cycle %>
                               <tr class="group open">
-                                <td colspan="<%= query.columns.size + 2 %>">
+                                <td colspan="<%= query.columns.size + 1 %>">
                                   <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                                   <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
                                   <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : @booking_count_by_group[group] %>
@@ -60,7 +59,6 @@
                       <tr id="entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
                         <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
                         <!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
-                        <td class="id"><%= entry.id %></td>
                         <%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
                         <td class="actions">
                           <%= link_to l(:time_tracker_label_continue), :controller => 'time_trackers', :action => 'start',
