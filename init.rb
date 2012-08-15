@@ -18,6 +18,8 @@ Query.send(:include, QueryPatch)
 
 require 'sort_helper_patch'
 require 'application_helper_patch'
+require 'queries_controller_patch'
+require 'issues_helper_patch'
 
 # workaround helping rails to find the helper-methods
 require File.join(File.dirname(__FILE__), "app", "helpers", "application_helper.rb")

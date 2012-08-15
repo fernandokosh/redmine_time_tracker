@@ -12,6 +12,7 @@
 <%= form_tag({:controller => 'time_list', :action => 'index'},
              :method => :get, :id => 'query_form') do %>
     <%= hidden_field_tag 'set_filter', '1' %>
+    <%= hidden_field_tag 'tt_query', true %>
     <div id="query_form_content" class="hide-when-print">
       <fieldset id="filters" class="collapsible <%= @query.new_record? ? "" : "collapsed" %>">
         <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
@@ -61,6 +62,9 @@
     <% end %>
 <% end %>
 
+<% content_for :sidebar do %>
+    <%= render_sidebar_queries %>
+<% end %>
 
 <!-- TODO edit next line to insert own context menu -->
 <!--<%= context_menu issues_context_menu_path  %>-->

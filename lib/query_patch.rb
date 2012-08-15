@@ -13,7 +13,6 @@ module QueryPatch
     base.send(:extend, ClassMethods)
     base.send(:include, InstanceMethods)
     base.class_eval do
-      attr_accessor :tt_query
 
       alias_method_chain :initialize, :time_tracker
       alias_method_chain :available_filters, :time_tracker
@@ -88,11 +87,12 @@ module QueryPatch
       # use raw Query as template to get the content for two complex fields without copying the source
       tq = Query.new
 
-      @available_filters['tt_project'] = tq.available_filters_without_time_tracker["project_id"].clone # :oder => 1
+      # unless-statements are used as workaround to get the code working for the migration file "011_add_default_tt_query"
+      @available_filters['tt_project'] = tq.available_filters_without_time_tracker["project_id"].clone unless tq.available_filters_without_time_tracker["project_id"].nil?
       @available_filters['tt_start_date'] = {:type => :date, :order => 2}
       @available_filters['tt_due_date'] = {:type => :date, :order => 3}
       @available_filters['tt_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
-      @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone # :oder => 5
+      @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
       @available_filters['tt_comments'] = {:type => :text, :order => 6}
       @available_filters
     end
