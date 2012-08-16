@@ -29,7 +29,6 @@ class TimeLogsController < ApplicationController
     if time_log.user_id == User.current.id || User.current.admin?
       start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
       time_log.started_on = start
-      # TODO calc stop-time
       hours = time_log.time_string2hour(tl[:spent_time])
       time_log.stopped_at = start + hours.hours
       time_log.comments = tl[:comments]
