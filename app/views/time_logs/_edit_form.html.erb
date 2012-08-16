@@ -1,51 +1,46 @@
 <% unless @time_log.nil? %>
     <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", @time_log.id, false, :id => nil) %></td>
-    <td class="tt_log_date"><%= @time_log.tt_log_date %></td>
-    <td colspan=4>
-      <%= form_for @time_log, :url => {:action => "add_booking"},
-                   :html => {:class => "time-booking-form"} do |f| %>
+    <td colspan=5>
+      <%= form_for @time_log, :url => {:action => "update"},
+                   :html => {:class => "time-log-update-form"} do |f| %>
           <%= f.hidden_field(:id) %>
 
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onkeyup => "updateBookingProject($('edit_time_log_#{@time_log.id}'))" %></div>
-          </div>
-          <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
-            <div class="task_form_input"><%= f.text_field :comments %></div>
-          </div>
-          <% projects = User.current.memberships.collect(&:project).compact.uniq %>
-          <% @time_log.project_id.nil? ? select = nil : select = Project.find(@time_log.project_id) %>
-          <% proj_list = "<option value=''>#{ l(:time_tracker_label_none) }</option>" %>
-          <% proj_list << "<option value='' disabled='disabled'>---</option>" %>
-          <% proj_list = proj_list.html_safe %>
-          <% proj_list << project_tree_options_for_select(projects, :selected => select) %>
-          <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
+            <div class="input_hint"><%= l(:field_tt_date) %></div>
             <div class="task_form_input">
-              <%= select_tag :project_id_select, proj_list, :onchange => "$('edit_time_log_#{@time_log.id}').time_log_project_id.value=$(this).value" %>
+              <%= f.text_field :tt_log_date, :size => "10", :placeholder => "date" %>
+              <%= image_tag("calendar.png", {:id => "edit_time_log_#{@time_log.id.to_s}.time_log_tt_log_date_trigger", :class => "calendar-trigger"}) +
+                          javascript_tag("Calendar.setup({inputField : $(edit_time_log_#{@time_log.id.to_s}).time_log_tt_log_date, ifFormat : '%Y-%m-%d', button : 'edit_time_log_#{@time_log.id.to_s}.time_log_tt_log_date_trigger' });") %>
             </div>
-            <%= f.hidden_field :project_id %>
           </div>
+
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
             <div class="task_form_input">
               <%= f.text_field :start_time, :value => @time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours($('edit_time_log_#{@time_log.id}'))" %>
             </div>
           </div>
+
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
             <div class="task_form_input">
               <%= f.text_field :stop_time, :value => @time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours($('edit_time_log_#{@time_log.id}'))" %>
             </div>
           </div>
+
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_time_spent) %></div>
+            <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
+            <div class="task_form_input"><%= f.text_field :comments %></div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:field_tt_bookable) %></div>
             <div class="task_form_input">
               <%= f.text_field :spent_time, :value => @time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop($('edit_time_log_#{@time_log.id}'))" %>
             </div>
           </div>
-          <%= f.submit "book" %>
+
+          <%= f.submit "update" %>
       <% end %>
     </td>
     <td class="actions">

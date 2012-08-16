@@ -5,6 +5,7 @@
     <td class="actions">
       <!-- TODO localize link-labels! -->
       <%= link_to_remote 'book', :update => 'entry-'+entry.id.to_s, :url => {:controller => 'time_logs', :action => 'show_booking', :time_log_id => entry.id} %>
+      <%= link_to_remote 'edit', :update => 'entry-'+entry.id.to_s, :url => {:controller => 'time_logs', :action => 'show_edit', :time_log_id => entry.id} %>
       <% if User.current.admin? %>
           <%= link_to 'delete', :controller => 'time_logs', :action => 'delete', :time_log_id => entry.id %>
       <% end %>

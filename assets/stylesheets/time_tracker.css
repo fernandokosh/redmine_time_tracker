@@ -1,7 +1,6 @@
-.invalid
-{
-    border-style:solid;
-    border-color:red;
+.invalid {
+    border-style: solid;
+    border-color: red;
 }
 
 tr.entry {
@@ -18,6 +17,8 @@ tr.entry {
 
 .task_form_sub_fields {
     float: left;
+    /*margin-left: 5%;*/
+    /*margin-right: 5%;*/
     margin-right: 5px;
 }
 
@@ -95,7 +96,6 @@ tr.entry {
 #user-time-logs-list td.comments {
     text-align: left;
 }
-
 
 #time_tracker_list td.start-date,
 #time_tracker_list td.spent-time,

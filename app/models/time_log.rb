@@ -91,6 +91,9 @@ class TimeLog < ActiveRecord::Base
     if str.match(/\d\d?:\d\d?:\d\d?/) #parse general input form hh:mm:ss
       arr = str.strip.split(':')
       sec = arr[0].to_i * 3600 + arr[1].to_i * 60 + arr[2].to_i
+    elsif str.match(/\d\d?:\d\d?/) #parse general input form hh:mm
+      arr = str.strip.split(':')
+      sec = arr[0].to_i * 3600 + arr[1].to_i * 60
     else
       # more flexible parsing for inputs like:  12d 23sec 5min
       time_factor = {:s => 1, :sec => 1, :m => 60, :min => 60, :h => 3600, :d => 86400}

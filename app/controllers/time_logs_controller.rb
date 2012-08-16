@@ -23,6 +23,21 @@ class TimeLogsController < ApplicationController
     redirect_to '/tt_overview'
   end
 
+  def update
+    tl = params[:time_log]
+    time_log = TimeLog.where(:id => tl[:id]).first
+    if time_log.user_id == User.current.id || User.current.admin?
+      start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
+      time_log.started_on = start
+      # TODO calc stop-time
+      hours = time_log.time_string2hour(tl[:spent_time])
+      time_log.stopped_at = start + hours.hours
+      time_log.comments = tl[:comments]
+      time_log.save!
+    end
+    redirect_to '/tt_overview'
+  end
+
   def delete
     if User.current.admin?
       time_log = TimeLog.where(:id => params[:time_log_id]).first
@@ -43,6 +58,11 @@ class TimeLogsController < ApplicationController
   def show_booking
     @time_log = TimeLog.where(:id => params[:time_log_id]).first
     render :partial => 'booking_form'
+  end
+
+  def show_edit
+    @time_log = TimeLog.where(:id => params[:time_log_id]).first
+    render :partial => 'edit_form'
   end
 
   def get_list_entry

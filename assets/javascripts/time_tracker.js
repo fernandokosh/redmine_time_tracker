@@ -101,6 +101,10 @@ function timeString2sec(str) {
         var arr = str.strip().split(':');
         return new Number(arr[0]) * 3600 + new Number(arr[1]) * 60 + new Number(arr[2]);
     }
+    if (str.match(/\d\d?:\d\d?/)) {     //parse general input form hh:mm:ss
+        var arr = str.strip().split(':');
+        return new Number(arr[0]) * 3600 + new Number(arr[1]) * 60;
+    }
     // more flexible parsing for inputs like:  12d 23sec 5min
     var time_factor = new Hash({"s":1, "sec":1, "m":60, "min":60, "h":3600, "d":86400});
     var sec = 0;
