@@ -198,7 +198,7 @@ module QueryPatch
 
       TimeLog.bookable.
           #includes([:project, :issue, :user]).
-          includes(:user).
+          includes(:user, :time_bookings).
           where(statement).
           order(order_option).
           limit(options[:limit]).
