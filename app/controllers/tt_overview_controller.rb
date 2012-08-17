@@ -35,27 +35,17 @@ class TtOverviewController < ApplicationController
                                :offset => @log_offset,
                                :limit => @limit)
       @log_count_by_group = @query_logs.log_count_by_group
-      #@log_count_by_group = 0
     end
 
     # time_bookings list  =======================
 
-    @query_give_logs = false
-    @query_give_bookings = true
-    tt_retrieve_query
+    time_bookings_query
 
     # group list by date per default // TODO replace this with some kind of user-settings later!
     @query_bookings.group_by ||= "tt_booking_date"
 
-    # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
-    # which depend on issues
-    @query_bookings.column_names = @query_bookings.column_names || [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
     #show only the actual users entries from the last 2 weeks
     @query_bookings.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}, :tt_start_date => {:operator => ">=", :values => [(Time.now-2.weeks).beginning_of_day.to_s]}}
-
-    # temporarily limit the available filters and columns for the view!
-    @query_bookings.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
-    @query_bookings.available_columns.delete_if { |item| !([:id, :user,:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
 
     sort_init(@query_bookings.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query_bookings.sort_criteria)
     tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")

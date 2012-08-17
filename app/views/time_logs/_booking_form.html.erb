@@ -8,7 +8,7 @@
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onkeyup => "updateBookingProject($('edit_time_log_#{@time_log.id}'))" %></div>
+            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onkeyup => "updateBookingProject($('edit_time_log_#{@time_log.id}'), 'log')" %></div>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
@@ -30,19 +30,19 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :start_time, :value => @time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours($('edit_time_log_#{@time_log.id}'))" %>
+              <%= f.text_field :start_time, :value => @time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours($('edit_time_log_#{@time_log.id}'), 'log')" %>
             </div>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :stop_time, :value => @time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours($('edit_time_log_#{@time_log.id}'))" %>
+              <%= f.text_field :stop_time, :value => @time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours($('edit_time_log_#{@time_log.id}'), 'log')" %>
             </div>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_time_spent) %></div>
             <div class="task_form_input">
-              <%= f.text_field :spent_time, :value => @time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop($('edit_time_log_#{@time_log.id}'))" %>
+              <%= f.text_field :spent_time, :value => @time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop($('edit_time_log_#{@time_log.id}'), 'log')" %>
             </div>
           </div>
           <%= f.submit "book" %>

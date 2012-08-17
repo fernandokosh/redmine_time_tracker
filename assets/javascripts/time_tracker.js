@@ -48,41 +48,52 @@ function updateTTControllerForm(obj) {
 
 // ================== booking_form helpers ============================
 
-function updateBookingHours(form) {
-    start = form.time_log_start_time.value;
-    stop = form.time_log_stop_time.value;
+function updateBookingHours(form, name) {
+    var start_field = "time_" + name + "_start_time";
+    var stop_field = "time_" + name + "_stop_time";
+    var spent_field = "time_" + name + "_spent_time";
+
+    var start = form.elements[start_field].value;
+    var stop = form.elements[stop_field].value;
     if (timeString2sec(stop) < timeString2sec(start)) {
-        swap = start;
+        var swap = start;
         start = stop;
         stop = swap;
-        form.time_log_start_time.value = start;
-        form.time_log_stop_time.value = stop;
+        form.elements[start_field].value = start;
+        form.elements[stop_field].value = stop;
     }
-    form.time_log_spent_time.value = calcBookingHelper(start, stop, 1);
+    form.elements[spent_field].value = calcBookingHelper(start, stop, 1);
 }
 
-function updateBookingStop(form) {
-    form.time_log_stop_time.value = calcBookingHelper(form.time_log_start_time.value, form.time_log_spent_time.value, 2);
+function updateBookingStop(form, name) {
+    var start_field = "time_" + name + "_start_time";
+    var stop_field = "time_" + name + "_stop_time";
+    var spent_field = "time_" + name + "_spent_time";
+
+    form.elements[stop_field].value = calcBookingHelper(form.elements[start_field].value, form.elements[spent_field].value, 2);
 }
 
-function updateBookingProject(form) {
-    issue_id = form.time_log_issue_id.value;
+function updateBookingProject(form, name) {
+    var issue_id_field = "time_" + name + "_issue_id";
+    var project_id_field = "time_" + name + "_project_id";
+
+    var issue_id = form.elements[issue_id_field].value;
     if (issue_id.blank()) {
         form.project_id_select.enable();
-        form.time_log_issue_id.parentNode.removeClassName('invalid');
+        form.elements[issue_id_field].parentNode.removeClassName('invalid');
     } else {
         new Ajax.Request('/issues/' + issue_id + '.json?',
             {
                 method:'get',
                 onSuccess:function (transport) {
-                    form.time_log_issue_id.parentNode.removeClassName('invalid');
+                    form.elements[issue_id_field].parentNode.removeClassName('invalid');
                     var issue = transport.responseJSON.issue;
                     if (issue == null) {
                         form.project_id_select.enable();
                     } else {
                         form.project_id_select.disable();
-                        form.time_log_project_id.value = issue.project.id;
-                        select_options = form.project_id_select;
+                        form.elements[project_id_field].value = issue.project.id;
+                        var select_options = form.project_id_select;
                         for (i = 0; i < select_options.length; i++) {
                             if (select_options[i].value == issue.project.id) select_options[i].selected = true;
                         }
@@ -90,7 +101,7 @@ function updateBookingProject(form) {
                 },
                 onFailure:function () {
                     form.project_id_select.enable();
-                    form.time_log_issue_id.parentNode.addClassName('invalid');
+                    form.elements[issue_id_field].parentNode.addClassName('invalid');
                 }
             });
     }
@@ -121,17 +132,17 @@ function timeString2sec(str) {
 }
 
 function calcBookingHelper(ele1, ele2, calc) {
-    sec1 = timeString2sec(ele1);
-    sec2 = timeString2sec(ele2);
+    var sec1 = timeString2sec(ele1);
+    var sec2 = timeString2sec(ele2);
     if (calc == 1) {
-        val = sec2 - sec1;
+        var val = sec2 - sec1;
     }
     if (calc == 2) {
         val = sec1 + sec2;
     }
-    h = (val / 3600).floor();
-    m = ((val - h * 3600) / 60).floor();
-    s = (val - (h * 3600 + m * 60)).floor();
+    var h = (val / 3600).floor();
+    var m = ((val - h * 3600) / 60).floor();
+    var s = (val - (h * 3600 + m * 60)).floor();
     h < 10 ? h = "0" + h.toString() : h = h.toString();
     m < 10 ? m = "0" + m.toString() : m = m.toString();
     s < 10 ? s = "0" + s.toString() : s = s.toString();

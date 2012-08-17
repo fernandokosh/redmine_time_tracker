@@ -1,0 +1,69 @@
+<% unless @time_booking.nil? %>
+    <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", @time_booking.id, false, :id => nil) %></td>
+    <td colspan=7>
+      <%= form_for @time_booking, :url => {:action => "update"},
+                   :html => {:class => "time-booking-update-form"} do |f| %>
+          <%= f.hidden_field(:id) %>
+
+          <% projects = User.current.memberships.collect(&:project).compact.uniq %>
+          <% @time_booking.project_id.nil? ? select = nil : select = Project.find(@time_booking.project_id) %>
+          <% proj_list = "<option value=''>#{ l(:time_tracker_label_none) }</option>" %>
+          <% proj_list << "<option value='' disabled='disabled'>---</option>" %>
+          <% proj_list = proj_list.html_safe %>
+          <% proj_list << project_tree_options_for_select(projects, :selected => select) %>
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
+            <div class="task_form_input">
+              <%= select_tag :project_id_select, proj_list, :onchange => "$('edit_time_booking_#{@time_booking.id}').time_booking_project_id.value=$(this).value", :disabled => (@time_booking.issue_id != l(:time_tracker_label_none)) %>
+            </div>
+            <%= f.hidden_field :project_id %>
+          </div>
+          
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:field_tt_date) %></div>
+            <div class="task_form_input">
+              <%= f.text_field :tt_booking_date, :size => "10", :placeholder => "date" %>
+              <%= image_tag("calendar.png", {:id => "edit_time_booking_#{@time_booking.id.to_s}.time_booking_tt_booking_date_trigger", :class => "calendar-trigger"}) +
+                          javascript_tag("Calendar.setup({inputField : $(edit_time_booking_#{@time_booking.id.to_s}).time_booking_tt_booking_date, ifFormat : '%Y-%m-%d', button : 'edit_time_booking_#{@time_booking.id.to_s}.time_booking_tt_booking_date_trigger' });") %>
+            </div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
+            <div class="task_form_input">
+              <%= f.text_field :start_time, :value => @time_booking.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours($('edit_time_booking_#{@time_booking.id}'), 'booking')" %>
+            </div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
+            <div class="task_form_input">
+              <%= f.text_field :stop_time, :value => @time_booking.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours($('edit_time_booking_#{@time_booking.id}'), 'booking')" %>
+            </div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
+            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onkeyup => "updateBookingProject($('edit_time_booking_#{@time_booking.id}'), 'booking')" %></div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
+            <div class="task_form_input"><%= f.text_field :comments %></div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_time_spent) %></div>
+            <div class="task_form_input">
+              <%= f.text_field :spent_time, :value => @time_booking.get_formatted_time, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop($('edit_time_booking_#{@time_booking.id}'), 'booking')" %>
+            </div>
+          </div>
+
+          <%= f.submit "update" %>
+      <% end %>
+    </td>
+    <td class="actions">
+      <!-- TODO localize link-labels! -->
+      <%= link_to_remote 'cancel', :update => 'booking-entry-'+@time_booking.id.to_s, :url => {:controller => 'time_bookings', :action => 'get_list_entry', :time_booking_id => @time_booking.id} %>
+    </td>
+<% end %>

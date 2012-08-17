@@ -1,15 +1,3 @@
-# Helper access from the model
-class TTHelper
-  # TODO check for Singleton. seems not be used if included like this:
-  # code is original from redmine_time_tracker-plugin
-  include Singleton
-  include TimeTrackersHelper
-end
-
-def help
-  TTHelper.instance
-end
-
 class TimeTracker < ActiveRecord::Base
   unloadable
 

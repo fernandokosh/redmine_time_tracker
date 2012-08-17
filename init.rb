@@ -60,3 +60,19 @@ Redmine::Plugin.register :redmine_time_tracker do
     #menu.push :time_tracker_menu_tab_stats, {:controller => 'time_logs', :action => 'index'}, :caption => :time_tracker_label_menu_tab_stats, :if => Proc.new { User.current.logged? }
   end
 end
+
+# Helper access from the model
+class TTHelper
+  # TODO check for Singleton. seems not be used if included like this:
+  # code is original from redmine_time_tracker-plugin
+  include Singleton
+  include TimeTrackersHelper
+end
+
+# to call helper methods from the model use help.<helper_method>
+# in the controllers, the TimeTrackerHelper was included separately, so all methods can be called without any prefix
+# that is necessary to make variables like params[] available to the helper-methods
+def help
+  TTHelper.instance
+end
+

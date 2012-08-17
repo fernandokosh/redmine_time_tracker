@@ -28,11 +28,10 @@ class TimeLogsController < ApplicationController
     time_log = TimeLog.where(:id => tl[:id]).first
     if time_log.user_id == User.current.id || User.current.admin?
       start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
-      time_log.started_on = start
-      hours = time_log.time_string2hour(tl[:spent_time])
-      time_log.stopped_at = start + hours.hours
-      time_log.comments = tl[:comments]
-      time_log.save!
+      hours = time_string2hour(tl[:spent_time])
+      stop = start + hours.hours
+
+      time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
     end
     redirect_to '/tt_overview'
   end

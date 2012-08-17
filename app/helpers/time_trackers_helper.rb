@@ -39,6 +39,29 @@ module TimeTrackersHelper
     @sort_bookings_criteria.to_sql
   end
 
+  def time_string2hour(str)
+    sec = 0
+    if str.match(/\d\d?:\d\d?:\d\d?/) #parse general input form hh:mm:ss
+      arr = str.strip.split(':')
+      sec = arr[0].to_i * 3600 + arr[1].to_i * 60 + arr[2].to_i
+    elsif str.match(/\d\d?:\d\d?/) #parse general input form hh:mm
+      arr = str.strip.split(':')
+      sec = arr[0].to_i * 3600 + arr[1].to_i * 60
+    else
+      # more flexible parsing for inputs like:  12d 23sec 5min
+      time_factor = {:s => 1, :sec => 1, :m => 60, :min => 60, :h => 3600, :d => 86400}
+      str.partition(/\A\d+\s*\D+/).each do |item|
+        item=item.strip
+        item.match(/\d+/).nil? ? num = nil : num = item.match(/\d+/)[0].to_i
+        item.match(/\D+/).nil? ? fac = nil : fac = item.match(/\D+/)[0].to_sym
+        if time_factor.has_key?(fac)
+          sec += num * time_factor.fetch(fac)
+        end
+      end
+    end
+    sec.to_f / 3600
+  end
+
   def calendar_for_tt(field_id)
     #include_calendar_headers_tags
     image_tag("calendar.png", {:id => "#{field_id}_trigger", :class => "calendar-trigger"}) +
@@ -103,5 +126,19 @@ module TimeTrackersHelper
     # temporarily limit the available filters and columns for the view!
     @query_logs.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
     @query_logs.available_columns.delete_if { |item| !([:id, :user, :tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :comments, :get_formatted_bookable_hours].include? item.name) }
+  end
+
+  def time_bookings_query
+    @query_give_logs = false
+    @query_give_bookings = true
+    tt_retrieve_query
+
+    # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
+    # which depend on issues
+    @query_bookings.column_names = @query_bookings.column_names || [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
+
+    # temporarily limit the available filters and columns for the view!
+    @query_bookings.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
+    @query_bookings.available_columns.delete_if { |item| !([:id, :user,:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
   end
 end
