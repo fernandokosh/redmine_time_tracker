@@ -12,19 +12,6 @@ module TimeTrackersHelper
     current.nil? ? TimeTracker.new : current
   end
 
-  def paginate_array(array, page)
-    limit = 15 # 15 items per page
-    page = 1 if page == 0
-    limit * (page - 1) > array.size - 1 ? offset = 0 : offset = limit * (page - 1)
-    offset + limit >= array.size ? stop_loop = array.size-1 : stop_loop = offset + limit - 1
-               # filling the array for the view
-    erg = []
-    for i in offset..stop_loop
-      erg.push(array[i])
-    end
-    {:limit => limit, :page => page, :arr => erg}
-  end
-
   def tt_column_header(column, sort_arg)
     column.sortable ? tt_sort_header_tag(sort_arg, column.name.to_s, :caption => column.caption,
                                          :default_order => column.default_order) :

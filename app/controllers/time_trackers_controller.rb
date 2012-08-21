@@ -104,19 +104,6 @@ class TimeTrackersController < ApplicationController
     current.nil? ? TimeTracker.new : current
   end
 
-  def paginate_array(array, page)
-    limit = 15 # 15 items per page
-    page = 1 if page == 0
-    limit * (page - 1) > array.size - 1 ? offset = 0 : offset = limit * (page - 1)
-    offset + limit >= array.size ? stop_loop = array.size-1 : stop_loop = offset + limit - 1
-               # filling the array for the view
-    erg = []
-    for i in offset..stop_loop
-      erg.push(array[i])
-    end
-    {:limit => limit, :page => page, :arr => erg}
-  end
-
   def apply_status_transition(issue)
     unless issue == nil
       new_status_id = Setting.plugin_redmine_time_tracker[:status_transitions][issue.status_id.to_s]
