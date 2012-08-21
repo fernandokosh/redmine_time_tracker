@@ -5,7 +5,10 @@ class TtInfoController < ApplicationController
   before_filter :authorize_global
 
   def index
-    #if User.current.allowed_to?(:view_others_time_trackers, nil, :global => true)
-    @time_trackers = TimeTracker.all
+    if User.current.allowed_to?(:view_others_time_trackers, nil, :global => true) || User.current.admin?
+      @time_trackers = TimeTracker.all
+    else
+      @time_trackers = help.get_current_time_tracker
+    end
   end
 end

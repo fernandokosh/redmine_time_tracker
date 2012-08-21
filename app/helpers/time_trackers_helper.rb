@@ -11,6 +11,16 @@ module TimeTrackersHelper
     Project.where(:id => project_id).first
   end
 
+  def time_dist2string(dist)
+    h = dist / 3600
+    m = (dist - h*3600) / 60
+    s = dist - (h*3600 + m*60)
+    h<10 ? h="0#{h}" : h = h.to_s
+    m<10 ? m="0#{m}" : m = m.to_s
+    s<10 ? s="0#{s}" : s = s.to_s
+    h + ":" + m + ":" + s
+  end
+
   def get_current_time_tracker
     current = TimeTracker.where(:user_id => User.current.id).first
     current.nil? ? TimeTracker.new : current

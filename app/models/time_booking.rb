@@ -48,7 +48,7 @@ class TimeBooking < ActiveRecord::Base
   end
 
   def get_formatted_time(time1 = started_on, time2 = stopped_at)
-    time_dist2string(time2.to_i - time1.to_i)
+    help.time_dist2string(time2.to_i - time1.to_i)
   end
 
   def get_formatted_start_time
@@ -57,17 +57,6 @@ class TimeBooking < ActiveRecord::Base
 
   def get_formatted_stop_time
     self.stopped_at.to_time.localtime.strftime("%H:%M:%S") unless self.stopped_at.nil?
-  end
-
-  # TODO this method should be a helper hence it was used in TimeLog and TimeBooking the same way!
-  def time_dist2string(dist)
-    h = dist / 3600
-    m = (dist - h*3600) / 60
-    s = dist - (h*3600 + m*60)
-    h<10 ? h="0#{h}" : h = h.to_s
-    m<10 ? m="0#{m}" : m = m.to_s
-    s<10 ? s="0#{s}" : s = s.to_s
-    h + ":" + m + ":" + s
   end
 
   # we have to redefine some setters, to ensure a convenient way to update these attributes

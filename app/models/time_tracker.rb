@@ -112,9 +112,8 @@ class TimeTracker < ActiveRecord::Base
     false
   end
 
-  # TODO think we don't need that method neither
   def running_time
-    ((Time.now.to_i - started_on.to_i) / 3600.0).to_f
+    Time.now.to_i - started_on.to_i
   end
 
   protected
