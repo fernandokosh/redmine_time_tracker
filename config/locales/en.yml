@@ -44,6 +44,7 @@ en:
   time_tracker_label_delete: "Delete"
   time_tracker_label_issue: "Issue"
   time_tracker_label_main_menu: "TimeTracker"
+  time_tracker_label_menu_tab_active_trackers: "Active Trackers"
   time_tracker_label_menu_tab_overview: "Overview"
   time_tracker_label_menu_tab_logs: "Your Logs"
   time_tracker_label_none: "< none >"

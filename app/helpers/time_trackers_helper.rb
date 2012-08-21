@@ -7,6 +7,10 @@ module TimeTrackersHelper
     User.where(:id => user_id).first
   end
 
+  def project_from_id(project_id)
+    Project.where(:id => project_id).first
+  end
+
   def get_current_time_tracker
     current = TimeTracker.where(:user_id => User.current.id).first
     current.nil? ? TimeTracker.new : current

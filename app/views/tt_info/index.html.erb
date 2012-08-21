@@ -1,0 +1,70 @@
+<div id="time_tracker_list">
+
+  <h2><%= l(:time_tracker_list_title) %></h2>
+
+  <% has_zombie = false %>
+
+  <% unless @time_trackers.nil? %>
+      <div id="all-time-trackers-list">
+        <% if @time_trackers.nil? || @time_trackers.empty? %>
+            <p class="msg"><%= l(:no_time_tracker) %></p>
+        <% else %>
+            <div class="autoscroll">
+              <table class="list">
+                <thead>
+                <tr>
+                  <th class="zombie"></th>
+                  <th class="user"><%= l(:label_user) %></th>
+                  <th class="project"><%= l(:time_tracker_label_project) %></th>
+                  <th class="issue"><%= l(:label_issue) %></th>
+                  <th class="start-date"><%= l(:time_tracker_label_start_date) %></th>
+                  <th class="spent-time"><%= l(:label_spent_time) %></th>
+                  <th class="buttons"><%= l(:time_tracker_label_action) %></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <% @time_trackers.each do |time_tracker| %>
+                    <tr id="all-timetracker<%= time_tracker.id %>" class="<%= cycle('odd', 'even') %>">
+                      <% if time_tracker.zombie? %>
+                          <% has_zombie = true %>
+                          <td class="zombie icon icon-warning"></td>
+                      <% else %>
+                          <td class="zombie"></td>
+                      <% end %>
+                      <td class="user"><%= link_to_user help.user_from_id(time_tracker.user_id) %></td>
+                      <% if time_tracker.project_id.nil? %>
+                          <td class="project"></td>
+                      <% else %>
+                          <td class="project"><%= link_to_project help.project_from_id(time_tracker.project_id) %></td>
+                      <% end %>
+                      <% if time_tracker.issue_id.nil? %>
+                          <td class="issue"></td>
+                      <% else %>
+                          <td class="issue"><%= link_to_issue help.issue_from_id(time_tracker.issue_id), :project => true %></td>
+                      <% end %>
+                      <td class="start-date"><%= format_time(time_tracker.started_on) %></td>
+                      <td class="spent-time"><%= time_tracker.running_time.round(2).to_s %></td>
+                      <td class="buttons">
+                        <% if User.current.allowed_to?(:delete_others_time_trackers, nil, :global => true) %>
+                            <%= link_to_remote l(:time_tracker_label_delete),
+                                               :url => {:controller => 'time_trackers', :action => 'delete', :id => time_tracker.id},
+                                               :html => {:class => 'icon icon-del'},
+                                               :complete => "$('#{'all-timetracker' + time_tracker.id.to_s}').update('<td colspan=\"0\" class=\"msg\">' + request.responseText + '</td>');"
+                            %>
+                        <% end %>
+                      </td>
+                    </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </div>
+        <% end %>
+      </div>
+  <% end %>
+
+  <% if has_zombie %>
+      <p class="legend icon icon-warning"><%= l(:time_tracker_zombie_legend) %></p>
+  <% end %>
+
+</div>
