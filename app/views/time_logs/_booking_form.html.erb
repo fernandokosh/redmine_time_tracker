@@ -8,7 +8,7 @@
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onkeyup => "updateBookingProject($('edit_time_log_#{@time_log.id}'), 'log')" %></div>
+            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject($('edit_time_log_#{@time_log.id}'), 'log')" %></div>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
@@ -47,6 +47,8 @@
           </div>
           <%= f.submit "book" %>
       <% end %>
+      <%= javascript_tag "new Autocomplete('time_log_issue_id', { serviceUrl:'/tt_completer/get_issue_id.json', useData:true, onSelect:'fireOnchange' } );" %>
+      <%= javascript_tag "new Autocomplete('time_log_comments', { serviceUrl:'/tt_completer/get_issue_subject.json', useData:true } );" %>
     </td>
     <td class="actions">
       <!-- TODO localize link-labels! -->

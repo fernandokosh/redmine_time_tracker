@@ -7,7 +7,7 @@ class TtCompleter
     self.data = Array.new
   end
 
-  def get_issue
+  def get_issue(flag = 0)
     issue_list = Array.new
     if query.match(/^\d+$/)
       issue_list << Issue.visible.find_by_id(query.to_i)
@@ -18,7 +18,9 @@ class TtCompleter
     issue_list.compact!
     issue_list.each do |item|
       self.suggestions.push("##{item.id} #{item.subject}")
-      self.data.push([item.id.to_s, item.subject])
+      self.data.push([item.id.to_s, item.subject]) if flag == 0
+      self.data.push(item.id.to_s) if flag == 1
+      self.data.push(item.subject) if flag == 2
     end
   end
 end

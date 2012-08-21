@@ -26,6 +26,7 @@ var Autocomplete = function (el, options) {
     this.serviceUrl = options.serviceUrl;
     this.options = {
         tTControlUpdate:false, // use this to autoComplete the comments-field AND issue-id within the TimeTrackerControl
+        useData:false, // autocompletion will fill in the data-value instead of the suggestions-value if this flag is true
         autoSubmit:false,
         minChars:1,
         maxHeight:300,
@@ -293,6 +294,8 @@ Autocomplete.prototype = {
             form.time_tracker_comments.value = data[1];
             this.hide();
             updateTTControllerForm(this.el.form);
+        } else if (this.options.useData) {
+            selectedValue = this.data[i];
         } else {
             selectedValue = this.suggestions[i];
         }
@@ -342,7 +345,13 @@ Autocomplete.prototype = {
     },
 
     onSelect:function () {
-        (this.options.onSelect || Prototype.emptyFunction)(this.el.form);
+        if (this.options.tTControlUpdate) {
+            (this.options.onSelect || Prototype.emptyFunction)(this.el.form);
+        } else if (this.options.onSelect == "fireOnchange") {
+            this.el.onchange()
+        } else {
+            (this.options.onSelect || Prototype.emptyFunction)(this.suggestions[i], this.data[i]);
+        }
     }
 };
 

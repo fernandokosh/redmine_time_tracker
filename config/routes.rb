@@ -20,3 +20,5 @@ match '/time_bookings/get_list_entry', :to => 'time_bookings#get_list_entry', :v
 match '/time_list', :to => 'time_list#index', :via => [:get, :post]
 match '/tt_overview', :to => 'tt_overview#index', :via => [:get, :post]
 match '/tt_completer/get_issue', :to => 'tt_completer#get_issue', :via => [:get]
+match '/tt_completer/get_issue_id', :to => 'tt_completer#get_issue_id', :via => [:get]
+match '/tt_completer/get_issue_subject', :to => 'tt_completer#get_issue_subject', :via => [:get]
