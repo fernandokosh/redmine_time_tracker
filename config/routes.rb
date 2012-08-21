@@ -19,3 +19,4 @@ match '/time_bookings/delete', :to => 'time_bookings#delete', :via => [:get, :po
 match '/time_bookings/get_list_entry', :to => 'time_bookings#get_list_entry', :via => [:get, :post]
 match '/time_list', :to => 'time_list#index', :via => [:get, :post]
 match '/tt_overview', :to => 'tt_overview#index', :via => [:get, :post]
+match '/tt_completer/get_issue', :to => 'tt_completer#get_issue', :via => [:get]

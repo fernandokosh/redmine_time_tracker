@@ -17,6 +17,14 @@ class TimeTrackersController < ApplicationController
         args[:issue_id]=params[:time_tracker][:issue_id] if args[:issue_id].nil?
         args[:comments]=params[:time_tracker][:comments] if args[:comments].nil?
       end
+      # parse comments fpr issue-id
+      if args[:issue_id].nil? && args[:comments].strip.match(/\A#\d?\d*\s/)
+        cut = args[:comments].strip.partition(/#\d?\d*\s/)
+        args[:issue_id] = cut[1].sub(/#/,"").to_i
+        args[:comments] = cut[2].strip
+      end
+
+
       @time_tracker = TimeTracker.new(:issue_id => args[:issue_id], :comments => args[:comments])
       if @time_tracker.start
         apply_status_transition(Issue.where(:id => args[:issue_id]).first) unless Setting.plugin_redmine_time_tracker[:status_transitions] == nil

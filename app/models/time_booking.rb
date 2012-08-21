@@ -1,7 +1,7 @@
 class TimeBooking < ActiveRecord::Base
   unloadable
 
-  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :virtual, :project
+  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :virtual, :project, :project_id
   belongs_to :project
   belongs_to :time_log
   belongs_to :time_entry, :dependent => :delete
@@ -21,7 +21,10 @@ class TimeBooking < ActiveRecord::Base
       if args[:issue].nil?
         # create a virtual booking
         proj = Project.where(:id => args[:project_id]).first
-        self.project = proj if User.current.allowed_to?(:log_time, proj)
+        if User.current.allowed_to?(:log_time, proj)
+          self.project = proj
+          self.write_attribute(:project_id, proj.id)
+        end
         self.update_attributes({:virtual => true, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
         self.comments = args[:comments]
       else
@@ -33,7 +36,7 @@ class TimeBooking < ActiveRecord::Base
         if User.current.allowed_to?(:log_time, args[:issue].project)
           # TODO check for user-specific setup (limitations for bookable times etc)
           time_entry = create_time_entry({:issue => args[:issue], :user_id => args[:user_id], :comments => args[:comments], :started_on => args[:started_on], :activity_id => args[:activity_id], :hours => args[:hours]})
-          super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at], :project => args[:issue].project})
+          super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at], :project_id => args[:issue].project.id})
         end
       end
     end
