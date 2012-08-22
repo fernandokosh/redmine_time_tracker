@@ -270,3 +270,5 @@ module QueryPatch
     end
   end
 end
+
+Query.send(:include, QueryPatch)

@@ -41,3 +41,5 @@ module MenuPatch
     end
   end
 end
+
+Redmine::MenuManager::MenuHelper.send(:include, MenuPatch)

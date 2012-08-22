@@ -5,16 +5,9 @@ require 'redmine'
 
 # patching the user-class of redmine, so we can reference the users time-log easier
 require 'user_patch'
-User.send(:include, UserPatch)
-
 require 'project_patch'
-Project.send(:include, ProjectPatch)
-
 require 'menu_patch'
-Redmine::MenuManager::MenuHelper.send(:include, MenuPatch)
-
 require 'query_patch'
-Query.send(:include, QueryPatch)
 
 require 'sort_helper_patch'
 require 'application_helper_patch'

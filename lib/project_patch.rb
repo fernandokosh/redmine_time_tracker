@@ -13,3 +13,5 @@ module ProjectPatch
   module InstanceMethods
   end
 end
+
+Project.send(:include, ProjectPatch)
