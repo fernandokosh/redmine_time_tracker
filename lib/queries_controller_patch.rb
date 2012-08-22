@@ -23,6 +23,7 @@ module QueriesControllerPatch
         @query.tt_query = true
         @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
         @query.available_columns.delete_if { |item| !([:id, :user, :project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
+        build_query_from_params
       end
     end
 

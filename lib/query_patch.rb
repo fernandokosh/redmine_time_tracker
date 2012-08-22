@@ -41,6 +41,19 @@ module QueryPatch
       self.tt_query
     end
 
+    def tt_query=(flag)
+      if !self.tt_query? && flag
+        self.filters.delete('status_id') if self.filters
+      elsif self.tt_query? && !flag
+        self.filters ||= {'status_id' => {:operator => "o", :values => [""]}} # reset original values
+      end
+
+      write_attribute(:tt_query, flag)
+      # to force a recalculation, we have to set columns and filters "nil"
+      @available_columns = nil
+      @available_filters = nil
+    end
+
     def initialize_with_time_tracker(attributes=nil, *args)
       initialize_without_time_tracker attributes
       self.filters.delete('status_id') if tt_query?
