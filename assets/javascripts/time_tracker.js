@@ -48,60 +48,60 @@ function updateTTControllerForm(obj) {
 
 // ================== booking_form helpers ============================
 
-function updateBookingHours(form, name) {
-    var start_field = "time_" + name + "_start_time";
-    var stop_field = "time_" + name + "_stop_time";
-    var spent_field = "time_" + name + "_spent_time";
+function updateBookingHours(name) {
+    var start_field = $(name + "_start_time");
+    var stop_field = $(name + "_stop_time");
+    var spent_field = $(name + "_spent_time");
 
-    var start = form.elements[start_field].value;
-    var stop = form.elements[stop_field].value;
+    var start = start_field.value;
+    var stop = stop_field.value;
     if (timeString2sec(stop) < timeString2sec(start)) {
         var swap = start;
         start = stop;
         stop = swap;
-        form.elements[start_field].value = start;
-        form.elements[stop_field].value = stop;
+        start_field.value = start;
+        stop_field.value = stop;
     }
-    form.elements[spent_field].value = calcBookingHelper(start, stop, 1);
+    spent_field.value = calcBookingHelper(start, stop, 1);
 }
 
-function updateBookingStop(form, name) {
-    var start_field = "time_" + name + "_start_time";
-    var stop_field = "time_" + name + "_stop_time";
-    var spent_field = "time_" + name + "_spent_time";
+function updateBookingStop(name) {
+    var start_field = $(name + "_start_time");
+    var stop_field = $(name + "_stop_time");
+    var spent_field = $(name + "_spent_time");
 
-    form.elements[stop_field].value = calcBookingHelper(form.elements[start_field].value, form.elements[spent_field].value, 2);
+    stop_field.value = calcBookingHelper(start_field.value, spent_field.value, 2);
 }
 
-function updateBookingProject(form, name) {
-    var issue_id_field = "time_" + name + "_issue_id";
-    var project_id_field = "time_" + name + "_project_id";
+function updateBookingProject(name) {
+    var issue_id_field = $(name + "_issue_id");
+    var project_id_field = $(name + "_project_id");
+    var project_id_select = $(name + "_project_id_select");
 
-    var issue_id = form.elements[issue_id_field].value;
+    var issue_id = issue_id_field.value;
     if (issue_id.blank()) {
-        form.project_id_select.enable();
-        form.elements[issue_id_field].parentNode.removeClassName('invalid');
+        project_id_select.enable(); // TODO get this element!!
+        issue_id_field.parentNode.removeClassName('invalid');
     } else {
         new Ajax.Request('/issues/' + issue_id + '.json?',
             {
                 method:'get',
                 onSuccess:function (transport) {
-                    form.elements[issue_id_field].parentNode.removeClassName('invalid');
+                    issue_id_field.parentNode.removeClassName('invalid');
                     var issue = transport.responseJSON.issue;
                     if (issue == null) {
-                        form.project_id_select.enable();
+                        project_id_select.enable();
                     } else {
-                        form.project_id_select.disable();
-                        form.elements[project_id_field].value = issue.project.id;
-                        var select_options = form.project_id_select;
-                        for (i = 0; i < select_options.length; i++) {
-                            if (select_options[i].value == issue.project.id) select_options[i].selected = true;
+                        project_id_select.disable();
+                        project_id_field.value = issue.project.id;
+                        for (i = 0; i < project_id_select.length; i++) {
+                            if (project_id_select[i].value == issue.project.id) project_id_select[i].selected = true;
                         }
                     }
                 },
                 onFailure:function () {
-                    form.project_id_select.enable();
-                    form.elements[issue_id_field].parentNode.addClassName('invalid');
+                    project_id_select.enable();
+                    issue_id_field.parentNode.addClassName('invalid');
                 }
             });
     }

@@ -8,7 +8,7 @@
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject($('edit_time_log_#{@time_log.id}'), 'log')" %></div>
+            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('time_log_add_booking_#{@time_log.id}')" %></div>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
@@ -23,32 +23,32 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
             <div class="task_form_input">
-              <%= select_tag :project_id_select, proj_list, :onchange => "$('edit_time_log_#{@time_log.id}').time_log_project_id.value=$(this).value" %>
+              <%= select_tag "time_log_add_booking_#{@time_log.id}_project_id_select", proj_list, :onchange => "$('time_log_add_booking_#{@time_log.id}_project_id').value=$(this).value" %>
             </div>
             <%= f.hidden_field :project_id %>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :start_time, :value => @time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours($('edit_time_log_#{@time_log.id}'), 'log')" %>
+              <%= f.text_field :start_time, :value => @time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours('time_log_add_booking_#{@time_log.id}')" %>
             </div>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :stop_time, :value => @time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours($('edit_time_log_#{@time_log.id}'), 'log')" %>
+              <%= f.text_field :stop_time, :value => @time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours('time_log_add_booking_#{@time_log.id}')" %>
             </div>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_time_spent) %></div>
             <div class="task_form_input">
-              <%= f.text_field :spent_time, :value => @time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop($('edit_time_log_#{@time_log.id}'), 'log')" %>
+              <%= f.text_field :spent_time, :value => @time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_log_add_booking_#{@time_log.id}')" %>
             </div>
           </div>
           <%= f.submit "book" %>
           <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => @time_log.id}, :remote => true %>
       <% end %>
-      <%= javascript_tag "new Autocomplete('time_log_issue_id', { serviceUrl:'/tt_completer/get_issue_id.json', useData:true, onSelect:'fireOnchange' } );" %>
-      <%= javascript_tag "new Autocomplete('time_log_comments', { serviceUrl:'/tt_completer/get_issue_subject.json', useData:true } );" %>
+      <%= javascript_tag "new Autocomplete('time_log_add_booking_#{@time_log.id}_issue_id', { serviceUrl:'/tt_completer/get_issue_id.json', useData:true, onSelect:'fireOnchange' } );" %>
+      <%= javascript_tag "new Autocomplete('time_log_add_booking_#{@time_log.id}_comments', { serviceUrl:'/tt_completer/get_issue_subject.json', useData:true } );" %>
     </td>
 <% end %>
