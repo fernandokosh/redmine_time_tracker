@@ -1,11 +1,11 @@
 <ul>
 
   <% unless @time_log.nil? %>
-      <li><%= context_menu_link l(:button_edit), {:controller => 'time_logs', :action => 'show_edit', :time_log_id => @time_log.id},
-                                :class => 'icon-edit', :remote => true, :disabled => false %>
-      </li>
       <li><%= context_menu_link l(:time_tracker_label_book), {:controller => 'time_logs', :action => 'show_booking', :time_log_id => @time_log.id},
                                 :remote => true, :disabled => false %>
+      </li>
+      <li><%= context_menu_link l(:button_edit), {:controller => 'time_logs', :action => 'show_edit', :time_log_id => @time_log.id},
+                                :class => 'icon-edit', :remote => true, :disabled => false %>
       </li>
       <% if User.current.admin? %>
           <li><%= context_menu_link l(:button_delete), {:controller => 'time_logs', :action => 'delete', :time_log_id => @time_log.id},
@@ -20,7 +20,7 @@
                                 :remote => false, :disabled => false %>
       </li>
       <li><%= context_menu_link l(:button_edit), {:controller => 'time_bookings', :action => 'show_edit', :time_booking_id => @time_booking.id},
-                                :class => 'icon.edit', :remote => true, :disabled => false %>
+                                :class => 'icon-edit', :remote => true, :disabled => false %>
       </li>
       <li><%= context_menu_link l(:time_tracker_label_delete), {:controller => 'time_bookings', :action => 'delete', :id => @time_booking.id},
                                 :class => 'icon-del', :remote => false, :disabled => false %>
