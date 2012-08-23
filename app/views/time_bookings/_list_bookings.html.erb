@@ -4,7 +4,7 @@
       <% if @bookings.empty? %>
           <p class="msg"><%= l(:no_time_bookings) %></p>
       <% else %>
-          <%= form_tag({}) do -%>
+          <%= form_tag({:controller => :time_bookings, :action => "actions"}, :remote => false) do -%>
               <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
               <div class="autoscroll">
                 <table class="list">
@@ -22,7 +22,7 @@
                   <% previous_group = false %>
                   <tbody>
                   <% bookings.each_with_index do |entry, index| -%>
-                      <% # workaround to enable group_by function with special columns    %>
+                      <!--# workaround to enable group_by function with special columns -->
                       <% if query.grouped? %>
                           <% gb_col = query.group_by_column %>
                           <% if entry.send(gb_col.name).nil?

@@ -1,8 +1,8 @@
 <% unless @time_booking.nil? %>
     <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", @time_booking.id, false, :id => nil) %></td>
     <td colspan=7>
-      <%= form_for @time_booking, :url => {:action => "update"},
-                   :html => {:class => "time-booking-update-form"} do |f| %>
+      <% prefix = "time_booking_edit[]" %>
+      <%= fields_for prefix, @time_booking do |f| %>
           <%= f.hidden_field(:id) %>
 
           <% projects = User.current.memberships.collect(&:project).compact.uniq %>
@@ -18,7 +18,7 @@
             </div>
             <%= f.hidden_field :project_id %>
           </div>
-          
+
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:field_tt_date) %></div>
             <div class="task_form_input">

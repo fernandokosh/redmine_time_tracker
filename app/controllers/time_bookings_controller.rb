@@ -5,13 +5,23 @@ class TimeBookingsController < ApplicationController
 
   include TimeTrackersHelper
 
+  def actions
+    unless params[:time_booking_edit].nil?
+      tb_e = params[:time_booking_edit]
+      tb_e.keys.each do |tb_key|
+        update tb_e[tb_key]
+      end
+    end
+
+    redirect_to '/tt_overview'
+  end
+
   def show_edit
     @time_booking = TimeBooking.where(:id => params[:time_booking_id]).first
     render(:update) { |page| page.replace_html 'booking-entry-'+params[:time_booking_id], :partial => 'time_bookings/edit_form' }
   end
 
-  def update
-    tb = params[:time_booking]
+  def update(tb)
     time_booking = TimeBooking.where(:id => tb[:id]).first
     tl = time_booking.time_log
     issue = Issue.where(:id => tb[:issue_id]).first
@@ -31,7 +41,6 @@ class TimeBookingsController < ApplicationController
       time_booking.save!
       tl.check_bookable
     end
-    redirect_to '/tt_overview'
   end
 
   def delete

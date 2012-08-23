@@ -9,22 +9,36 @@ class TimeLogsController < ApplicationController
   def index
   end
 
-  # TODO localize messages
-  def add_booking
-    tl = params[:time_log]
-    time_log = TimeLog.where(:id => tl[:id]).first
-    issue = issue_from_id(tl[:issue_id])
-    time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
-                         :comments => tl[:comments], :issue => issue, :project_id => params[:project_id_select])
-    flash[:notice] = l(:success_add_booking)
-  rescue BookingError => e
-    flash[:error] = e.message
-  ensure
+  def actions
+    unless params[:time_log_add_booking].nil?
+      tl_add_booking = params[:time_log_add_booking]
+      tl_add_booking.keys.each do |tl_key|
+        add_booking tl_add_booking[tl_key]
+      end
+    end
+
+    unless params[:time_log_edit].nil?
+      tl_eb = params[:time_log_edit]
+      tl_eb.keys.each do |tl_key|
+        update tl_eb[tl_key]
+      end
+    end
+
     redirect_to '/tt_overview'
   end
 
-  def update
-    tl = params[:time_log]
+  # TODO localize messages
+  def add_booking(tl)
+    time_log = TimeLog.where(:id => tl[:id]).first
+    issue = issue_from_id(tl[:issue_id])
+    time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
+                         :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id])
+    flash[:notice] = l(:success_add_booking)
+  rescue BookingError => e
+    flash[:error] = e.message
+  end
+
+  def update(tl)
     time_log = TimeLog.where(:id => tl[:id]).first
     if time_log.user_id == User.current.id || User.current.admin?
       start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
@@ -33,7 +47,6 @@ class TimeLogsController < ApplicationController
 
       time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
     end
-    redirect_to '/tt_overview'
   end
 
   def delete

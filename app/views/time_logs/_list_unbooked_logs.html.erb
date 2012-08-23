@@ -4,7 +4,7 @@
       <% if @logs.empty? %>
           <p class="msg"><%= l(:no_time_logss) %></p>
       <% else %>
-          <%= form_tag({}) do -%>
+          <%= form_tag({:controller => :time_logs, :action => "actions"}, :remote => false) do -%>
               <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
               <div class="autoscroll">
                 <table class="list">

@@ -1,8 +1,8 @@
 <% unless @time_log.nil? %>
     <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", @time_log.id, false, :id => nil) %></td>
     <td colspan=5>
-      <%= form_for @time_log, :url => {:action => "update"},
-                   :html => {:class => "time-log-update-form"} do |f| %>
+      <% prefix = "time_log_edit[]" %>
+      <%= fields_for prefix, @time_log do |f| %>
           <%= f.hidden_field(:id) %>
 
           <div class="task_form_sub_fields">
