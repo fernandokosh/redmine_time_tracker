@@ -17,7 +17,6 @@
                     <% query.columns.each do |column| %>
                         <%= tt_column_header(column, :sort_bookings) %>
                     <% end %>
-                    <th class="actions"><%= l(:time_tracker_label_action) %></th>
                   </tr>
                   </thead>
                   <% previous_group = false %>
@@ -57,7 +56,7 @@
 
                       <!-- look at issues\_list! the following line contains a method to add css-classes dynamically there.. -->
                       <tr id="booking-entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
-                        <%= render :partial => 'time_bookings/list_entry', :locals => {:entry => entry, :query => query, :button => :book} %>
+                        <%= render :partial => 'time_bookings/list_entry', :locals => {:entry => entry, :query => query} %>
                       </tr>
                   <% end -%>
                   </tbody>

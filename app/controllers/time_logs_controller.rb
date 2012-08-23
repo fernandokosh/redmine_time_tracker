@@ -55,12 +55,12 @@ class TimeLogsController < ApplicationController
 
   def show_booking
     @time_log = TimeLog.where(:id => params[:time_log_id]).first
-    render :partial => 'booking_form'
+    render(:update) { |page| page.replace_html 'entry-'+params[:time_log_id], :partial => 'time_logs/booking_form' }
   end
 
   def show_edit
     @time_log = TimeLog.where(:id => params[:time_log_id]).first
-    render :partial => 'edit_form'
+    render(:update) { |page| page.replace_html 'entry-'+params[:time_log_id], :partial => 'time_logs/edit_form' }
   end
 
   def get_list_entry
@@ -68,6 +68,10 @@ class TimeLogsController < ApplicationController
     time_logs_query
 
     entry = TimeLog.where(:id => params[:time_log_id]).first
-    render :partial => 'list_entry', :locals => {:entry => entry, :query => @query_logs, :button => :book}
+    render :update do |page|
+      page.replace_html 'entry-'+params[:time_log_id], :partial => 'time_logs/list_entry', :locals => {:entry => entry, :query => @query_logs}
+      page << "new ContextMenu('#{ url_for(tt_overview_context_menu_path) }')" # workaround for strange contextMenu-problem
+    end
   end
+
 end

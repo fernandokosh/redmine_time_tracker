@@ -46,12 +46,9 @@
             </div>
           </div>
           <%= f.submit "book" %>
+          <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => @time_log.id}, :remote => true %>
       <% end %>
       <%= javascript_tag "new Autocomplete('time_log_issue_id', { serviceUrl:'/tt_completer/get_issue_id.json', useData:true, onSelect:'fireOnchange' } );" %>
       <%= javascript_tag "new Autocomplete('time_log_comments', { serviceUrl:'/tt_completer/get_issue_subject.json', useData:true } );" %>
-    </td>
-    <td class="actions">
-      <!-- TODO localize link-labels! -->
-      <%= link_to_remote 'cancel', :update => 'entry-'+@time_log.id.to_s, :url => {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => @time_log.id} %>
     </td>
 <% end %>

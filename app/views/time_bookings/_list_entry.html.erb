@@ -1,8 +1,5 @@
-<td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
-<%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
-<td class="actions">
-  <%= link_to l(:time_tracker_label_continue), :controller => 'time_trackers', :action => 'start',
-              :time_tracker => {:issue_id => entry.virtual ? nil : entry.time_entry.issue.id, :comments => entry.comments} %>
-  <%= link_to_remote 'edit', :update => 'booking-entry-'+entry.id.to_s, :url => {:controller => 'time_bookings', :action => 'show_edit', :time_booking_id => entry.id} %>
-  <%= link_to l(:time_tracker_label_delete), :controller => 'time_bookings', :action => 'delete', :id => entry.id %>
+<td class="checkbox hide-when-print">
+  <%= check_box_tag("ids[]", entry.id, false, :id => nil) %>
+  <%= hidden_field_tag "entryClass", entry.class %>
 </td>
+<%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>

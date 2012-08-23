@@ -38,6 +38,7 @@ en:
   time_tracker_delete_booking_success: "Time booking successfully deleted"
   time_tracker_hour_sym: ":"
   time_tracker_label_action: "Action"
+  time_tracker_label_book: "Book"
   time_tracker_label_comments: "Comments"
   time_tracker_label_continue: "Continue"
   time_tracker_label_current_task: "Please specify your current task"

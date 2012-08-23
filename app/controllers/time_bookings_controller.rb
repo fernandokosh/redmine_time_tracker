@@ -7,7 +7,7 @@ class TimeBookingsController < ApplicationController
 
   def show_edit
     @time_booking = TimeBooking.where(:id => params[:time_booking_id]).first
-    render :partial => 'edit_form'
+    render(:update) { |page| page.replace_html 'booking-entry-'+params[:time_booking_id], :partial => 'time_bookings/edit_form' }
   end
 
   def update
@@ -53,6 +53,9 @@ class TimeBookingsController < ApplicationController
     time_bookings_query
 
     entry = TimeBooking.where(:id => params[:time_booking_id]).first
-    render :partial => 'list_entry', :locals => {:entry => entry, :query => @query_bookings, :button => :book}
+    render :update do |page|
+      page.replace_html 'booking-entry-'+params[:time_booking_id], :partial => 'time_bookings/list_entry', :locals => {:entry => entry, :query => @query_bookings, :button => :book}
+      page << "new ContextMenu('#{ url_for(tt_overview_context_menu_path) }')" # workaround for strange contextMenu-problem
+    end
   end
 end
