@@ -19,11 +19,11 @@ module ContextMenusControllerControllerPatch
       entryClass = params[:entryClass] # specify either a TimeLog- or TimeBooking- ContextMenu was activated
 
       if entryClass == "TimeLog"
-        # book / edit / delete
-        @time_log = TimeLog.where(:id => params[:ids][0]).first
+        @time_log_ids = params[:ids]
+        #@time_log = TimeLog.where(:id => params[:ids][0]).first
       elsif entryClass == "TimeBooking"
-        # continue (nur bei singleSelect) / edit / delete
-        @time_booking = TimeBooking.where(:id => params[:ids][0]).first
+        @time_booking_ids = params[:ids]
+        @time_booking = TimeBooking.where(:id => params[:ids][0]).first if params[:ids].length == 1
       end
 
       render :layout => false
