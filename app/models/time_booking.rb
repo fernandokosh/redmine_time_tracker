@@ -13,15 +13,6 @@ class TimeBooking < ActiveRecord::Base
 
   # scope :last_two_weeks, where("started_on > ? ", (Time.now-2.weeks).beginning_of_day)
 
-  def self.total_booked_on(date)
-    tb_list = where("date(started_on) = ?", date).all
-    hours = 0
-    tb_list.each do |tb|
-      hours += tb.hours_spent
-    end
-    hours
-  end
-
   def initialize(args = {}, options = {})
     ActiveRecord::Base.transaction do
       super(nil)
