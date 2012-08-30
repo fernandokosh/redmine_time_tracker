@@ -122,7 +122,7 @@ function timeString2sec(str) {
     time_arr.each(function (item) {
         item = item.strip();
         var num = item.match(/\d+/);
-        var fac = item.match(/\D+/);
+        var fac = item.match(/\D+/)[0].strip().toLowerCase();
         if (time_factor.get(fac)) {
             sec += num * time_factor.get(fac);
         }

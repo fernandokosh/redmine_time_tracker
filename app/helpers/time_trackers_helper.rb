@@ -54,7 +54,7 @@ module TimeTrackersHelper
       str.partition(/\A\d+\s*\D+/).each do |item|
         item=item.strip
         item.match(/\d+/).nil? ? num = nil : num = item.match(/\d+/)[0].to_i
-        item.match(/\D+/).nil? ? fac = nil : fac = item.match(/\D+/)[0].to_sym
+        item.match(/\D+/).nil? ? fac = nil : fac = item.match(/\D+/)[0].strip.downcase.to_sym
         if time_factor.has_key?(fac)
           sec += num * time_factor.fetch(fac)
         end
