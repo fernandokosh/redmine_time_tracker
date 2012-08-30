@@ -1,3 +1,9 @@
+@media print {
+    #tt_reporting_chart {
+        width: 99%;
+    }
+}
+
 .invalid {
     border-style: solid;
     border-color: red;
