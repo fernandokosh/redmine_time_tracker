@@ -55,14 +55,13 @@ function updateBookingHours(name) {
 
     var start = start_field.value;
     var stop = stop_field.value;
+    // if the stop-time looks smaller than the start-time, we assume a booking over midnight
     if (timeString2sec(stop) < timeString2sec(start)) {
-        var swap = start;
-        start = stop;
-        stop = swap;
-        start_field.value = start;
-        stop_field.value = stop;
+        var temp = calcBookingHelper(start, "24:00", 1);
+        spent_field.value = calcBookingHelper(stop, temp, 2);
+    } else {
+        spent_field.value = calcBookingHelper(start, stop, 1);
     }
-    spent_field.value = calcBookingHelper(start, stop, 1);
 }
 
 function updateBookingStop(name) {
@@ -146,6 +145,6 @@ function calcBookingHelper(ele1, ele2, calc) {
     h < 10 ? h = "0" + h.toString() : h = h.toString();
     m < 10 ? m = "0" + m.toString() : m = m.toString();
     s < 10 ? s = "0" + s.toString() : s = s.toString();
-    if (calc == 2 && h > 23) h = h - h / 24;    //stop_time should be between 0-24 o clock
+    while (calc == 2 && h > 23) h = h - 24;    //stop_time should be between 0-24 o clock
     return h + ":" + m + ":" + s;
 }
