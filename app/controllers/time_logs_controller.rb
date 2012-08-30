@@ -6,9 +6,6 @@ class TimeLogsController < ApplicationController
 
   include TimeTrackersHelper
 
-  def index
-  end
-
   def actions
     unless params[:time_log_add_booking].nil?
       tl_add_booking = params[:time_log_add_booking]
