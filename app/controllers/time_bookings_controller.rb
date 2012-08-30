@@ -21,7 +21,7 @@ class TimeBookingsController < ApplicationController
     render :update do |page|
       time_bookings.each do |item|
         @time_booking = item
-        render(:update) { |page| page.replace_html 'booking-entry-'+item.id.to_s, :partial => 'time_bookings/edit_form' }
+        page.replace_html 'booking-entry-'+item.id.to_s, :partial => 'time_bookings/edit_form'
       end
     end
   end
