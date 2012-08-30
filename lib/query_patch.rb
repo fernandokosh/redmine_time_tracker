@@ -106,7 +106,6 @@ module QueryPatch
       @available_filters['tt_due_date'] = {:type => :date, :order => 3}
       @available_filters['tt_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
       @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
-      @available_filters['tt_comments'] = {:type => :text, :order => 6}
       @available_filters
     end
 
@@ -283,10 +282,6 @@ module QueryPatch
         value += User.current.id.to_s.to_a
       end
       "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
-    end
-
-    def sql_for_tt_comments_field(field, operator, value)
-      # stub
     end
   end
 end
