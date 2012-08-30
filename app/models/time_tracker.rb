@@ -36,9 +36,11 @@ class TimeTracker < ActiveRecord::Base
   end
 
   before_save do
-    unless self.issue_id.nil?
-      issue = Issue.find(self.issue_id)
-      self.project_id = issue.project_id unless self.project_id == issue.project_id
+    issue = issue_from_id(self.issue_id)
+    if issue.nil?
+      self.issue_id = self.issue_id_was
+    else
+      self.project_id = issue.project_id unless issue.nil? || self.project_id == issue.project_id
     end
   end
 
@@ -47,10 +49,14 @@ class TimeTracker < ActiveRecord::Base
   end
 
   def initialize(arguments = nil)
+    unless arguments.nil?
+      issue = issue_from_id(arguments[:issue_id])
+      arguments[:issue_id] = nil if issue.nil?
+    end
     super(arguments)
     self.user_id = User.current.id
-    unless issue_id.nil?
-      self.project_id = issue_from_id(issue_id).project_id
+    unless issue.nil?
+      self.project_id = issue.project_id
     end
   end
 
