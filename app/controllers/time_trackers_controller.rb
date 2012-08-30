@@ -67,7 +67,7 @@ class TimeTrackersController < ApplicationController
 
   def update
     @time_tracker = get_current
-    @time_tracker.update_attributes(params[:time_tracker])
+    @time_tracker.update_attributes!(params[:time_tracker])
     respond_to do |format|
       format.html { render :nothing => true }
       format.xml { render :xml => @time_tracker }
@@ -76,6 +76,8 @@ class TimeTrackersController < ApplicationController
   # if something went wrong, return the original object
   rescue
     @time_tracker = get_current
+    # todo figure out a way to show errors, even on ajax requests!
+    flash[:error] = @time_tracker.errors.to_hash unless @time_tracker.errors.empty?
     respond_to do |format|
       format.html { render :nothing => true }
       format.xml { render :xml => @time_tracker }
