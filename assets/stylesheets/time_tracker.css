@@ -91,18 +91,21 @@ tr.entry {
 
 #user-time-bookings-list td.issue,
 #user-time-bookings-list td.comments,
+#time_tracker_list td.issue,
+#time_tracker_list td.comments,
 #tt-time-list td.issue,
 #tt-time-list td.comments,
 #user-time-logs-list td.comments {
     text-align: left;
 }
 
-#time_tracker_list td.start-date,
-#time_tracker_list td.spent-time,
-#time_tracker_list p.msg,
 #time_tracker_list td.user,
 #time_tracker_list td.project,
-#time_tracker_list td.issue,
+#time_tracker_list td.start-date,
+#time_tracker_list td.start-time,
+#time_tracker_list td.spent-time,
+#time_tracker_list td.buttons,
+#time_tracker_list p.msg,
 #time_tracker_list td.msg {
     text-align: center;
 }
