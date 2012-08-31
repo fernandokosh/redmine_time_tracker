@@ -13,7 +13,7 @@ class TimeBookingsController < ApplicationController
       end
     end
 
-    redirect_to '/tt_overview'
+    redirect_to :back
   end
 
   def show_edit
@@ -57,7 +57,7 @@ class TimeBookingsController < ApplicationController
       tl.check_bookable # we should set the bookable_flag after deleting bookings
       flash[:success] = l(:time_tracker_delete_booking_success)
     end
-    redirect_to '/tt_overview'
+    redirect_to :back
   end
 
   def get_list_entry

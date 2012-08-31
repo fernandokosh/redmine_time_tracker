@@ -14,17 +14,21 @@ module ContextMenusControllerControllerPatch
 
   module InstanceMethods
 
-    # actual implementation will support single-selection only!
     def tt_overview
       entryClass = params[:entryClass] # specify either a TimeLog- or TimeBooking- ContextMenu was activated
 
       if entryClass == "TimeLog"
         @time_log_ids = params[:ids]
-        #@time_log = TimeLog.where(:id => params[:ids][0]).first
       elsif entryClass == "TimeBooking"
         @time_booking_ids = params[:ids]
         @time_booking = TimeBooking.where(:id => params[:ids][0]).first if params[:ids].length == 1
       end
+
+      render :layout => false
+    end
+
+    def time_list
+      @time_booking_ids = params[:ids]
 
       render :layout => false
     end

@@ -1,5 +1,5 @@
 <div id="tt-time-list">
-  <%= form_tag({}) do -%>
+  <%= form_tag({:controller => :time_bookings, :action => "actions"}, :remote => false) do -%>
       <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
       <div class="autoscroll">
         <table class="list">
@@ -50,7 +50,7 @@
               <% end %>
 
               <!-- look at issues\_list! the following line contains a method to add css-classes dynamically there.. -->
-              <tr id="entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
+              <tr id="booking-entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
                 <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
                 <!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
                 <%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
