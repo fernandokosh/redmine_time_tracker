@@ -1,8 +1,8 @@
 require_dependency 'query'
 require_dependency 'project'
 require_dependency 'active_record'
-require_dependency 'plugins/redmine_time_tracker/app/models/time_booking'
-require_dependency 'plugins/redmine_time_tracker/app/models/time_log'
+require_dependency '../plugins/redmine_time_tracker/app/models/time_booking'
+require_dependency '../plugins/redmine_time_tracker/app/models/time_log'
 
 # TODO write a declarative comment
 module QueryPatch
