@@ -17,11 +17,14 @@ class TimeTrackersController < ApplicationController
         args[:issue_id]=params[:time_tracker][:issue_id] if args[:issue_id].nil?
         args[:comments]=params[:time_tracker][:comments] if args[:comments].nil?
       end
-      # parse comments fpr issue-id
-      if args[:issue_id].nil? && args[:comments].strip.match(/\A#\d?\d*\s/)
-        cut = args[:comments].strip.partition(/#\d?\d*\s/)
-        args[:issue_id] = cut[1].sub(/#/,"").to_i
-        args[:comments] = cut[2].strip
+      # parse comments for issue-id
+      if args[:issue_id].nil? && args[:comments].strip.match(/\A#\d?\d*/)
+        cut = args[:comments].strip.partition(/#\d?\d*/)
+        issue_id = cut[1].sub(/#/, "").to_i
+        unless help.issue_from_id(issue_id).nil?
+          args[:issue_id] = issue_id
+          args[:comments] = cut[2].strip
+        end
       end
 
 
@@ -67,15 +70,17 @@ class TimeTrackersController < ApplicationController
 
   def update
     @time_tracker = get_current
-    @time_tracker.update_attributes(params[:time_tracker])
+    @time_tracker.update_attributes!(params[:time_tracker])
     respond_to do |format|
       format.html { render :nothing => true }
       format.xml { render :xml => @time_tracker }
       format.json { render :json => @time_tracker }
     end
-  # if something went wrong, return the original object
+      # if something went wrong, return the original object
   rescue
     @time_tracker = get_current
+    # todo figure out a way to show errors, even on ajax requests!
+    flash[:error] = @time_tracker.errors.to_hash unless @time_tracker.errors.empty?
     respond_to do |format|
       format.html { render :nothing => true }
       format.xml { render :xml => @time_tracker }

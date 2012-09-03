@@ -26,8 +26,8 @@ class TimeLog < ActiveRecord::Base
   # if issue is the only parameter we get, we will book the whole time to one issue
   # method returns true if all works well, false otherwise
   def add_booking(args = {})
-    # TODO not set activity_id default value to 1 / only for testing because redmine requires activity_id
-    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => 1, :issue => nil, :spent_time => nil, :virtual => false, :project_id => self.project_id}
+    tea = TimeEntryActivity.where(:name => :time_tracker_activity).first
+    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => tea.id, :issue => nil, :spent_time => nil, :virtual => false, :project_id => self.project_id}
     args = default_args.merge(args)
 
     # TODO check time boundaries

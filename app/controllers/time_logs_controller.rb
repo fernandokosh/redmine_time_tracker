@@ -6,9 +6,6 @@ class TimeLogsController < ApplicationController
 
   include TimeTrackersHelper
 
-  def index
-  end
-
   def actions
     unless params[:time_log_add_booking].nil?
       tl_add_booking = params[:time_log_add_booking]
@@ -51,15 +48,15 @@ class TimeLogsController < ApplicationController
 
   def delete
     if User.current.admin?
-      time_log = TimeLog.where(:id => params[:time_log_id]).first
-      unless time_log.nil?
-        if time_log.time_bookings.count == 0
-          time_log.destroy
+      time_logs = TimeLog.where(:id => params[:time_log_ids]).all
+      time_logs.each do |item|
+        if item.time_bookings.count == 0
+          item.destroy
         else
-          booked_time = time_log.hours_spent - time_log.bookable_hours
-          time_log.stopped_at = time_log.started_on + booked_time.hours
-          time_log.bookable = false
-          time_log.save!
+          booked_time = item.hours_spent - item.bookable_hours
+          item.stopped_at = item.started_on + booked_time.hours
+          item.bookable = false
+          item.save!
         end
       end
     end
@@ -67,13 +64,23 @@ class TimeLogsController < ApplicationController
   end
 
   def show_booking
-    @time_log = TimeLog.where(:id => params[:time_log_id]).first
-    render(:update) { |page| page.replace_html 'entry-'+params[:time_log_id], :partial => 'time_logs/booking_form' }
+    time_logs = TimeLog.where(:id => params[:time_log_ids]).all
+    render :update do |page|
+      time_logs.each do |item|
+        @time_log = item
+        page.replace_html 'entry-'+item.id.to_s, :partial => 'time_logs/booking_form'
+      end
+    end
   end
 
   def show_edit
-    @time_log = TimeLog.where(:id => params[:time_log_id]).first
-    render(:update) { |page| page.replace_html 'entry-'+params[:time_log_id], :partial => 'time_logs/edit_form' }
+    time_logs = TimeLog.where(:id => params[:time_log_ids]).all
+    render :update do |page|
+      time_logs.each do |item|
+        @time_log = item
+        page.replace_html 'entry-'+item.id.to_s, :partial => 'time_logs/edit_form'
+      end
+    end
   end
 
   def get_list_entry

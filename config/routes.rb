@@ -5,7 +5,6 @@ match '/time_trackers/add_status_transition', :to => 'time_trackers#add_status_t
 match '/time_trackers/delete_status_transition', :to => 'time_trackers#delete_status_transition', :via => [:get, :post]
 match '/time_trackers/show_report', :to => 'time_trackers#show_report', :via => [:get, :post]
 match '/time_trackers/delete', :to => 'time_trackers#delete', :via => [:get, :post]
-match '/time_logs', :to => 'time_logs#index', :via => [:get, :post]
 match '/time_logs/actions', :to => 'time_logs#actions', :via => [:get, :post, :put]
 match '/time_logs/update', :to => 'time_logs#update', :via => [:put]
 match '/time_logs/delete', :to => 'time_logs#delete', :via => [:get, :post]
@@ -13,7 +12,6 @@ match '/time_logs/add_booking', :to => 'time_logs#add_booking', :via => [:get, :
 match '/time_logs/show_booking', :to => 'time_logs#show_booking', :via => [:get, :post]
 match '/time_logs/show_edit', :to => 'time_logs#show_edit', :via => [:get, :post]
 match '/time_logs/get_list_entry', :to => 'time_logs#get_list_entry', :via => [:get, :post]
-match '/time_bookings', :to => 'time_bookings#index', :via => [:get, :post]
 match '/time_bookings/actions', :to => 'time_bookings#actions', :via => [:get, :post, :put]
 match '/time_bookings/show_edit', :to => 'time_bookings#show_edit', :via => [:get, :post]
 match '/time_bookings/update', :to => 'time_bookings#update', :via => [:put]
@@ -26,4 +24,5 @@ match '/tt_completer/get_issue', :to => 'tt_completer#get_issue', :via => [:get]
 match '/tt_completer/get_issue_id', :to => 'tt_completer#get_issue_id', :via => [:get]
 match '/tt_completer/get_issue_subject', :to => 'tt_completer#get_issue_subject', :via => [:get]
 match '/tt_overview/context_menu', :to => 'context_menus#tt_overview', :as => 'tt_overview_context_menu'
+match '/time_list/context_menu', :to => 'context_menus#time_list', :as => 'time_list_context_menu'
 match '/tt_reporting', :to => 'tt_reporting#index', :via => [:get, :post]

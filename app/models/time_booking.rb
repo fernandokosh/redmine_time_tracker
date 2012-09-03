@@ -80,8 +80,8 @@ class TimeBooking < ActiveRecord::Base
         self.time_entry.destroy
       end
 
-      # TODO not set activity_id default value to 1 / only for testing because redmine requires activity_id
-      time_entry = create_time_entry({:issue => issue, :user_id => user, :comments => comments, :started_on => self.started_on, :activity_id => 1, :hours => self.hours_spent})
+      tea = TimeEntryActivity.where(:name => :time_tracker_activity).first
+      time_entry = create_time_entry({:issue => issue, :user_id => user, :comments => comments, :started_on => self.started_on, :activity_id => tea.id, :hours => self.hours_spent})
 
       write_attribute(:time_entry_id, time_entry.id)
       write_attribute(:project_id, issue.project.id)

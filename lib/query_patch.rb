@@ -1,8 +1,8 @@
 require_dependency 'query'
 require_dependency 'project'
 require_dependency 'active_record'
-require_dependency 'plugins/redmine_time_tracker/app/models/time_booking'
-require_dependency 'plugins/redmine_time_tracker/app/models/time_log'
+require_dependency '../plugins/redmine_time_tracker/app/models/time_booking'
+require_dependency '../plugins/redmine_time_tracker/app/models/time_log'
 
 # TODO write a declarative comment
 module QueryPatch
@@ -103,10 +103,8 @@ module QueryPatch
       # unless-statements are used as workaround to get the code working for the migration file "011_add_default_tt_query"
       @available_filters['tt_project'] = tq.available_filters_without_time_tracker["project_id"].clone unless tq.available_filters_without_time_tracker["project_id"].nil?
       @available_filters['tt_start_date'] = {:type => :date, :order => 2}
-      @available_filters['tt_due_date'] = {:type => :date, :order => 3}
       @available_filters['tt_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
       @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
-      @available_filters['tt_comments'] = {:type => :text, :order => 6}
       @available_filters
     end
 
@@ -236,22 +234,38 @@ module QueryPatch
     end
 
     def sql_for_tt_start_date_field(field, operator, value)
-      # TODO complete the operator handling
-      # stub    :date => [ "=", ">=", "<=", "><", "<t+", ">t+", "t+", "t", "w", ">t-", "<t-", "t-", "!*", "*" ],
       case operator
         when "="
-          "#{TimeBooking.table_name}.started_on = '#{Time.parse(value[0]).to_date}'"
+          "DATE(#{TimeBooking.table_name}.started_on) = '#{Time.parse(value[0]).to_date}'"
         when ">="
-          "#{TimeBooking.table_name}.started_on >= '#{Time.parse(value[0]).to_date}'"
+          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.parse(value[0]).to_date}'"
         when "<="
-          "#{TimeBooking.table_name}.started_on <= '#{Time.parse(value[0]).to_date}'"
+          "DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.parse(value[0]).to_date}'"
+        when "><"
+          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.parse(value[0]).to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.parse(value[1]).to_date}'"
+        when "<t+"
+          "DATE(#{TimeBooking.table_name}.started_on) > '#{value[0].to_i.days.to_date}'"
+        when ">t+"
+          "DATE(#{TimeBooking.table_name}.started_on) < '#{value[0].to_i.days.to_date}'"
+        when "t+"
+          "DATE(#{TimeBooking.table_name}.started_on) = '#{value[0].to_i.days.to_date}'"
+        when "t"
+          "DATE(#{TimeBooking.table_name}.started_on) = '#{Time.now.to_date}'"
+        when "w"
+          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.now.beginning_of_week.to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.now.end_of_week.to_date}'"
+        when ">t-"
+          "DATE(#{TimeBooking.table_name}.started_on) > '#{value[0].to_i.days.ago.to_date}'"
+        when "<t-"
+          "DATE(#{TimeBooking.table_name}.started_on) < '#{value[0].to_i.days.ago.to_date}'"
+        when "t-"
+          "DATE(#{TimeBooking.table_name}.started_on) = '#{value[0].to_i.days.ago.to_date}'"
+        when "!*"
+          "DATE(#{TimeBooking.table_name}.started_on) IS NULL"
+        when "*"
+          "DATE(#{TimeBooking.table_name}.started_on) IS NOT NULL"
         else
-          "#{TimeBooking.table_name}.started_on = '#{(Time.now-2.weeks).beginning_of_day.to_date}'"
+          "#{TimeBooking.table_name}.started_on >= '#{(Time.now-2.weeks).beginning_of_day.to_date}'"
       end
-    end
-
-    def sql_for_tt_due_date_field(field, operator, value)
-      # stub
     end
 
     def sql_for_tt_issue_field(field, operator, value)
@@ -263,10 +277,6 @@ module QueryPatch
         value += User.current.id.to_s.to_a
       end
       "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
-    end
-
-    def sql_for_tt_comments_field(field, operator, value)
-      # stub
     end
   end
 end

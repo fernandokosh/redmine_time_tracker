@@ -6,7 +6,7 @@
 
   <% unless @time_trackers.nil? %>
       <div id="all-time-trackers-list">
-        <% if @time_trackers.nil? || @time_trackers.empty? %>
+        <% if @time_trackers.nil? || @time_trackers.is_a?(Array) && @time_trackers.empty? %>
             <p class="msg"><%= l(:no_time_tracker) %></p>
         <% else %>
             <div class="autoscroll">
@@ -16,9 +16,11 @@
                   <th class="zombie"></th>
                   <th class="user"><%= l(:label_user) %></th>
                   <th class="project"><%= l(:time_tracker_label_project) %></th>
-                  <th class="issue"><%= l(:label_issue) %></th>
                   <th class="start-date"><%= l(:time_tracker_label_start_date) %></th>
-                  <th class="spent-time"><%= l(:label_spent_time) %></th>
+                  <th class="start-time"><%= l(:time_tracker_label_start_time) %></th>
+                  <th class="issue"><%= l(:label_issue) %></th>
+                  <th class="comments"><%= l(:time_tracker_label_comments) %></th>
+                  <th class="spent-time"><%= l(:time_tracker_label_time_spent) %></th>
                   <th class="buttons"><%= l(:time_tracker_label_action) %></th>
                 </tr>
                 </thead>
@@ -38,15 +40,17 @@
                       <% else %>
                           <td class="project"><%= link_to_project help.project_from_id(time_tracker.project_id) %></td>
                       <% end %>
+                      <td class="start-date"><%= time_tracker.get_formatted_date %></td>
+                      <td class="start-time"><%= time_tracker.get_formatted_time %></td>
                       <% if time_tracker.issue_id.nil? %>
                           <td class="issue"></td>
                       <% else %>
                           <td class="issue"><%= link_to_issue help.issue_from_id(time_tracker.issue_id), :project => true %></td>
                       <% end %>
-                      <td class="start-date"><%= format_time(time_tracker.started_on) %></td>
+                      <td class="comments"><%= time_tracker.comments %></td>
                       <td class="spent-time"><%= help.time_dist2string(time_tracker.running_time) %></td>
-                      <td class="buttons">
-                        <% if User.current.allowed_to?(:delete_others_time_trackers, nil, :global => true) %>
+                      <td class="buttons" style="width: 75px;">
+                        <% if time_tracker.user_id == User.current.id || User.current.allowed_to?(:delete_others_time_trackers, nil, :global => true) %>
                             <%= link_to_remote l(:time_tracker_label_delete),
                                                :url => {:controller => 'time_trackers', :action => 'delete', :id => time_tracker.id},
                                                :html => {:class => 'icon icon-del'},

@@ -13,12 +13,17 @@ class TimeBookingsController < ApplicationController
       end
     end
 
-    redirect_to '/tt_overview'
+    redirect_to :back
   end
 
   def show_edit
-    @time_booking = TimeBooking.where(:id => params[:time_booking_id]).first
-    render(:update) { |page| page.replace_html 'booking-entry-'+params[:time_booking_id], :partial => 'time_bookings/edit_form' }
+    time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
+    render :update do |page|
+      time_bookings.each do |item|
+        @time_booking = item
+        page.replace_html 'booking-entry-'+item.id.to_s, :partial => 'time_bookings/edit_form'
+      end
+    end
   end
 
   def update(tb)
@@ -44,17 +49,15 @@ class TimeBookingsController < ApplicationController
   end
 
   def delete
-    time_booking = TimeBooking.where(:id => params[:id]).first
-    if time_booking.nil?
-      flash[:error] = l(:time_tracker_delete_booking_fail)
-      redirect_to :back
-    else
-      tl = TimeLog.where(:id => time_booking.time_log_id, :user_id => User.current.id).first
-      time_booking.destroy
+    time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
+    time_bookings.each do |item|
+      #flash[:error] = l(:time_tracker_delete_booking_fail)
+      tl = TimeLog.where(:id => item.time_log_id, :user_id => User.current.id).first
+      item.destroy
       tl.check_bookable # we should set the bookable_flag after deleting bookings
       flash[:success] = l(:time_tracker_delete_booking_success)
-      redirect_to :back
     end
+    redirect_to :back
   end
 
   def get_list_entry
