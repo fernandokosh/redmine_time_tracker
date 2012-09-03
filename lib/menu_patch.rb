@@ -14,21 +14,8 @@ module MenuPatch
   end
 
   module ClassMethods
-  end
 
-  module InstanceMethods
-
-    def display_main_menu_with_time_tracker?(project)
-      Redmine::MenuManager.items(get_menu_name(project)).children.present?
-    end
-
-    def render_main_menu_with_time_tracker(project)
-      render_menu(get_menu_name(project), project)
-    end
-
-    private
-
-    def get_menu_name(project)
+    def get_menu_name(project, params={})
       if (project && !project.new_record?)
         :project_menu
       else
@@ -39,6 +26,19 @@ module MenuPatch
         end
       end
     end
+
+  end
+
+  module InstanceMethods
+
+    def display_main_menu_with_time_tracker?(project)
+      Redmine::MenuManager.items(Redmine::MenuManager::MenuHelper.get_menu_name(project, params)).children.present?
+    end
+
+    def render_main_menu_with_time_tracker(project)
+      render_menu(Redmine::MenuManager::MenuHelper.get_menu_name(project, params), project)
+    end
+
   end
 end
 
