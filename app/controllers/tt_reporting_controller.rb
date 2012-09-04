@@ -35,7 +35,8 @@ class TtReportingController < ApplicationController
 
 
       unless @bookings.empty?
-        @chart_start_date = @bookings.last.started_on.to_date
+        # if the user changes the date-order for the table values, we have to get the correct date, as starting-point for the chart
+        @chart_start_date = [@bookings.last.started_on.to_date, @bookings.first.started_on.to_date].min
         # prepare hash for different users
         users = Hash.new
         user_filter = @query.filters["tt_user"]
@@ -44,6 +45,8 @@ class TtReportingController < ApplicationController
             users[user.id] = [] # todo check permissions
           end
         else
+          user_filter[:values] += User.current.id.to_s.to_a if user_filter[:values].delete('me')
+
           if user_filter[:operator] == "!"
             User.all.each do |user| # todo check permissions
               users[user.id] = [] unless user_filter[:values].include?(user.id.to_s)
@@ -55,7 +58,17 @@ class TtReportingController < ApplicationController
           end
         end
 
-        (@bookings.last.started_on.to_date..@bookings.first.started_on.to_date).map do |date|
+        # if the user changes the date-order for the table values, we have to sort the data correctly
+        # so we create a dynamical method-call
+        if @bookings.last.started_on <= @bookings.first.started_on
+          m1 = :last
+          m2 = :first
+        else
+          m1 = :first
+          m2 = :last
+        end
+
+        (@bookings.send(m1).started_on.to_date..@bookings.send(m2).started_on.to_date).map do |date|
           users.keys.each do |key|
             users[key].push(0)
           end
