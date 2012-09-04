@@ -23,7 +23,7 @@ class TimeBooking < ActiveRecord::Base
         proj = Project.where(:id => args[:project_id]).first
         if User.current.allowed_to?(:log_time, proj)
           self.project = proj
-          self.write_attribute(:project_id, proj.id)
+          write_attribute(:project_id, proj.id)
         end
         self.update_attributes({:virtual => true, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at]})
         self.comments = args[:comments]
