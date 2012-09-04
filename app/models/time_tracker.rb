@@ -38,7 +38,7 @@ class TimeTracker < ActiveRecord::Base
   before_save do
     issue = issue_from_id(self.issue_id)
     if issue.nil?
-      self.issue_id = self.issue_id_was
+      self.issue_id = self.issue_id_was unless self.issue_id.blank?
     else
       self.project_id = issue.project_id unless issue.nil? || self.project_id == issue.project_id
     end

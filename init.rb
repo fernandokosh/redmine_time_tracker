@@ -4,27 +4,28 @@ Rails.logger.info 'Starting Time Tracker plugin for RedMine'
 require 'redmine'
 
 # patching the user-class of redmine, so we can reference the users time-log easier
-require 'user_patch'
-require 'project_patch'
-require 'menu_patch'
-require 'query_patch'
+require 'tt_user_patch'
+require 'tt_project_patch'
+require 'tt_menu_patch'
+require 'tt_query_patch'
 
-require 'sort_helper_patch'
-require 'application_helper_patch'
-require 'queries_controller_patch'
-require 'issues_helper_patch'
-require 'context_menus_controller_patch'
+require 'tt_sort_helper_patch'
+require 'tt_application_helper_patch'
+require 'tt_queries_controller_patch'
+require 'tt_issues_helper_patch'
+require 'tt_context_menus_controller_patch'
 
 # workaround helping rails to find the helper-methods
 require File.join(File.dirname(__FILE__), "app", "helpers", "application_helper.rb")
 
 # TODO rails 3.2 has assets-directories as sub-dirs in app, lib and vendor => maybe we should organize our assets that way!
 
-require_dependency 'time_tracker_hooks'
+require_dependency 'tt_time_tracker_hooks'
 
 Redmine::Plugin.register :redmine_time_tracker do
   name 'Redmine Time Tracker plugin'
   author 'Christian Reich'
+  author_url 'mailto:christian.reich@hicknhack-software.com'
   description 'This is a plugin to track time in Redmine'
   version '0.4.1'
 
