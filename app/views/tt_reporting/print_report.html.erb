@@ -1,0 +1,88 @@
+<html>
+<head>
+  <%= stylesheet_link_tag 'tt_report', :plugin => 'redmine_time_tracker' %>
+  <%= javascript_include_tag 'prototype.js' %>
+  <%= javascript_include_tag 'highcharts/prototype-adapter.js', :plugin => 'redmine_time_tracker' %>
+  <%= javascript_include_tag 'highcharts/highcharts.js', :plugin => 'redmine_time_tracker' %>
+</head>
+<body>
+<table>
+  <tr>
+    <td id="tt_report-headline">
+      Title of the Report (vertikal zentriert?!)
+    </td>
+    <td id="tt_report-logo">
+      insert logo here
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td id="tt_report-statistics">
+      <%= @total_booked_time %>
+    </td>
+    <td id="tt_report-chart-table">
+      <div id="tt_report-print-chart"></div>
+    </td>
+  </tr>
+</table>
+
+
+<table class="list">
+  <thead>
+  <tr>
+    <th class="tt_report-date-head">Date</th>
+    <th class="tt_report-desc-head">Description</th>
+    <th class="tt_report-time-head">Time Spent</th>
+    <th class="tt_report-pers-head">Person</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <% @bookings.each do |entry| -%>
+      <!--TODO insert grouped-functionality-->
+      <tr id="entry-<%= entry.id %>" class="entry <%= cycle('odd', 'even') %>">
+        <td><%= entry.tt_booking_date %></td>
+        <td>
+          <div>
+            <div><%= entry.comments %></div>
+            <div class="tt_list-project"><%= entry.project.name unless entry.project.nil? %></div>
+          </div>
+        </td>
+        <td><%= entry.get_formatted_time %></td>
+        <td><%= entry.user.name %></td>
+      </tr>
+  <% end -%>
+
+  </tbody>
+</table>
+</body>
+</html>
+
+
+<script type="text/javascript" charset="utf-8">
+    var tt_report_print_chart; // globally available
+    document.observe("dom:loaded", function () {
+        tt_report_print_chart = new Highcharts.Chart({
+            chart:{
+                renderTo:'tt_report-print-chart',
+                type:'column'
+            },
+            title:{ text:'Booked Hours by Day' },
+            xAxis:{ type:'datetime' },
+            yAxis:{
+                title:{ text:'Booked Hours' }
+            },
+            series:[
+                <% @chart_data.each do |user_id, data| %>
+                {
+                    name:"<%= User.where(:id => user_id).first.name %>",
+                    pointInterval: <%= 1.day * 1000 %>,
+                    pointStart: <%= @chart_start_date.at_midnight.to_i * 1000 %>,
+                    data: <%= data %>
+                },
+                <% end %>
+            ]
+        });
+    });
+</script>

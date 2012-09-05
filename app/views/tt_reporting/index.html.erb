@@ -70,6 +70,13 @@
 
 <% content_for :sidebar do %>
     <%= render_sidebar_queries %>
+
+    <div id="tt_reporting-sidebar">
+      <h3>Reporting</h3>
+      hier kann noch die statistik mit rein</br>
+      <!--TODO localize label!-->
+      <%= link_to "Print Report", :controller => :tt_reporting, :action => :print_report %>
+    </div>
 <% end %>
 
 <!-- TODO edit next line to insert own context menu -->

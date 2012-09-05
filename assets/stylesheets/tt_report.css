@@ -1,0 +1,106 @@
+@media screen,print {
+    body {
+        border:0px solid blue;
+        color: #484848;
+        font-family: Verdana,sans-serif;
+        font-size: 12px;
+        /*margin: 15mm;*/
+
+        /*		width: 210mm;
+
+          height:297mm;*/
+        width:640px;
+        padding: 0;
+    }
+
+    * {
+        border: 0px solid red;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tbody {
+        display: table-row-group;
+    }
+
+    /*TODO: remove this lines!! redmine-css allways defines them!*/
+    .odd {background-color:#f6f7f8;}
+    .even {background-color: #fff;}
+
+    tr {
+        page-break-inside: avoid;
+    }
+
+    /*#tt_report-headline{*/
+    /*height:20mm;*/
+    /*}*/
+
+    #tt_report-title {
+        width:50%;
+    }
+
+    #tt_report-logo {
+    }
+
+    #tt_report-statistics{
+        width:13%;
+        font-weight: bold;
+        font-size: 16pt;
+    }
+
+    #tt_report-print-chart{
+        heigth:250px;
+    }
+
+    .tt_report-date-head{
+        white-space:nowrap;
+    }
+
+    .tt_report-desc-head{
+        /*max-width:129mm;*/
+    }
+
+    .tt_report-time-head{
+        white-space:nowrap;
+    }
+
+    .tt_report-pers-head{
+        /*min-width:30mm;*/
+    }
+    .list {
+        width:100%;
+        border-collapse: collapse;
+    }
+
+    .list thead tr {
+        background-color: #90D2E8;
+    }
+
+    .list tr th {
+        text-align:left;
+    }
+
+    .list td .tt_list-project{
+        float: left;
+        position: relative;
+        overflow: hidden;
+        font-size: 9px;
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

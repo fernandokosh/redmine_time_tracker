@@ -26,3 +26,4 @@ match '/tt_completer/get_issue_subject', :to => 'tt_completer#get_issue_subject'
 match '/tt_overview/context_menu', :to => 'context_menus#tt_overview', :as => 'tt_overview_context_menu'
 match '/time_list/context_menu', :to => 'context_menus#time_list', :as => 'time_list_context_menu'
 match '/tt_reporting', :to => 'tt_reporting#index', :via => [:get, :post]
+match '/tt_print_report', :to => 'tt_reporting#print_report', :via => [:get]
