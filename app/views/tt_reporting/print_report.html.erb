@@ -7,14 +7,13 @@
   <%= javascript_include_tag 'highcharts/highcharts.js', :plugin => 'redmine_time_tracker' %>
 </head>
 <body>
-<table>
+<table style="width: 100%;">
   <tr>
     <td id="tt_report-headline">
       <h2><%= Setting.plugin_redmine_time_tracker[:report_title] %></h2>
     </td>
     <td id="tt_report-logo">
-      <!--<%= image_tag("../images/reportLogo.png", :border => 0) %>-->
-      insert your logo here
+      <%= image_tag "reportLogo.png", :border => 0, :size => "227x139", :alt => "Insert Your logo here", :plugin => 'redmine_time_tracker' %>
     </td>
   </tr>
 </table>
