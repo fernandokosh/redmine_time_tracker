@@ -1,15 +1,16 @@
-@media screen,print {
+@media screen, print {
     body {
-        border:0px solid blue;
+        border: 0px solid blue;
         color: #484848;
-        font-family: Verdana,sans-serif;
-        font-size: 12px;
+        font-family: Verdana, sans-serif;
+        font-size: 12pt;
         /*margin: 15mm;*/
 
         /*		width: 210mm;
 
           height:297mm;*/
-        width:640px;
+        width: 640px;
+        /*width: 960px;*/
         padding: 0;
     }
 
@@ -26,52 +27,58 @@
     }
 
     /*TODO: remove this lines!! redmine-css allways defines them!*/
-    .odd {background-color:#f6f7f8;}
-    .even {background-color: #fff;}
+    .odd {
+        background-color: #f6f7f8;
+    }
+
+    .even {
+        background-color: #fff;
+    }
 
     tr {
         page-break-inside: avoid;
     }
 
-    /*#tt_report-headline{*/
-    /*height:20mm;*/
-    /*}*/
-
     #tt_report-title {
-        width:50%;
+        width: 50%;
     }
 
     #tt_report-logo {
     }
 
-    #tt_report-statistics{
-        width:13%;
+    #tt_report-statistics {
+        /*white-space:nowrap;*/
+        width: 15%;
         font-weight: bold;
-        font-size: 16pt;
+        font-size: 15pt;
     }
 
-    #tt_report-print-chart{
-        heigth:250px;
+    #tt_report-print-chart {
+        heigth: 250px;
     }
 
-    .tt_report-date-head{
-        white-space:nowrap;
+    .tt_report-date-head {
+        white-space: nowrap;
     }
 
-    .tt_report-desc-head{
-        /*max-width:129mm;*/
+    .tt_report-desc-head {
     }
 
-    .tt_report-time-head{
-        white-space:nowrap;
+    .tt_report-time-head {
+        white-space: nowrap;
     }
 
-    .tt_report-pers-head{
-        /*min-width:30mm;*/
+    .tt_report-pers-head {
     }
+
     .list {
-        width:100%;
+        width: 100%;
         border-collapse: collapse;
+    }
+
+    .list>* {
+        font-family: Verdana, sans-serif;
+        font-size: 12pt;
     }
 
     .list thead tr {
@@ -79,28 +86,13 @@
     }
 
     .list tr th {
-        text-align:left;
+        text-align: left;
     }
 
-    .list td .tt_list-project{
+    .list td .tt_list-project {
         float: left;
         position: relative;
         overflow: hidden;
-        font-size: 9px;
+        font-size: 8pt;
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

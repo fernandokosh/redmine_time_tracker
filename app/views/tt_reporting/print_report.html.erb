@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <%= stylesheet_link_tag 'tt_report', :plugin => 'redmine_time_tracker' %>
@@ -19,6 +20,8 @@
 <table>
   <tr>
     <td id="tt_report-statistics">
+      <!--TODO localize labels!-->
+      Total Time<br/>
       <%= @total_booked_time %>
     </td>
     <td id="tt_report-chart-table">
@@ -45,11 +48,11 @@
         <td><%= entry.tt_booking_date %></td>
         <td>
           <div>
-            <div><%= entry.comments %></div>
+            <div style="min-height: 1em;"><%= entry.comments %></div>
             <div class="tt_list-project"><%= entry.project.name unless entry.project.nil? %></div>
           </div>
         </td>
-        <td><%= entry.get_formatted_time %></td>
+        <td><%= help.time_string4report(entry.get_formatted_time) %></td>
         <td><%= entry.user.name %></td>
       </tr>
   <% end -%>

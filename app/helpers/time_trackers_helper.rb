@@ -21,6 +21,11 @@ module TimeTrackersHelper
     h + ":" + m + ":" + s
   end
 
+  def time_string4report(ts)
+    parts = ts.split(":")
+    parts[0] + "h " + parts[1] + "m"
+  end
+
   def get_current_time_tracker
     current = TimeTracker.where(:user_id => User.current.id).first
     current.nil? ? TimeTracker.new : current
