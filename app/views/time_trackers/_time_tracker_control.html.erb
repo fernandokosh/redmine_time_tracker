@@ -10,19 +10,18 @@
           <%= javascript_tag "new Autocomplete('time_tracker_comments', { serviceUrl:'/tt_completer/get_issue.json' } );" %>
       <% else %>
           <%= form_for @time_tracker, :url => {:controller => :time_trackers, :action => :stop},
-                       :html => {:class => "time-tracker-form",
-                                 :onchange => "updateTTControllerForm($(this))"} do |f| %>
+                       :html => {:class => "time-tracker-form"} do |f| %>
               <!-- TODO localize placeholders / add labels -->
               <h3><%= l(:time_tracker_label_current_task) %></h3>
 
               <div class="task_form_top_fields">
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-                  <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue" %></div>
+                  <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateTTControllerForm($(this).form)" %></div>
                 </div>
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
-                  <div class="task_form_input"><%= f.text_field :comments %></div>
+                  <div class="task_form_input"><%= f.text_field :comments, :onchange => "updateTTControllerForm($(this).form)" %></div>
                 </div>
               </div>
               <% projects = User.current.memberships.collect(&:project).compact.uniq %>
@@ -34,18 +33,18 @@
               <div class="task_form_bottom_fields">
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
-                  <div class="task_form_input"><%= select_tag :project_id_select, proj_list, :onchange => "$('time_tracker_project_id').value=$(this).value", :disabled => !@time_tracker.issue_id.nil? %></div>
+                  <div class="task_form_input"><%= select_tag :project_id_select, proj_list, :onchange => "$('time_tracker_project_id').value=$(this).value; updateTTControllerForm($(this).form);", :disabled => !@time_tracker.issue_id.nil? %></div>
                   <%= f.hidden_field :project_id %>
                 </div>
                 <div class="task_form_sub_fields">
                   <!--  TODO refactor conditions for disabling the Time-Inputs to use special Role-settings instead of admin only  -->
                   <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
-                  <div class="task_form_input"><%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => "start", :disabled => !User.current.admin? %></div>
+                  <div class="task_form_input"><%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => "start", :onchange => "updateTTControllerForm($(this).form)", :disabled => !User.current.admin? %></div>
                 </div>
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_start_date) %></div>
                   <div class="task_form_input">
-                    <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date", :disabled => !User.current.admin? %>
+                    <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => "date", :onchange => "updateTTControllerForm($(this).form)", :disabled => !User.current.admin? %>
                     <%= calendar_for_tt('time_tracker_date') %>
                   </div>
                 </div>
