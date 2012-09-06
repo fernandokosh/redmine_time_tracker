@@ -13,7 +13,13 @@
       <h2><%= Setting.plugin_redmine_time_tracker[:report_title] %></h2>
     </td>
     <td id="tt_report-logo">
-      <%= image_tag "reportLogo.png", :border => 0, :size => "227x139", :alt => "Insert Your logo here", :plugin => 'redmine_time_tracker' %>
+      <% unless Setting.plugin_redmine_time_tracker[:report_logo_url].blank? %>
+          <% if Setting.plugin_redmine_time_tracker[:report_logo_url].starts_with?("http://") %>
+              <%= image_tag Setting.plugin_redmine_time_tracker[:report_logo_url], :border => 0, :alt => "Insert Your logo via plugin-settings" %>
+          <% else %>
+              <%= image_tag Setting.plugin_redmine_time_tracker[:report_logo_url], :border => 0, :size => "227x139", :alt => "Insert Your logo via plugin-settings", :plugin => 'redmine_time_tracker' %>
+          <% end %>
+      <% end %>
     </td>
   </tr>
 </table>

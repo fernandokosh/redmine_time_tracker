@@ -54,12 +54,17 @@
         white-space: nowrap;
     }
 
+    .list td,
+    .list th {
+        padding-right: 0.5em;
+    }
+
     .list {
         width: 100%;
         border-collapse: collapse;
     }
 
-    .list>* {
+    .list * {
         font-family: Verdana, sans-serif;
         font-size: 12pt;
     }
@@ -73,7 +78,6 @@
     }
 
     .list td .tt_list-project {
-        float: left;
         position: relative;
         overflow: hidden;
         font-size: 8pt;
