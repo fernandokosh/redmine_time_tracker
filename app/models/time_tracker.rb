@@ -62,7 +62,7 @@ class TimeTracker < ActiveRecord::Base
 
   def start
     if self.valid?
-      self.started_on = Time.now.change(sec: 0)
+      self.started_on = Time.now.localtime.change(sec: 0)
       self.save
     end
   end
@@ -73,7 +73,7 @@ class TimeTracker < ActiveRecord::Base
       # saving an TimeLog and destroying the TimeTracker have to be executed as a transaction, because we don't want to
       # track all time without any data loss.
       ActiveRecord::Base.transaction do
-        stop_time = Time.now.change(sec: 0) + 1.minute
+        stop_time = Time.now.localtime.change(sec: 0) + 1.minute
         time_log = TimeLog.create(:user_id => user_id, :started_on => started_on, :stopped_at => stop_time, :comments => comments)
         # if there already is a ticket-nr then we automatically associate the timeLog and the issue using a timeBooking-entry
         # and creating a time_entry
@@ -120,7 +120,7 @@ class TimeTracker < ActiveRecord::Base
   end
 
   def running_time
-    Time.now.to_i - started_on.to_i
+    Time.now.localtime.to_i - started_on.to_i
   end
 
   protected

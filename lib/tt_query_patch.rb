@@ -250,9 +250,9 @@ module QueryPatch
         when "t+"
           "DATE(#{TimeBooking.table_name}.started_on) = '#{value[0].to_i.days.to_date}'"
         when "t"
-          "DATE(#{TimeBooking.table_name}.started_on) = '#{Time.now.to_date}'"
+          "DATE(#{TimeBooking.table_name}.started_on) = '#{Time.now.localtime.to_date}'"
         when "w"
-          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.now.beginning_of_week.to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.now.end_of_week.to_date}'"
+          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.now.localtime.beginning_of_week.to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.now.localtime.end_of_week.to_date}'"
         when ">t-"
           "DATE(#{TimeBooking.table_name}.started_on) > '#{value[0].to_i.days.ago.to_date}'"
         when "<t-"
@@ -264,7 +264,7 @@ module QueryPatch
         when "*"
           "DATE(#{TimeBooking.table_name}.started_on) IS NOT NULL"
         else
-          "#{TimeBooking.table_name}.started_on >= '#{(Time.now-2.weeks).beginning_of_day.to_date}'"
+          "#{TimeBooking.table_name}.started_on >= '#{(Time.now.localtime-2.weeks).beginning_of_day.to_date}'"
       end
     end
 

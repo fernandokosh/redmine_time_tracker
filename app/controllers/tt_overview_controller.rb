@@ -45,7 +45,7 @@ class TtOverviewController < ApplicationController
     @query_bookings.group_by ||= "tt_booking_date"
 
     #show only the actual users entries from the last 2 weeks
-    @query_bookings.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}, :tt_start_date => {:operator => ">=", :values => [(Time.now-2.weeks).beginning_of_day.to_s]}}
+    @query_bookings.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}, :tt_start_date => {:operator => ">=", :values => [(Time.now.localtime-2.weeks).beginning_of_day.to_s]}}
 
     sort_init(@query_bookings.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query_bookings.sort_criteria)
     tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
