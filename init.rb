@@ -33,20 +33,21 @@ Redmine::Plugin.register :redmine_time_tracker do
 
   settings :default => {:refresh_rate => '60', :status_transitions => {}}, :partial => 'settings/time_tracker'
 
-  # following permission-setting will be found in a plugin-specific field within the roles-settings
-  project_module :redmine_timetracker_plugin_settings do
-    permission :use_time_tracker_plugin, {:time_trackers => [:start, :stop, :delete],
-                                          :time_logs => [:add_booking, :show_booking, :get_list_entry],
-                                          :time_list => :index,
-                                          :tt_overview => :index,
-                                          :tt_info => :index,
-                                          :time_bookings => [:delete]},
-               :require => :loggedin
-  end
-  # following permission will be set-up within the "project"-field in the roles-settings
-  permission :delete_others_time_trackers, :time_trackers => :delete
+  Redmine::AccessControl.map do |map|
+    map.project_module :redmine_timetracker_plugin_settings do
+      map.permission :use_time_tracker_plugin, {:time_trackers => [:start, :stop, :update, :delete],
+                                                :time_logs => [:actions, :update, :delete, :add_booking, :show_booking, :show_edit, :get_list_entry],
+                                                :time_bookings => [:actions, :show_edit, :update, :delete, :get_list_entry],
+                                                :time_list => [:index],
+                                                :tt_overview => [:index],
+                                                :tt_info => [:index],
+                                                :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject]},
+                     :require => :loggedin
 
-  permission :view_others_time_trackers, :tt_info => :index
+      map.permission :delete_others_time_trackers, :time_trackers => :delete
+      map.permission :view_others_time_trackers, :tt_info => :index
+    end
+  end
 
   # setup an menu entry into the redmine top-menu on the upper left corner
   menu :top_menu, :time_tracker_main_menu, {:controller => 'tt_overview', :action => 'index'}, :caption => :time_tracker_label_main_menu,

@@ -41,7 +41,7 @@ function updateTTControllerForm(obj) {
         // function is called from the calendar widget. the calendar could only send a reference to itself, so we have
         // to find the form manually..
         var cal = obj;
-        var form = cal.params.inputField.parentElement.parentElement.parentElement.parentElement;
+        var form = cal.params.inputField.form;
         updateTTControllerForm(form);
     }
 }
