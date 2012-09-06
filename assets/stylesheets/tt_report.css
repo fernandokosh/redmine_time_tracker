@@ -56,7 +56,21 @@
 
     .list td,
     .list th {
-        padding-right: 0.5em;
+        padding-right: 1em;
+        border-bottom: 1px solid #666;
+    }
+
+    .list td:first-child,
+    .list th:first-child {
+         padding-left: 1em;
+    }
+
+    .list td:last-child {
+        padding-right: 1em;
+    }
+
+    .list th {
+        border-bottom-color: #000;
     }
 
     .list {

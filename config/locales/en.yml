@@ -68,6 +68,7 @@ en:
   time_tracker_refresh_rate: "Refresh rate"
   time_tracker_report_title: "Report title"
   time_tracker_report_logo_url: "Report logo URL"
+  time_tracker_report_logo_width: "Report logo width"
   time_tracker_seconds: "seconds"
   time_tracker_settings_from_status: "From status"
   time_tracker_settings_general_title: "General"

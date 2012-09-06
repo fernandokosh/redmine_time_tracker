@@ -44,6 +44,11 @@ class TtReportingController < ApplicationController
     @total_booked_time = help.time_dist2string((total_booked*3600).to_i)
     fetch_chart_data
 
+    # prepare logo settings
+    @logo_url = Setting.plugin_redmine_time_tracker[:report_logo_url]
+    Setting.plugin_redmine_time_tracker[:report_logo_url].starts_with?("http://") ? @logo_external = true : @logo_external = false
+    Setting.plugin_redmine_time_tracker[:report_logo_width].blank? ? @logo_width = "150" : @logo_width = Setting.plugin_redmine_time_tracker[:report_logo_width]
+
     render "print_report", :layout => false
   end
 end
