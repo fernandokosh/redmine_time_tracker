@@ -71,6 +71,13 @@
                 renderTo:'tt_report-print-chart',
                 type:'column'
             },
+            plotOptions:{
+                column:{
+                    borderWidth:0,
+                    shadow:false,
+                    animation:false
+                }
+            },
             title:{ text:'Booked Hours by Day' },
             legend:{ enabled:false },
             xAxis:{
@@ -90,14 +97,11 @@
                 }
             },
             series:[
-                <% @chart_data.each do |user_id, data| %>
                 {
-                    name:"<%= User.where(:id => user_id).first.name %>",
                     pointInterval: <%= 1.day * 1000 %>,
                     pointStart: <%= @chart_start_date.at_midnight.to_i * 1000 %>,
-                    data: <%= data %>
-                },
-                <% end %>
+                    data: <%= @chart_data %>
+                }
             ]
         });
     });

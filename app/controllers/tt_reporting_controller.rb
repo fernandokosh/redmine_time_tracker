@@ -61,15 +61,6 @@ def total_booked
   hours
 end
 
-def self.total_booked_on(date)
-  tb_list = where("date(started_on) = ?", date).all
-  hours = 0
-  tb_list.each do |tb|
-    hours += tb.hours_spent
-  end
-  hours
-end
-
 private
 
 def fetch_query
@@ -90,26 +81,7 @@ def fetch_chart_data
   if @query.valid? && !(@bookings.empty? || @bookings.nil?)
     # if the user changes the date-order for the table values, we have to get the correct date, as starting-point for the chart
     @chart_start_date = [@bookings.last.started_on.to_date, @bookings.first.started_on.to_date].min
-    # prepare hash for different users
-    users = Hash.new
-    user_filter = @query.filters["tt_user"]
-    if user_filter.nil?
-      User.all.each do |user|
-        users[user.id] = [] # todo check permissions
-      end
-    else
-      user_filter[:values] += User.current.id.to_s.to_a if user_filter[:values].delete('me')
-
-      if user_filter[:operator] == "!"
-        User.all.each do |user| # todo check permissions
-          users[user.id] = [] unless user_filter[:values].include?(user.id.to_s)
-        end
-      elsif user_filter[:operator] == "="
-        user_filter[:values].each do |user_id|
-          users[user_id.to_i] = [] unless User.where(:id => user_id).first.nil? # todo also check permissions
-        end
-      end
-    end
+    @chart_data = Array.new
 
     # if the user changes the date-order for the table values, we have to sort the data correctly
     # so we create a dynamical method-call
@@ -122,13 +94,11 @@ def fetch_chart_data
     end
 
     (@bookings.send(m1).started_on.to_date..@bookings.send(m2).started_on.to_date).map do |date|
-      users.keys.each do |key|
-        users[key].push(0)
-      end
+      hours = 0
       @bookings.each do |tb|
-        users[tb.user.id][users[tb.user.id].size - 1] += tb.hours_spent if tb.started_on.to_date == date
+        hours += tb.hours_spent if tb.started_on.to_date == date
       end
+      @chart_data.push(hours)
     end
-    @chart_data = users
   end
 end
