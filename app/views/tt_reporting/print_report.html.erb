@@ -72,9 +72,22 @@
                 type:'column'
             },
             title:{ text:'Booked Hours by Day' },
-            xAxis:{ type:'datetime' },
+            legend:{ enabled:false },
+            xAxis:{
+                type:'datetime',
+                labels:{
+                    style:{
+                        fontSize:'9px'
+                    }
+                }
+            },
             yAxis:{
-                title:{ text:'' }
+                title:{ text:'' },
+                labels:{
+                    style:{
+                        fontSize:'9px'
+                    }
+                }
             },
             series:[
                 <% @chart_data.each do |user_id, data| %>
