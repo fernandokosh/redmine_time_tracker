@@ -64,7 +64,7 @@
     .list td,
     .list th {
         padding-right: 1em;
-        border-bottom: 1px solid #666;
+        border-bottom: 1px solid #aaa;
     }
 
     .list td:first-child,
@@ -77,7 +77,7 @@
     }
 
     .list th {
-        border-bottom-color: #000;
+        border-bottom-color: #666;
     }
 
     .list {

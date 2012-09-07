@@ -78,21 +78,27 @@
                     animation:false
                 }
             },
+            colors: [ '#999' ], // for printing we only use a light gray
             title:{ text:'Booked Hours by Day' },
             legend:{ enabled:false },
             xAxis:{
                 type:'datetime',
                 labels:{
                     style:{
-                        fontSize:'9px'
+                        fontSize:'10px',
+                        color:'#484848'
                     }
-                }
+                },
+                minorTickInterval: <%= 1.day * 1000 %>,
+                minorGridLineWidth: 0,
+                minorTickWidth: 1
             },
             yAxis:{
                 title:{ text:'' },
                 labels:{
                     style:{
-                        fontSize:'9px'
+                        fontSize:'10px',
+                        color:'#484848'
                     }
                 }
             },

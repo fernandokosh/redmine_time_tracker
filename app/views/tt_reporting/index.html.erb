@@ -100,7 +100,12 @@
                 },
                 title:{ text:'Booked Hours by Day' },
                 legend:{ enabled:false },
-                xAxis:{ type:'datetime' },
+                xAxis:{
+                    type:'datetime',
+                    minorTickInterval: <%= 1.day * 1000 %>,
+                    minorGridLineWidth:0,
+                    minorTickWidth:1
+                },
                 yAxis:{ title:{ text:'' } },
                 series:[
                     {
