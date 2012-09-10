@@ -221,7 +221,6 @@ module QueryPatch
 
     # sql statements for where clauses have to be in an "sql_for_#{filed-name}_field" method
     # so we have to implement some where-clauses for every new filter here
-    # todo implement all filters
     def sql_for_tt_project_field(field, operator, value)
       if value.delete('mine')
         value += User.current.memberships.map(&:project_id).map(&:to_s)

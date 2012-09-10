@@ -24,7 +24,6 @@ class TimeLogsController < ApplicationController
     redirect_to '/tt_overview'
   end
 
-  # TODO localize messages
   def add_booking(tl)
     time_log = TimeLog.where(:id => tl[:id]).first
     issue = issue_from_id(tl[:issue_id])

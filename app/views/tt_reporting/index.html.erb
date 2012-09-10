@@ -73,9 +73,8 @@
 
     <div id="tt_reporting-sidebar">
       <h3>Reporting</h3>
-      hier kann noch die statistik mit rein</br>
-      <!--TODO localize label!-->
-      <%= link_to "Print Report", :controller => :tt_reporting, :action => :print_report %>
+      <!--TODO insert statistics here-->
+      <%= link_to l(:time_tracker_label_print_report), :controller => :tt_reporting, :action => :print_report %>
     </div>
 <% end %>
 
@@ -98,7 +97,7 @@
                         shadow:false
                     }
                 },
-                title:{ text:'Booked Hours by Day' },
+                title:{ text:'<%= l(:time_tracker_chart_title) %>' },
                 legend:{ enabled:false },
                 xAxis:{
                     type:'datetime',

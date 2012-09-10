@@ -20,8 +20,7 @@
 <table style="width: 100%;">
   <tr>
     <td id="tt_report-statistics">
-      <!--TODO localize labels!-->
-      Total Time<br/>
+      <%= l(:time_tracker_report_total_time) %><br/>
       <%= @total_booked_time %>
     </td>
     <td id="tt_report-chart-table">
@@ -34,10 +33,10 @@
 <table class="list">
   <thead>
   <tr>
-    <th class="tt_report-date">Date</th>
-    <th class="tt_report-desc-head">Description</th>
-    <th class="tt_report-time">Time Spent</th>
-    <th class="tt_report-pers-head">Person</th>
+    <th class="tt_report-date"><%= l(:time_tracker_label_date) %></th>
+    <th class="tt_report-desc-head"><%= l(:time_tracker_label_description) %></th>
+    <th class="tt_report-time"><%= l(:time_tracker_label_time_spent) %></th>
+    <th class="tt_report-pers-head"><%= l(:time_tracker_label_person) %></th>
   </tr>
   </thead>
   <tbody>
@@ -79,7 +78,7 @@
                 }
             },
             colors: [ '#999' ], // for printing we only use a light gray
-            title:{ text:'Booked Hours by Day' },
+            title:{ text:'<%= l(:time_tracker_chart_title) %>' },
             legend:{ enabled:false },
             xAxis:{
                 type:'datetime',
