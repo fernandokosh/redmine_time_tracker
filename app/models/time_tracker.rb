@@ -1,7 +1,7 @@
 class TimeTracker < ActiveRecord::Base
   unloadable
 
-  attr_accessible :comments, :issue_id, :project_id, :start_time, :date
+  attr_accessible :comments, :issue_id, :project_id, :start_time, :date, :round
   attr_accessor :start_time, :date
 
   belongs_to :user
@@ -74,6 +74,12 @@ class TimeTracker < ActiveRecord::Base
       # track all time without any data loss.
       ActiveRecord::Base.transaction do
         stop_time = Time.now.localtime.change(sec: 0) + 1.minute
+        if self.round # round times to solid quarters of an hour
+          t_diff = (stop_time.to_i - started_on.to_i)
+          unless (t_diff % 900) == 0
+            stop_time = started_on + (t_diff / 900 + 1) * 900
+          end
+        end
         time_log = TimeLog.create(:user_id => user_id, :started_on => started_on, :stopped_at => stop_time, :comments => comments)
         # if there already is a ticket-nr then we automatically associate the timeLog and the issue using a timeBooking-entry
         # and creating a time_entry
