@@ -23,6 +23,12 @@
                   <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
                   <div class="task_form_input"><%= f.text_field :comments, :onchange => "updateTTControllerForm($(this).form)" %></div>
                 </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_round) %></div>
+                  <div class="task_form_input">
+                    <%= f.check_box :round, :value => @time_tracker.round, :onchange => "updateTTControllerForm($(this).form)" %>
+                  </div>
+                </div>
               </div>
               <% projects = User.current.memberships.collect(&:project).compact.uniq %>
               <% @time_tracker.project_id.nil? ? select = nil : select = Project.find(@time_tracker.project_id) %>
