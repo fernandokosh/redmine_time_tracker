@@ -112,7 +112,7 @@ module QueryPatch
     def booking_count
       # TODO refactor includes
       TimeBooking.
-          includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+          includes([:project, :virtual_comment, {:time_entry => :issue}, {:time_log => :user}]).
           where(statement).
           count(:id)
     rescue ::ActiveRecord::StatementInvalid => e
@@ -131,7 +131,7 @@ module QueryPatch
           gbs = group_by_statement
           gbs = "#{Project.table_name}.name" if gbs == "project"
           r = TimeBooking.
-              includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+              includes([:project, :virtual_comment, {:time_entry => :issue}, {:time_log => :user}]).
               group(gbs).
               where(statement).
               count(:id)
@@ -155,7 +155,7 @@ module QueryPatch
       order_option = nil if order_option.blank?
 
       TimeBooking.
-          includes([:project, :virtual_comment, :time_entry => :issue, :time_log => :user]).
+          includes([:project, :virtual_comment, {:time_entry => :issue}, {:time_log => :user}]).
           where(statement).
           order(order_option).
           limit(options[:limit]).
