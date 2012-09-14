@@ -21,7 +21,7 @@ class TimeLogsController < ApplicationController
       end
     end
 
-    redirect_to '/tt_overview'
+    redirect_to :controller => 'tt_overview'
   end
 
   def add_booking(tl)
@@ -59,7 +59,7 @@ class TimeLogsController < ApplicationController
         end
       end
     end
-    redirect_to '/tt_overview'
+    redirect_to :controller => 'tt_overview'
   end
 
   def show_booking
