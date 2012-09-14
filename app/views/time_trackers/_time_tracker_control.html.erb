@@ -7,7 +7,7 @@
               <%= f.text_field :comments %>
               <%= f.submit l(:start_time_tracker) %>
           <% end %>
-          <%= javascript_tag "new Autocomplete('time_tracker_comments', { serviceUrl:'/tt_completer/get_issue.json' } );" %>
+          <%= javascript_tag "new Autocomplete('time_tracker_comments', { serviceUrl:'tt_completer/get_issue.json' } );" %>
       <% else %>
           <%= form_for @time_tracker, :url => {:controller => :time_trackers, :action => :stop},
                        :html => {:class => "time-tracker-form"} do |f| %>
@@ -56,8 +56,8 @@
               </div>
               <%= f.submit l(:stop_time_tracker) %>
           <% end %>
-          <%= javascript_tag "new Autocomplete('time_tracker_issue_id', { serviceUrl:'/tt_completer/get_issue.json', tTControlUpdate:true } );" %>
-          <%= javascript_tag "new Autocomplete('time_tracker_comments', { serviceUrl:'/tt_completer/get_issue.json', tTControlUpdate:true } );" %>
+          <%= javascript_tag "new Autocomplete('time_tracker_issue_id', { serviceUrl:'tt_completer/get_issue.json', tTControlUpdate:true } );" %>
+          <%= javascript_tag "new Autocomplete('time_tracker_comments', { serviceUrl:'tt_completer/get_issue.json', tTControlUpdate:true } );" %>
       <% end %>
   <% end %>
 </div>

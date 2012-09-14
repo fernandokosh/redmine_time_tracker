@@ -13,7 +13,7 @@ function updateElementIfChanged(id, newContent) {
 function updateTTControllerForm(obj) {
     if (obj.nodeName == "FORM") {
         var form = obj;
-        new Ajax.Request('/time_trackers/update.json?' + Form.serializeElements(form.getInputs()),
+        new Ajax.Request('time_trackers/update.json?' + Form.serializeElements(form.getInputs()),
             {
                 method:'put',
                 onSuccess:function (transport) {
