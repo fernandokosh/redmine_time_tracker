@@ -4,7 +4,7 @@
     <li>
       <%= link_to l(:stop_time_tracker).capitalize + ' #' + time_tracker.issue_id.to_s,
                          :url => {:controller => '/time_trackers', :action => 'stop'},
-                         :html => {:class => 'icon icon-stop'}
+                         :html => {:class => 'icon icon-stop'},
                          :remote => true  %>
     </li>
 <% elsif !@project.nil? and !@issue.nil? and User.current.allowed_to?(:log_time, @project) %>
@@ -13,7 +13,7 @@
     <li>
       <%= link_to l(:start_time_tracker).capitalize + ' #' + @issue.id.to_s,
                          :url => {:controller => '/time_trackers', :action => 'start', :time_tracker => {:issue_id => @issue.id}},
-                         :html => {:class => 'icon icon-start'}
+                         :html => {:class => 'icon icon-start'},
                          :remote => true 
       %>
     </li>
