@@ -105,6 +105,11 @@ module QueryPatch
       @available_filters['tt_start_date'] = {:type => :date, :order => 2}
       @available_filters['tt_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
       @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
+
+      @available_filters.each do |field, options|
+        options[:name] ||= l(options[:label] || "field_#{field}".gsub(/_id$/, ''))
+      end
+
       @available_filters
     end
 
