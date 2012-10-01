@@ -27,9 +27,9 @@ Redmine::Plugin.register :redmine_time_tracker do
   author 'Christian Reich'
   author_url 'mailto:christian.reich@hicknhack-software.com'
   description 'This is a plugin to track time in Redmine'
-  version '0.4.2'
+  version '0.5'
 
-  requires_redmine :version_or_higher => '2.0.0'
+  requires_redmine :version_or_higher => '2.1.0'
 
   #settings :default => {:refresh_rate => '60', :status_transitions => {}}, :partial => 'settings/time_tracker'
   settings :default => {:report_title => 'Report', :report_logo_url => '', :report_logo_width => '150'}, :partial => 'settings/time_tracker'
