@@ -27,7 +27,7 @@ Redmine::Plugin.register :redmine_time_tracker do
   author 'Christian Reich'
   author_url 'mailto:christian.reich@hicknhack-software.com'
   description 'This is a plugin to track time in Redmine'
-  version '0.4.1'
+  version '0.4.2'
 
   requires_redmine :version_or_higher => '2.0.0'
 
