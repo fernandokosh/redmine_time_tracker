@@ -56,7 +56,9 @@
     </p>
 <% end %>
 
-<div id="tt_reporting_chart" style="height: <%= @bookings.empty? ? '0' : '400px' %>"></div>
+<% unless @bookings.nil? %>
+    <div id="tt_reporting_chart" style="height: <%= @bookings.empty? ? '0' : '400px' %>"></div>
+<% end %>
 
 <%= error_messages_for 'query' %>
 <% if @query.valid? %>
@@ -81,7 +83,7 @@
 <!-- TODO edit next line to insert own context menu -->
 <!--<%= context_menu issues_context_menu_path %>-->
 
-<% unless @bookings.empty? %>
+<% unless @bookings.nil? || @bookings.empty? %>
 
     <script type="text/javascript" charset="utf-8">
         var tt_reporting_chart; // globally available
