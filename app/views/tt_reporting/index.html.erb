@@ -1,4 +1,3 @@
-<%= javascript_include_tag 'highcharts/prototype-adapter.js', :plugin => 'redmine_time_tracker' %>
 <%= javascript_include_tag 'highcharts/highcharts.js', :plugin => 'redmine_time_tracker' %>
 
 
@@ -87,7 +86,7 @@
 
     <script type="text/javascript" charset="utf-8">
         var tt_reporting_chart; // globally available
-        document.observe("dom:loaded", function () {
+        $(document).ready(function () {
             tt_reporting_chart = new Highcharts.Chart({
                 chart:{
                     renderTo:'tt_reporting_chart',
