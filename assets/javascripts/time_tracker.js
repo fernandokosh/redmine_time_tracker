@@ -8,6 +8,33 @@ function updateElementIfChanged(id, newContent) {
     }
 }
 
+// ================== helpers for date-filter chooser ============================
+
+function get_time_span(time, obj) {
+    // default action is getting the actual month
+    var action = "get_this_time_span";
+    if (time == "next") {
+        action = "get_next_time_span";
+    } else if (time == "prev") {
+        action = "get_prev_time_span";
+    }
+
+    var date1 = $('values_tt_start_date_1').value;
+    var date2 = $('values_tt_start_date_2').value;
+
+    new Ajax.Request('tt_date_shifter/' + action +'.json?date1=' + date1 + '&date2=' + date2,
+        {
+            method:'get',
+            onSuccess:function (transport) {
+                var ds = transport.responseJSON;
+
+                $('values_tt_start_date_1').value = ds.start_date;
+                $('values_tt_start_date_2').value = ds.stop_date;
+            }
+        });
+
+}
+
 // ================== time_tracker_controller helpers ============================
 
 function updateTTControllerForm(obj) {

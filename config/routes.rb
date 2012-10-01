@@ -23,6 +23,9 @@ match '/tt_info', :to => 'tt_info#index', :via => [:get, :post]
 match '/tt_completer/get_issue', :to => 'tt_completer#get_issue', :via => [:get]
 match '/tt_completer/get_issue_id', :to => 'tt_completer#get_issue_id', :via => [:get]
 match '/tt_completer/get_issue_subject', :to => 'tt_completer#get_issue_subject', :via => [:get]
+match '/tt_date_shifter/get_prev_time_span', :to => 'tt_date_shifter#get_prev_time_span', :via => [:get]
+match '/tt_date_shifter/get_next_time_span', :to => 'tt_date_shifter#get_next_time_span', :via => [:get]
+match '/tt_date_shifter/get_this_time_span', :to => 'tt_date_shifter#get_this_time_span', :via => [:get]
 match '/tt_overview/context_menu', :to => 'context_menus#tt_overview', :as => 'tt_overview_context_menu'
 match '/time_list/context_menu', :to => 'context_menus#time_list', :as => 'time_list_context_menu'
 match '/tt_reporting', :to => 'tt_reporting#index', :via => [:get, :post]
