@@ -22,7 +22,7 @@ function get_time_span(time, obj) {
     var date1 = $('values_tt_start_date_1').value;
     var date2 = $('values_tt_start_date_2').value;
 
-    new Ajax.Request('tt_date_shifter/' + action +'.json?date1=' + date1 + '&date2=' + date2,
+    new Ajax.Request('tt_date_shifter/' + action + '.json?date1=' + date1 + '&date2=' + date2,
         {
             method:'get',
             onSuccess:function (transport) {
@@ -35,43 +35,7 @@ function get_time_span(time, obj) {
 
 }
 
-// ================== time_tracker_controller helpers ============================
 
-function updateTTControllerForm(obj) {
-    if (obj.nodeName == "FORM") {
-        var form = obj;
-        new Ajax.Request('time_trackers/update.json?' + Form.serializeElements(form.getInputs()),
-            {
-                method:'put',
-                onSuccess:function (transport) {
-                    var tt = transport.responseJSON.time_tracker;
-                    form.time_tracker_issue_id.value = tt.issue_id;
-                    (tt.issue_id == null) ? form.project_id_select.enable() : form.project_id_select.disable();
-                    form.time_tracker_comments.value = tt.comments;
-                    form.time_tracker_project_id.value = tt.project_id;
-                    select_options = form.project_id_select;
-                    for (i = 0; i < select_options.length; i++) {
-                        if (select_options[i].value == tt.project_id) select_options[i].selected = true;
-                    }
-                    dat = new Date(Date.parse(tt.started_on));
-                    //form.time_tracker_start_time.value = dat.getHours().toString()+':'+dat.getMinutes().toString();
-                    form.time_tracker_start_time.value = dat.toLocaleTimeString();
-                    year = dat.getFullYear().toString();
-                    month = dat.getMonth() + 1;
-                    (month < 10) ? month = '0' + month.toString() : month = month.toString();
-                    day = dat.getDate();
-                    (day < 10) ? day = '0' + dat.getDate().toString() : day = dat.getDate().toString();
-                    form.time_tracker_date.value = year + '-' + month + '-' + day;
-                }
-            });
-    } else {
-        // function is called from the calendar widget. the calendar could only send a reference to itself, so we have
-        // to find the form manually..
-        var cal = obj;
-        var form = cal.params.inputField.form;
-        updateTTControllerForm(form);
-    }
-}
 
 // ================== booking_form helpers ============================
 

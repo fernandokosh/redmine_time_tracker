@@ -2,7 +2,7 @@ class TimeTrackersController < ApplicationController
   unloadable
 
   menu_item :time_tracker_menu_tab_overview
-  before_filter :authorize_global
+  before_filter :js_auth, :authorize_global
 
   # we could start an empty timeTracker to track time without any association.
   # we also can give some more information, so the timeTracker could be automatically associated later.
@@ -119,6 +119,16 @@ class TimeTrackersController < ApplicationController
         @issue.status_id = new_status_id
         @issue.save
       end
+    end
+  end
+
+  private
+
+  # following method is necessary to got ajax requests logged_in
+  def js_auth
+    respond_to do |format|
+      format.json { User.current = User.where(:id => session[:user_id]).first }
+      format.any {}
     end
   end
 end
