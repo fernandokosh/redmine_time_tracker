@@ -1,4 +1,5 @@
 // ================== helpers for date-filter chooser ============================
+// this function is unused till the date-shifter will be ported to jquery too
 
 function get_time_span(time, obj) {
     // default action is getting the actual month
@@ -9,101 +10,99 @@ function get_time_span(time, obj) {
         action = "get_prev_time_span";
     }
 
-    var date1 = $('values_tt_start_date_1').value;
-    var date2 = $('values_tt_start_date_2').value;
+    var date1 = $('#values_tt_start_date_1').val();
+    var date2 = $('#values_tt_start_date_2').val();
 
-    new Ajax.Request('tt_date_shifter/' + action + '.json?date1=' + date1 + '&date2=' + date2,
-        {
-            method:'get',
-            onSuccess:function (transport) {
-                var ds = transport.responseJSON;
+    $.ajax({url:'tt_date_shifter/' + action + '.json?date1=' + date1 + '&date2=' + date2,
+        type:'GET',
+        success:function (transport) {
 
-                $('values_tt_start_date_1').value = ds.start_date;
-                $('values_tt_start_date_2').value = ds.stop_date;
-            }
-        });
+            var ds = transport;
+
+            $('#values_tt_start_date_1').val(ds.start_date);
+            $('#values_tt_start_date_2').val(ds.stop_date);
+        }
+    });
 
 }
 
 // ================== booking_form helpers ============================
 
 function updateBookingHours(name) {
-    var start_field = $(name + "_start_time");
-    var stop_field = $(name + "_stop_time");
-    var spent_field = $(name + "_spent_time");
+    var start_field = $("#" + name + "_start_time");
+    var stop_field = $("#" + name + "_stop_time");
+    var spent_field = $("#" + name + "_spent_time");
 
-    var start = start_field.value;
-    var stop = stop_field.value;
+    var start = start_field.val();
+    var stop = stop_field.val();
     // if the stop-time looks smaller than the start-time, we assume a booking over midnight
     if (timeString2sec(stop) < timeString2sec(start)) {
         var temp = calcBookingHelper(start, "24:00", 1);
-        spent_field.value = calcBookingHelper(stop, temp, 2);
+        spent_field.val(calcBookingHelper(stop, temp, 2));
     } else {
-        spent_field.value = calcBookingHelper(start, stop, 1);
+        spent_field.val(calcBookingHelper(start, stop, 1));
     }
 }
 
 function updateBookingStop(name) {
-    var start_field = $(name + "_start_time");
-    var stop_field = $(name + "_stop_time");
-    var spent_field = $(name + "_spent_time");
+    var start_field = $("#" + name + "_start_time");
+    var stop_field = $("#" + name + "_stop_time");
+    var spent_field = $("#" + name + "_spent_time");
 
-    stop_field.value = calcBookingHelper(start_field.value, spent_field.value, 2);
+    stop_field.val(calcBookingHelper(start_field.val(), spent_field.val(), 2));
 }
 
 function updateBookingProject(name) {
-    var issue_id_field = $(name + "_issue_id");
-    var project_id_field = $(name + "_project_id");
-    var project_id_select = $(name + "_project_id_select");
+    var issue_id_field = $("#" + name + "_issue_id");
+    var project_id_field = $("#" + name + "_project_id");
+    var project_id_select = $("#" + name + "_project_id_select");
 
-    var issue_id = issue_id_field.value;
-    if (issue_id.blank()) {
-        project_id_select.enable(); // TODO get this element!!
-        issue_id_field.parentNode.removeClassName('invalid');
+    var issue_id = issue_id_field.val();
+    // check if the string is blank
+    if (!issue_id || $.trim(issue_id) === "") {
+        project_id_select.attr('disabled', false);
+        issue_id_field.removeClass('invalid');
     } else {
-        new Ajax.Request('/issues/' + issue_id + '.json?',
-            {
-                method:'get',
-                onSuccess:function (transport) {
-                    issue_id_field.parentNode.removeClassName('invalid');
-                    var issue = transport.responseJSON.issue;
-                    if (issue == null) {
-                        project_id_select.enable();
-                    } else {
-                        project_id_select.disable();
-                        project_id_field.value = issue.project.id;
-                        for (i = 0; i < project_id_select.length; i++) {
-                            if (project_id_select[i].value == issue.project.id) project_id_select[i].selected = true;
-                        }
-                    }
-                },
-                onFailure:function () {
-                    project_id_select.enable();
-                    issue_id_field.parentNode.addClassName('invalid');
+        $.ajax({url:'/issues/' + issue_id + '.json',
+            type:'GET',
+            success:function (transport) {
+                issue_id_field.removeClass('invalid');
+                var issue = transport.issue;
+                if (issue == null) {
+                    project_id_select.attr('disabled', false);
+                } else {
+                    project_id_select.attr('disabled', true);
+                    project_id_field.val(issue.project.id);
+                    $("#" + project_id_select.attr("id")).val(issue.project.id);
                 }
-            });
+            },
+            error:function () {
+                project_id_select.attr('disabled', false);
+                issue_id_field.addClass('invalid');
+            }
+        });
     }
 }
 
 function timeString2sec(str) {
     if (str.match(/\d\d?:\d\d?:\d\d?/)) {     //parse general input form hh:mm:ss
-        var arr = str.strip().split(':');
+        var arr = str.trim().split(':');
         return new Number(arr[0]) * 3600 + new Number(arr[1]) * 60 + new Number(arr[2]);
     }
     if (str.match(/\d\d?:\d\d?/)) {     //parse general input form hh:mm:ss
-        var arr = str.strip().split(':');
+        var arr = str.trim().split(':');
         return new Number(arr[0]) * 3600 + new Number(arr[1]) * 60;
     }
     // more flexible parsing for inputs like:  12d 23sec 5min
-    var time_factor = new Hash({"s":1, "sec":1, "m":60, "min":60, "h":3600, "d":86400});
+    var time_factor = {"s":1, "sec":1, "m":60, "min":60, "h":3600, "d":86400};
     var sec = 0;
     var time_arr = str.match(/\d+\s*\D+/g);
-    time_arr.each(function (item) {
-        item = item.strip();
+    jQuery.each(time_arr, function (index, item) {
+        item = item.trim();
         var num = item.match(/\d+/);
-        var fac = item.match(/\D+/)[0].strip().toLowerCase();
-        if (time_factor.get(fac)) {
-            sec += num * time_factor.get(fac);
+        var fac = item.match(/\D+/)[0].trim().toLowerCase();
+        if (time_factor[fac]) {
+            sec += num * time_factor[fac];
         }
     });
     return sec;
@@ -118,9 +117,9 @@ function calcBookingHelper(ele1, ele2, calc) {
     if (calc == 2) {
         val = sec1 + sec2;
     }
-    var h = (val / 3600).floor();
-    var m = ((val - h * 3600) / 60).floor();
-    var s = (val - (h * 3600 + m * 60)).floor();
+    var h = Math.floor(val / 3600);
+    var m = Math.floor((val - h * 3600) / 60);
+    var s = Math.floor(val - (h * 3600 + m * 60));
     h < 10 ? h = "0" + h.toString() : h = h.toString();
     m < 10 ? m = "0" + m.toString() : m = m.toString();
     s < 10 ? s = "0" + s.toString() : s = s.toString();
