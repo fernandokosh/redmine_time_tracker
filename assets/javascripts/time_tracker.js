@@ -35,8 +35,6 @@ function get_time_span(time, obj) {
 
 }
 
-
-
 // ================== booking_form helpers ============================
 
 function updateBookingHours(name) {

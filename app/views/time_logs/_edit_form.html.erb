@@ -1,30 +1,29 @@
-<% unless @time_log.nil? %>
-    <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", @time_log.id, false, :id => nil) %></td>
+<% unless time_log.nil? %>
+    <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", time_log.id, false, :id => nil) %></td>
     <td colspan=5>
       <% prefix = "time_log_edit[]" %>
-      <%= fields_for prefix, @time_log do |f| %>
+      <%= fields_for prefix, time_log do |f| %>
           <%= f.hidden_field(:id) %>
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:field_tt_date) %></div>
             <div class="task_form_input">
               <%= f.text_field :tt_log_date, :size => "10", :placeholder => "date" %>
-              <%= image_tag("calendar.png", {:id => "time_log_edit_#{@time_log.id.to_s}_tt_log_date_trigger", :class => "calendar-trigger"}) +
-                          javascript_tag("Calendar.setup({inputField : time_log_edit_#{@time_log.id.to_s}_tt_log_date, ifFormat : '%Y-%m-%d', button : 'time_log_edit_#{@time_log.id.to_s}_tt_log_date_trigger' });") %>
+              <%= calendar_for("time_log_edit_#{time_log.id.to_s}_tt_log_date") %>
             </div>
           </div>
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :start_time, :value => @time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours('time_log_edit_#{@time_log.id}')" %>
+              <%= f.text_field :start_time, :value => time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours('time_log_edit_#{time_log.id}')" %>
             </div>
           </div>
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :stop_time, :value => @time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours('time_log_edit_#{@time_log.id}')" %>
+              <%= f.text_field :stop_time, :value => time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours('time_log_edit_#{time_log.id}')" %>
             </div>
           </div>
 
@@ -36,12 +35,12 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:field_tt_bookable) %></div>
             <div class="task_form_input">
-              <%= f.text_field :spent_time, :value => @time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_log_edit_#{@time_log.id}')" %>
+              <%= f.text_field :spent_time, :value => time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_log_edit_#{time_log.id}')" %>
             </div>
           </div>
 
           <%= f.submit "update" %>
-          <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => @time_log.id}, :remote => true %>
+          <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => time_log.id}, :remote => true %>
       <% end %>
     </td>
 <% end %>

@@ -17,12 +17,9 @@ class TimeBookingsController < ApplicationController
   end
 
   def show_edit
-    time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
-    render :update do |page|
-      time_bookings.each do |item|
-        @time_booking = item
-        page.replace_html 'booking-entry-'+item.id.to_s, :partial => 'time_bookings/edit_form'
-      end
+    @time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
+    respond_to do |format|
+      format.js
     end
   end
 
@@ -64,10 +61,9 @@ class TimeBookingsController < ApplicationController
     # prepare query for time_bookings
     time_bookings_query
 
-    entry = TimeBooking.where(:id => params[:time_booking_id]).first
-    render :update do |page|
-      page.replace_html 'booking-entry-'+params[:time_booking_id], :partial => 'time_bookings/list_entry', :locals => {:entry => entry, :query => @query_bookings, :button => :book}
-      page << "new ContextMenu('#{ url_for(tt_overview_context_menu_path) }')" # workaround for strange contextMenu-problem
+    @entry = TimeBooking.where(:id => params[:time_booking_id]).first
+    respond_to do |format|
+      format.js
     end
   end
 end

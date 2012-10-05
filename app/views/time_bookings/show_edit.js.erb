@@ -1,0 +1,7 @@
+<% @time_bookings.each do |item| %>
+
+$('#<%= "booking-entry-" + item.id.to_s %>').html('<%= escape_javascript(render(:partial => 'time_bookings/edit_form', :locals => {:time_booking => item})) %>');
+
+<% end %>
+contextMenuHide();
+contextMenuUnselectAll();

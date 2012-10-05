@@ -1,0 +1,3 @@
+$('#<%= "entry-" + @entry.id.to_s %>').html('<%= escape_javascript(render(:partial => 'time_logs/list_entry', :locals => {:entry => @entry, :query => @query_logs})) %>');
+contextMenuHide();
+contextMenuUnselectAll();

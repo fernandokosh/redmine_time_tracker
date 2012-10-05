@@ -63,22 +63,16 @@ class TimeLogsController < ApplicationController
   end
 
   def show_booking
-    time_logs = TimeLog.where(:id => params[:time_log_ids]).all
-    render :update do |page|
-      time_logs.each do |item|
-        @time_log = item
-        page.replace_html 'entry-'+item.id.to_s, :partial => 'time_logs/booking_form'
-      end
+    @time_logs = TimeLog.where(:id => params[:time_log_ids]).all
+    respond_to do |format|
+      format.js
     end
   end
 
   def show_edit
-    time_logs = TimeLog.where(:id => params[:time_log_ids]).all
-    render :update do |page|
-      time_logs.each do |item|
-        @time_log = item
-        page.replace_html 'entry-'+item.id.to_s, :partial => 'time_logs/edit_form'
-      end
+    @time_logs = TimeLog.where(:id => params[:time_log_ids]).all
+    respond_to do |format|
+      format.js
     end
   end
 
@@ -86,10 +80,9 @@ class TimeLogsController < ApplicationController
     # prepare query for time_logs
     time_logs_query
 
-    entry = TimeLog.where(:id => params[:time_log_id]).first
-    render :update do |page|
-      page.replace_html 'entry-'+params[:time_log_id], :partial => 'time_logs/list_entry', :locals => {:entry => entry, :query => @query_logs}
-      page << "new ContextMenu('#{ url_for(tt_overview_context_menu_path) }')" # workaround for strange contextMenu-problem
+    @entry = TimeLog.where(:id => params[:time_log_id]).first
+    respond_to do |format|
+      format.js
     end
   end
 
