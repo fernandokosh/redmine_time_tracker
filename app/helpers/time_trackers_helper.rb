@@ -77,7 +77,6 @@ module TimeTrackersHelper
       @query.project = @project
       session[:tt_query] = {:id => @query.id, :project_id => @query.project_id}
       sort_clear
-      #elsif params[:set_filter]
     elsif params[:set_filter] == "1" && !@query_give_logs && !@query_give_bookings ||
         params[:set_filter] == "2" && @query_give_logs && !@query_give_bookings ||
         params[:set_filter] == "3" && !@query_give_logs && @query_give_bookings ||
