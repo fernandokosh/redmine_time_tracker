@@ -1,0 +1,26 @@
+<% unless time_booking.nil? %>
+
+$(function () {
+    $('#time_booking_edit_<%= time_booking.id.to_s %>_issue_id').autocomplete({
+        source:'tt_completer/get_issue.json',
+        minLength:0,
+        select:function (event, ui) {
+            $('#time_booking_edit_<%= time_booking.id.to_s %>_comments').val(ui.item.data);
+            updateBookingProject('time_booking_edit_<%= time_booking.id.to_s %>');
+        }
+    });
+});
+
+$(function () {
+    $('#time_booking_edit_<%= time_booking.id.to_s %>_comments').autocomplete({
+        source:'tt_completer/get_issue.json',
+        minLength:0,
+        select:function (event, ui) {
+            $('#time_booking_edit_<%= time_booking.id.to_s %>_issue_id').val(ui.item.value);
+            $('#time_booking_edit_<%= time_booking.id.to_s %>_comments').val(ui.item.data);
+            updateBookingProject('time_booking_edit_<%= time_booking.id.to_s %>');
+        }
+    });
+});
+
+<% end %>

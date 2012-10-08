@@ -1,0 +1,26 @@
+<% unless time_log.nil? %>
+
+$(function () {
+    $('#time_log_add_booking_<%= time_log.id.to_s %>_issue_id').autocomplete({
+        source:'tt_completer/get_issue.json',
+        minLength:0,
+        select:function (event, ui) {
+            $('#time_log_add_booking_<%= time_log.id.to_s %>_comments').val(ui.item.data);
+            updateBookingProject('time_log_add_booking_<%= time_log.id.to_s %>');
+        }
+    });
+});
+
+$(function () {
+    $('#time_log_add_booking_<%= time_log.id.to_s %>_comments').autocomplete({
+        source:'tt_completer/get_issue.json',
+        minLength:0,
+        select:function (event, ui) {
+            $('#time_log_add_booking_<%= time_log.id.to_s %>_issue_id').val(ui.item.value);
+            $('#time_log_add_booking_<%= time_log.id.to_s %>_comments').val(ui.item.data);
+            updateBookingProject('time_log_add_booking_<%= time_log.id.to_s %>');
+        }
+    });
+});
+
+<% end %>

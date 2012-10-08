@@ -48,8 +48,6 @@
           <%= f.submit "book" %>
           <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => time_log.id}, :remote => true %>
       <% end %>
-      <!--TODO insert new autocompleter-->
-      <!--<%= javascript_tag "new Autocomplete('time_log_add_booking_#{time_log.id}_issue_id', { serviceUrl:'tt_completer/get_issue_id.json', useData:true, onSelect:'fireOnchange' } );" %>-->
-      <!--<%= javascript_tag "new Autocomplete('time_log_add_booking_#{time_log.id}_comments', { serviceUrl:'tt_completer/get_issue_subject.json', useData:true } );" %>-->
+      <%= javascript_tag render :partial => 'booking_form_autocomplete', :locals => {:time_log => time_log} %>
     </td>
 <% end %>
