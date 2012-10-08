@@ -1,0 +1,20 @@
+$(document).on('change', '#add_filter_select', null, function (e) {
+    $('#tr_tt_start_date').addClass('test');
+    <% if @query.tt_query? %>
+
+    $('#tr_tt_start_date').append(
+            '<td class="tt_expansion"><%= link_to_function "<<", "get_time_span('prev', $(this))" %></td>' +
+            '<td class="tt_expansion"><%= link_to_function "this month", "get_time_span('now', $(this))" %></td>' +
+            '<td class="tt_expansion"><%= link_to_function ">>", "get_time_span('next', $(this))" %></td>'
+    );
+    <% end %>
+});
+
+$(document).on('click', '#filters-table td.field input[type=checkbox]', null, function (e) {
+    if ($('#cb_tt_start_date').is(':checked')) {
+        $('#tr_tt_start_date').find('td.tt_expansion').show();
+    } else {
+        $('#tr_tt_start_date').find('td.tt_expansion').hide();
+
+    }
+});

@@ -21,6 +21,7 @@
         <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
         <div style="<%= @query.new_record? ? "" : "display: none;" %>">
           <%= render :partial => 'queries/filters', :locals => {:query => @query} %>
+          <%= javascript_tag render :partial => 'queries/expand_filter_menu', :formats => [:js] %>
         </div>
       </fieldset>
       <fieldset class="collapsible collapsed">
