@@ -2,7 +2,12 @@
 <html>
 <head>
   <%= stylesheet_link_tag 'tt_report', :plugin => 'redmine_time_tracker', :media => "all" %>
-  <%= javascript_include_tag 'highcharts/highcharts.js', :plugin => 'redmine_time_tracker' %>
+  <%= javascript_include_tag 'jquery-1.7.2-ui-1.8.21-ujs-2.0.3.js' %>
+  <%= javascript_include_tag 'jqplot/jquery.jqplot.min.js', :plugin => 'redmine_time_tracker' %>
+  <%= javascript_include_tag 'jqplot/plugins/jqplot.barRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+  <%= javascript_include_tag 'jqplot/plugins/jqplot.categoryAxisRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+  <%= stylesheet_link_tag 'jquery.jqplot.min.css', :plugin => 'redmine_time_tracker' %>
+
 </head>
 <body>
 <table style="width: 100%;">
@@ -59,53 +64,4 @@
 </body>
 </html>
 
-
-<script type="text/javascript" charset="utf-8">
-    var tt_report_print_chart; // globally available
-    document.observe("dom:loaded", function () {
-        tt_report_print_chart = new Highcharts.Chart({
-            chart:{
-                renderTo:'tt_report-print-chart',
-                type:'column'
-            },
-            plotOptions:{
-                column:{
-                    borderWidth:0,
-                    shadow:false,
-                    animation:false
-                }
-            },
-            colors: [ '#999' ], // for printing we only use a light gray
-            title:{ text:'<%= l(:time_tracker_chart_title) %>' },
-            legend:{ enabled:false },
-            xAxis:{
-                type:'datetime',
-                labels:{
-                    style:{
-                        fontSize:'10px',
-                        color:'#484848'
-                    }
-                },
-                minorTickInterval: <%= 1.day * 1000 %>,
-                minorGridLineWidth: 0,
-                minorTickWidth: 1
-            },
-            yAxis:{
-                title:{ text:'' },
-                labels:{
-                    style:{
-                        fontSize:'10px',
-                        color:'#484848'
-                    }
-                }
-            },
-            series:[
-                {
-                    pointInterval: <%= 1.day * 1000 %>,
-                    pointStart: <%= @chart_start_date.at_midnight.to_i * 1000 %>,
-                    data: <%= @chart_data %>
-                }
-            ]
-        });
-    });
-</script>
+<%= javascript_tag render :partial => 'chart', :formats => [:js], :locals => {:chart_data => @chart_data, :chart_ticks => @chart_ticks, :print => true} %>

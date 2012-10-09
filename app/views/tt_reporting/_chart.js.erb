@@ -1,0 +1,38 @@
+$(document).ready(function () {
+    var data = <%= chart_data %>;
+    var ticks = [<%= raw chart_ticks.map {|tick| tick.blank? ? "" : "'#{tick.strftime("%d %b")}'"}.join(',') %>];
+
+    var plot1 = $.jqplot(
+            '<%= print ? 'tt_report-print-chart' : 'tt_reporting_chart' %>',
+            [data],
+            {
+                <% if print %>
+                seriesColors:['#999'],
+                <% end %>
+                seriesDefaults:{
+                    renderer:$.jqplot.BarRenderer,
+                    rendererOptions:{
+                        fillToZero:true,
+                        shadow:false
+                    }
+                },
+                axes:{
+                    xaxis:{
+                        renderer:$.jqplot.CategoryAxisRenderer,
+                        ticks:ticks
+                    },
+                    yaxis:{
+                        <% if print %>
+                        fontSize:'10px',
+                        <% end %>
+                        min:0,
+                        pad:0.75,
+                        tickOptions:{formatString:'%d h'}
+                    }
+                },
+                grid:{
+                    background:"#ffffff",
+                    shadow:false
+                }
+            });
+});

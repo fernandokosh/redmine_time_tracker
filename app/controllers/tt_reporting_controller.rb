@@ -79,26 +79,31 @@ end
 
 def fetch_chart_data
   if @query.valid? && !(@bookings.empty? || @bookings.nil?)
-    # if the user changes the date-order for the table values, we have to get the correct date, as starting-point for the chart
-    @chart_start_date = [@bookings.last.started_on.to_date, @bookings.first.started_on.to_date].min
+    # if the user changes the date-order for the table values, we have to reorder it for the chart
+    start_date = [@bookings.last.started_on.to_date, @bookings.first.started_on.to_date].min
+    stop_date = [@bookings.last.started_on.to_date, @bookings.first.started_on.to_date].max
     @chart_data = Array.new
+    @chart_ticks = Array.new
 
-    # if the user changes the date-order for the table values, we have to sort the data correctly
-    # so we create a dynamical method-call
-    if @bookings.last.started_on <= @bookings.first.started_on
-      m1 = :last
-      m2 = :first
-    else
-      m1 = :first
-      m2 = :last
-    end
-
-    (@bookings.send(m1).started_on.to_date..@bookings.send(m2).started_on.to_date).map do |date|
+    (start_date..stop_date).map do |date|
       hours = 0
       @bookings.each do |tb|
         hours += tb.hours_spent if tb.started_on.to_date == date
       end
       @chart_data.push(hours)
+
+      #to get readable labels, we have to blank out some of them if there are to many
+      if (stop_date - start_date).days > 6.days
+        # only set six labels and set the other blank
+        if (date - start_date).days % 6.days == 0
+          @chart_ticks.push(date)
+        else
+          @chart_ticks.push("")
+        end
+      else
+        # print date for every data-entry
+        @chart_ticks.push(date)
+      end
     end
   end
 end

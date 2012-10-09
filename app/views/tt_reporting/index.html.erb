@@ -1,5 +1,7 @@
-<%= javascript_include_tag 'highcharts/highcharts.js', :plugin => 'redmine_time_tracker' %>
-
+<%= javascript_include_tag 'jqplot/jquery.jqplot.min.js', :plugin => 'redmine_time_tracker' %>
+<%= javascript_include_tag 'jqplot/plugins/jqplot.barRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+<%= javascript_include_tag 'jqplot/plugins/jqplot.categoryAxisRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+<%= stylesheet_link_tag 'jquery.jqplot.min.css', :plugin => 'redmine_time_tracker' %>
 
 <div class="contextual">
   <% if !@query.new_record? && @query.editable_by?(User.current) %>
@@ -84,39 +86,5 @@
 <!--<%= context_menu issues_context_menu_path %>-->
 
 <% unless @bookings.nil? || @bookings.empty? %>
-
-    <script type="text/javascript" charset="utf-8">
-        var tt_reporting_chart; // globally available
-        $(document).ready(function () {
-            tt_reporting_chart = new Highcharts.Chart({
-                chart:{
-                    renderTo:'tt_reporting_chart',
-                    type:'column'
-                },
-                plotOptions:{
-                    column:{
-                        borderWidth:0,
-                        shadow:false
-                    }
-                },
-                title:{ text:'<%= l(:time_tracker_chart_title) %>' },
-                legend:{ enabled:false },
-                xAxis:{
-                    type:'datetime',
-                    minorTickInterval: <%= 1.day * 1000 %>,
-                    minorGridLineWidth:0,
-                    minorTickWidth:1
-                },
-                yAxis:{ title:{ text:'' } },
-                series:[
-                    {
-                        pointInterval: <%= 1.day * 1000 %>,
-                        pointStart: <%= @chart_start_date.at_midnight.to_i * 1000 %>,
-                        data: <%= @chart_data %>
-                    }
-                ]
-            });
-        });
-    </script>
-
+    <%= javascript_tag render :partial => 'chart', :formats => [:js], :locals => {:chart_data => @chart_data, :chart_ticks => @chart_ticks, :print => false} %>
 <% end %>
