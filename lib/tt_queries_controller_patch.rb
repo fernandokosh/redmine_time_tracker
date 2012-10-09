@@ -10,6 +10,7 @@ module QueriesControllerPatch
       alias_method_chain :create, :time_tracker
       alias_method_chain :edit, :time_tracker
       alias_method_chain :update, :time_tracker
+      alias_method_chain :destroy, :time_tracker
     end
   end
 
@@ -39,7 +40,7 @@ module QueriesControllerPatch
       if @query.save
         flash[:notice] = l(:notice_successful_create)
         if @query.tt_query?
-          redirect_to :controller => 'time_list', :action => 'index', :project_id => @project, :query_id => @query
+          redirect_to params[:tt_request_referer], :project_id => @project, :query_id => @query
         else
           redirect_to :controller => 'issues', :action => 'index', :project_id => @project, :query_id => @query
         end
@@ -66,12 +67,21 @@ module QueriesControllerPatch
       if @query.save
         flash[:notice] = l(:notice_successful_update)
         if @query.tt_query?
-          redirect_to :controller => 'time_list', :action => 'index', :project_id => @project, :query_id => @query
+          redirect_to params[:tt_request_referer], :project_id => @project, :query_id => @query
         else
           redirect_to :controller => 'issues', :action => 'index', :project_id => @project, :query_id => @query
         end
       else
         render :action => 'edit'
+      end
+    end
+
+    def destroy_with_time_tracker
+      if @query.tt_query?
+        @query.destroy
+        redirect_to URI(request.referer).path, :set_filter => 1
+      else
+        destroy_without_time_tracker
       end
     end
   end

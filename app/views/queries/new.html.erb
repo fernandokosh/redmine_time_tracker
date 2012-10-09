@@ -5,6 +5,7 @@
     <%= render :partial => 'form', :locals => {:query => @query} %>
     <% if @query.tt_query? %>
         <%= hidden_field_tag 'tt_query', true %>
+        <%= hidden_field_tag 'tt_request_referer', URI(request.referer).path %>
     <% end %>
     <%= submit_tag l(:button_save) %>
 <% end %>
