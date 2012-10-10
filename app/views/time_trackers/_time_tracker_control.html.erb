@@ -27,6 +27,10 @@
                     <%= f.check_box :round, :value => @time_tracker.round, :onchange => "updateTTControllerForm(this.form)" %>
                   </div>
                 </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_running_time) %></div>
+                  <div id="tt_running_time" class="task_form_input"></div>
+                </div>
               </div>
               <% projects = User.current.memberships.collect(&:project).compact.uniq %>
               <% @time_tracker.project_id.nil? ? select = nil : select = Project.find(@time_tracker.project_id) %>
@@ -55,7 +59,8 @@
               </div>
               <%= f.submit l(:stop_time_tracker) %>
           <% end %>
+          <%= javascript_tag render :partial => 'time_trackers/timer', :formats => [:js], :locals => {:tracker => @time_tracker} %>
       <% end %>
       <%= javascript_include_tag 'time_tracker_control.js', :plugin => 'redmine_time_tracker' %>
-<% end %>
+  <% end %>
 </div>

@@ -56,6 +56,7 @@ en:
   time_tracker_label_print_report: "Print report"
   time_tracker_label_project: "Project"
   time_tracker_label_round: "Round Time"
+  time_tracker_label_running_time: "Running Time"
   time_tracker_label_start_date: "Start date"
   time_tracker_label_start_time: "Start time"
   time_tracker_label_stop_date: "Stop date"
