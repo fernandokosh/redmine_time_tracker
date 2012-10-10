@@ -56,8 +56,13 @@
                     <%= calendar_for('time_tracker_date') %>
                   </div>
                 </div>
+                <div class="task_form_sub_fields">
+                  <div class="task_form_input">
+                    <%= f.submit l(:stop_time_tracker) %>
+                  </div>
+                </div>
+                <div style="clear:both"></div>
               </div>
-              <%= f.submit l(:stop_time_tracker) %>
           <% end %>
           <%= javascript_tag render :partial => 'time_trackers/timer', :formats => [:js], :locals => {:tracker => @time_tracker} %>
       <% end %>
