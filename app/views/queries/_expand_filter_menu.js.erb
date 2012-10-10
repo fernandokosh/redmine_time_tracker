@@ -1,7 +1,6 @@
+// TODO change function so that expansion would be added only once!
 $(document).on('change', '#add_filter_select', null, function (e) {
-    $('#tr_tt_start_date').addClass('test');
     <% if @query.tt_query? %>
-
     $('#tr_tt_start_date').append(
             '<td class="tt_expansion"><%= link_to_function "<<", "get_time_span('prev', $(this))" %></td>' +
             '<td class="tt_expansion"><%= link_to_function "this month", "get_time_span('now', $(this))" %></td>' +

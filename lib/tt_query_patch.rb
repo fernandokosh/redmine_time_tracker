@@ -59,6 +59,28 @@ module QueryPatch
       self.filters.delete('status_id') if tt_query?
     end
 
+    # following two methods are a workaround to implement some custom filters to the date-filter without rewriting
+    # Query-class and JS-methods for filter-build completely
+    def tt_operators_labels
+      if tt_query?
+        opl = Query.operators_labels.clone
+        opl["!*"] = l(:time_tracker_label_this_month)
+        opl
+      else
+        Query.operators_labels
+      end
+    end
+
+    def tt_operators_by_filter_type
+      if tt_query?
+        ops = Query.operators_by_filter_type.clone
+        ops[:date] = ["=", "><", "t", "w", "!*", "*"]
+        ops
+      else
+        Query.operators_by_filter_type
+      end
+    end
+
     # standard is unable to order groups! but we want to, so we do not define a default ;)
     def group_by_sort_order_with_time_tracker
       unless tt_query?
@@ -241,30 +263,16 @@ module QueryPatch
       case operator
         when "="
           "DATE(#{TimeBooking.table_name}.started_on) = '#{Time.parse(value[0]).to_date}'"
-        when ">="
-          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.parse(value[0]).to_date}'"
-        when "<="
-          "DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.parse(value[0]).to_date}'"
         when "><"
           "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.parse(value[0]).to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.parse(value[1]).to_date}'"
-        when "<t+"
-          "DATE(#{TimeBooking.table_name}.started_on) > '#{value[0].to_i.days.to_date}'"
-        when ">t+"
-          "DATE(#{TimeBooking.table_name}.started_on) < '#{value[0].to_i.days.to_date}'"
-        when "t+"
-          "DATE(#{TimeBooking.table_name}.started_on) = '#{value[0].to_i.days.to_date}'"
         when "t"
           "DATE(#{TimeBooking.table_name}.started_on) = '#{Time.now.localtime.to_date}'"
         when "w"
           "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.now.localtime.beginning_of_week.to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.now.localtime.end_of_week.to_date}'"
-        when ">t-"
-          "DATE(#{TimeBooking.table_name}.started_on) > '#{value[0].to_i.days.ago.to_date}'"
-        when "<t-"
-          "DATE(#{TimeBooking.table_name}.started_on) < '#{value[0].to_i.days.ago.to_date}'"
-        when "t-"
-          "DATE(#{TimeBooking.table_name}.started_on) = '#{value[0].to_i.days.ago.to_date}'"
+        # following filter is used as workaround for custom-filters. so the logic implemented here is not "none"!
+        # instead it represents "this month"
         when "!*"
-          "DATE(#{TimeBooking.table_name}.started_on) IS NULL"
+          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.now.localtime.beginning_of_month.to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.now.localtime.end_of_month.to_date}'"
         when "*"
           "DATE(#{TimeBooking.table_name}.started_on) IS NOT NULL"
         else
