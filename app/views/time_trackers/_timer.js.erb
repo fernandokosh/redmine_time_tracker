@@ -1,6 +1,6 @@
 $(document).ready(function () {
     window.setInterval(function () {
-        var start = new Date(('<%= tracker.started_on.localtime %>').replace(/\-/ig, '/'));
+        var start = new Date($('#time_tracker_date').val().replace(/\-/ig, '/') + ' ' + $('#time_tracker_start_time').val());
         var now = new Date();
         var diff = Math.floor((now - start) / 1000);
         var h = Math.floor(diff / 3600);
