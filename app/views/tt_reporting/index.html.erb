@@ -11,8 +11,8 @@
   <% end %>
 </div>
 
-<h2><%= @query.new_record? ? l(:time_tracker_label_menu_tab_logs) : h(@query.name) %></h2>
-<% html_title(@query.new_record? ? l(:time_tracker_label_menu_tab_logs) : @query.name) %>
+<h2><%= @query.new_record? ? l(:time_tracker_label_menu_tab_reports) : h(@query.name) %></h2>
+<% html_title(@query.new_record? ? l(:time_tracker_label_menu_tab_reports) : @query.name) %>
 
 <%= form_tag({:controller => 'tt_reporting', :action => 'index'},
              :method => :get, :id => 'query_form') do %>
