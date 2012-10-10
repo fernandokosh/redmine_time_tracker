@@ -65,8 +65,24 @@ class TimeLog < ActiveRecord::Base
     ((time2.to_i - time1.to_i) / 3600.0).to_f
   end
 
+  def hours_booked
+    time_booked = 0
+    time_bookings.each do |tb|
+      time_booked += tb.hours_spent
+    end
+    time_booked
+  end
+
   def get_formatted_bookable_hours
     help.time_dist2string((bookable_hours*3600).to_i)
+  end
+
+  def get_formatted_time_span
+    help.time_dist2string((hours_spent*3600).to_i)
+  end
+
+  def get_formatted_booked_time
+    help.time_dist2string((hours_booked*3600).to_i)
   end
 
   def get_formatted_start_time
@@ -85,11 +101,7 @@ class TimeLog < ActiveRecord::Base
   # if log was not booked at all, so the whole time is bookable
   def bookable_hours
     # every gap between the bookings represents bookable time so we sum up the time to show it as bookable time
-    time_booked = 0
-    time_bookings.each do |tb|
-      time_booked += tb.hours_spent
-    end
-    hours_spent - time_booked
+    hours_spent - hours_booked
   end
 
   def check_bookable
