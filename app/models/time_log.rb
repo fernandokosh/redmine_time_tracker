@@ -15,9 +15,15 @@ class TimeLog < ActiveRecord::Base
   has_many :time_bookings, :dependent => :delete_all
   has_many :time_entries, :through => :time_bookings
 
+  # prevent that updating the time_log results in negative bookable_time
+  validate :check_time_spent, :on => :update
+  validate :check_bookable, :on => :update
+
   scope :bookable, where(:bookable => true)
 
-#  belongs_to :project
+  def check_time_spent
+    raise BookingError, l(:tt_update_booking_results_in_negative_time) if self.bookable_hours < 0
+  end
 
   def initialize(arguments = nil, *args)
     super(arguments)
@@ -87,7 +93,6 @@ class TimeLog < ActiveRecord::Base
   end
 
   def check_bookable
-    self.bookable = (bookable_hours > 0)
-    self.save!
+    update_attribute(:bookable, bookable_hours > 0)
   end
 end

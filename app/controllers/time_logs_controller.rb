@@ -42,7 +42,12 @@ class TimeLogsController < ApplicationController
       stop = start + hours.hours
 
       time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
+    else
+      flash[:error] = l(:tt_update_booking_not_allowed)
     end
+    flash[:notice] = l(:tt_update_booking_success)
+  rescue BookingError => e
+    flash[:error] = e.message
   end
 
   def delete

@@ -48,11 +48,10 @@ class TimeBookingsController < ApplicationController
   def delete
     time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
     time_bookings.each do |item|
-      #flash[:error] = l(:time_tracker_delete_booking_fail)
       tl = TimeLog.where(:id => item.time_log_id, :user_id => User.current.id).first
       item.destroy
       tl.check_bookable # we should set the bookable_flag after deleting bookings
-      flash[:success] = l(:time_tracker_delete_booking_success)
+      flash[:notice] = l(:time_tracker_delete_booking_success)
     end
     redirect_to :back
   end
