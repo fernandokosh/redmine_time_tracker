@@ -1,7 +1,7 @@
 $(document).on('change', '#add_filter_select', null, function (e) {
     <% if @query.tt_query? %>
     if ($('#tr_tt_start_date').find('td.tt_expansion').length == 0) {
-        $('#tr_tt_start_date').append(
+        $('#tr_tt_start_date td.operator').after(
                 '<td class="tt_expansion"><%= link_to_function " << ", "shift_time_span('prev')" %></td>' +
                         '<td class="tt_expansion"><%= link_to_function " >> ", "shift_time_span('next')" %></td>'
         );
