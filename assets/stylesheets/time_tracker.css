@@ -4,6 +4,10 @@
     }
 }
 
+fieldset#filters td.values input[type="button"] {
+    height: auto;
+}
+
 .invalid {
     border-style: solid;
     border-color: red;
