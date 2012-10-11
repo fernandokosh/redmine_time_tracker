@@ -7,10 +7,12 @@ class TimeLogsController < ApplicationController
   include TimeTrackersHelper
 
   def actions
+    last_added_booking_ids = Array.new
+
     unless params[:time_log_add_booking].nil?
       tl_add_booking = params[:time_log_add_booking]
       tl_add_booking.keys.each do |tl_key|
-        add_booking tl_add_booking[tl_key]
+        last_added_booking_ids.push(add_booking tl_add_booking[tl_key])
       end
     end
 
@@ -21,15 +23,17 @@ class TimeLogsController < ApplicationController
       end
     end
 
-    redirect_to :controller => 'tt_overview'
+    # send information which id's are touched to implement highlighting
+    redirect_to :controller => 'tt_overview', :tl_labids => last_added_booking_ids
   end
 
   def add_booking(tl)
     time_log = TimeLog.where(:id => tl[:id]).first
     issue = issue_from_id(tl[:issue_id])
-    time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
+    last_added_booking_id = time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
                          :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id])
     flash[:notice] = l(:success_add_booking)
+    last_added_booking_id
   rescue BookingError => e
     flash[:error] = e.message
   end
@@ -43,9 +47,9 @@ class TimeLogsController < ApplicationController
 
       time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
     else
-      flash[:error] = l(:tt_update_booking_not_allowed)
+      flash[:error] = l(:tt_update_log_not_allowed)
     end
-    flash[:notice] = l(:tt_update_booking_success)
+    flash[:notice] = l(:tt_update_log_success)
   rescue BookingError => e
     flash[:error] = e.message
   end

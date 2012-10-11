@@ -6,3 +6,5 @@
 <%= render 'tt_overview/bookings_ov' %>
 
 <%= context_menu tt_overview_context_menu_path  %>
+
+<%= javascript_tag render :partial => 'highlight_bookings', :formats => [:js], :locals => {:lab_ids => params[:tl_labids]} %>

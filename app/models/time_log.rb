@@ -22,7 +22,7 @@ class TimeLog < ActiveRecord::Base
   scope :bookable, where(:bookable => true)
 
   def check_time_spent
-    raise BookingError, l(:tt_update_booking_results_in_negative_time) if self.bookable_hours < 0
+    raise BookingError, l(:tt_update_log_results_in_negative_time) if self.bookable_hours < 0
   end
 
   def initialize(arguments = nil, *args)
@@ -30,7 +30,7 @@ class TimeLog < ActiveRecord::Base
   end
 
   # if issue is the only parameter we get, we will book the whole time to one issue
-  # method returns true if all works well, false otherwise
+  # method returns the booking.id if transaction was successfully completed, raises an error otherwise
   def add_booking(args = {})
     tea = TimeEntryActivity.where(:name => :time_tracker_activity).first
     default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => tea.id, :issue => nil, :spent_time => nil, :virtual => false, :project_id => self.project_id}
@@ -53,10 +53,10 @@ class TimeLog < ActiveRecord::Base
     tb = TimeBooking.create(args)
     # tb.persisted? will be true if transaction was successfully completed
     if tb.persisted?
-      self.bookable = (bookable_hours - tb.hours_spent > 0)
-      self.save!
+      update_attribute(:bookable, bookable_hours - tb.hours_spent > 0)
+      tb.id # return the booking id to get the last added booking
     else
-      false
+      raise BookingError, l(:error_add_booking_failed)
     end
   end
 
