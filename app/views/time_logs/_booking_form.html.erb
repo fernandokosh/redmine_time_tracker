@@ -45,7 +45,7 @@
               <%= f.text_field :spent_time, :value => time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
-          <%= f.submit "book" %>
+          <%= f.submit l(:time_tracker_label_book), :class => "tl_book_form_button" %>
           <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => time_log.id}, :remote => true %>
       <% end %>
       <%= javascript_tag render :partial => 'booking_form_autocomplete', :locals => {:time_log => time_log} %>

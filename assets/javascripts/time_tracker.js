@@ -1,3 +1,13 @@
+function hideMultiFormButtons(button_class) {
+    var last = $('input.'+button_class).parent().parent().last().index();
+
+    $('input.'+button_class).each(function (a,b) {
+        if ( last != $(this).parent().parent().index()) {
+            $(this).hide();
+        }
+    });
+}
+
 // ================== booking_form helpers ============================
 
 function updateBookingHours(name) {

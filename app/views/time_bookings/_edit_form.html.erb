@@ -57,8 +57,7 @@
               <%= f.text_field :spent_time, :value => time_booking.get_formatted_time, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_booking_edit_#{time_booking.id}')" %>
             </div>
           </div>
-
-          <%= f.submit "update" %>
+          <%= f.submit l(:time_tracker_label_update), :class => "tb_edit_form_update_button" %>
           <%= link_to l(:button_cancel), {:controller => 'time_bookings', :action => 'get_list_entry', :time_booking_id => time_booking.id}, :remote => true %>
       <% end %>
       <%= javascript_tag render :partial => 'edit_form_autocomplete', :locals => {:time_booking => time_booking} %>

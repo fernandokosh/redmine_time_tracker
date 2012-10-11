@@ -42,7 +42,7 @@
             <div class="input_hint"><%= l(:time_tracker_label_booked_time) + "  " + time_log.get_formatted_booked_time %></div>
           </div>
 
-          <%= f.submit "update" %>
+          <%= f.submit l(:time_tracker_label_update), :class => "tl_edit_form_update_button" %>
           <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => time_log.id}, :remote => true %>
       <% end %>
     </td>
