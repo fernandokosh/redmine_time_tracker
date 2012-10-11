@@ -1,31 +1,3 @@
-// ================== helpers for date-filter chooser ============================
-// this function is unused till the date-shifter will be ported to jquery too
-
-function get_time_span(time, obj) {
-    // default action is getting the actual month
-    var action = "get_this_time_span";
-    if (time == "next") {
-        action = "get_next_time_span";
-    } else if (time == "prev") {
-        action = "get_prev_time_span";
-    }
-
-    var date1 = $('#values_tt_start_date_1').val();
-    var date2 = $('#values_tt_start_date_2').val();
-
-    $.ajax({url:'tt_date_shifter/' + action + '.json?date1=' + date1 + '&date2=' + date2,
-        type:'GET',
-        success:function (transport) {
-
-            var ds = transport;
-
-            $('#values_tt_start_date_1').val(ds.start_date);
-            $('#values_tt_start_date_2').val(ds.stop_date);
-        }
-    });
-
-}
-
 // ================== booking_form helpers ============================
 
 function updateBookingHours(name) {

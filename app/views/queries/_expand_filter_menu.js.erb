@@ -2,9 +2,8 @@ $(document).on('change', '#add_filter_select', null, function (e) {
     <% if @query.tt_query? %>
     if ($('#tr_tt_start_date').find('td.tt_expansion').length == 0) {
         $('#tr_tt_start_date').append(
-                '<td class="tt_expansion"><%= link_to_function "<<", "get_time_span('prev', $(this))" %></td>' +
-                        '<td class="tt_expansion"><%= link_to_function "this month", "get_time_span('now', $(this))" %></td>' +
-                        '<td class="tt_expansion"><%= link_to_function ">>", "get_time_span('next', $(this))" %></td>'
+                '<td class="tt_expansion"><%= link_to_function " << ", "shift_time_span('prev')" %></td>' +
+                        '<td class="tt_expansion"><%= link_to_function " >> ", "shift_time_span('next')" %></td>'
         );
     } else {
         toggleExpansionVisibility();
@@ -17,10 +16,69 @@ $(document).on('click', '#filters-table td.field input[type=checkbox]', null, fu
 });
 
 function toggleExpansionVisibility() {
-    if ($('#cb_tt_start_date').is(':checked')) {
+    if ($('#cb_tt_start_date').is(':checked') && $('#operators_tt_start_date').val() != "*") {
         $('#tr_tt_start_date').find('td.tt_expansion').show();
     } else {
         $('#tr_tt_start_date').find('td.tt_expansion').hide();
+    }
+}
 
+// ================== helpers for date-filter chooser ============================
+
+function shift_time_span(direction) {
+    // setting default time_span to null
+    var op = null;
+    switch ($('#operators_tt_start_date').val()) {
+        case "=":
+            op = "is";
+            break;
+        case "><":
+            op = "between";
+            break;
+        case "t":
+            op = "today";
+            break;
+        case "w":
+            op = "thisWeek";
+            break;
+        case "!*":
+            op = "thisMonth";
+            break;
+        default:
+            break;
+    }
+
+    if (op != null) {
+        var action = "get_" + direction + "_time_span";
+        var date1 = $('#values_tt_start_date_1').val();
+        var date2 = $('#values_tt_start_date_2').val();
+
+        $.ajax({url:'tt_date_shifter/' + action + '.json?date1=' + date1 + '&date2=' + date2 + '&op=' + op,
+            type:'GET',
+            success:function (ds) {
+                $('#values_tt_start_date_1').val(ds.start_date);
+                $('#values_tt_start_date_2').val(ds.stop_date);
+
+                switch (ds.special) {
+                    case "today":
+                        $('#operators_tt_start_date').val('t');
+                        break;
+                    case "thisWeek":
+                        $('#operators_tt_start_date').val('w');
+                        break;
+                    case "thisMonth":
+                        $('#operators_tt_start_date').val('!*');
+                        break;
+                    default:
+                        if (op == "is" || op == "today") {
+                            $('#operators_tt_start_date').val('=');
+                        } else {
+                            $('#operators_tt_start_date').val('><');
+                        }
+                        break;
+                }
+                $('#operators_tt_start_date').change();
+            }
+        });
     }
 }
