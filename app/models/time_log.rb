@@ -17,9 +17,13 @@ class TimeLog < ActiveRecord::Base
 
   # prevent that updating the time_log results in negative bookable_time
   validate :check_time_spent, :on => :update
-  validate :check_bookable, :on => :update
 
   scope :bookable, where(:bookable => true)
+
+  after_save do
+    # we have to keep the "bookable"-flag up-to-date
+    update_attribute(:bookable, bookable_hours > 0) if self.bookable != (bookable_hours > 0)
+  end
 
   def check_time_spent
     raise BookingError, l(:tt_update_log_results_in_negative_time) if self.bookable_hours < 0
@@ -53,7 +57,7 @@ class TimeLog < ActiveRecord::Base
     tb = TimeBooking.create(args)
     # tb.persisted? will be true if transaction was successfully completed
     if tb.persisted?
-      update_attribute(:bookable, bookable_hours - tb.hours_spent > 0)
+      update_attribute(:bookable, (bookable_hours - tb.hours_spent > 0))
       tb.id # return the booking id to get the last added booking
     else
       raise BookingError, l(:error_add_booking_failed)
@@ -102,9 +106,5 @@ class TimeLog < ActiveRecord::Base
   def bookable_hours
     # every gap between the bookings represents bookable time so we sum up the time to show it as bookable time
     hours_spent - hours_booked
-  end
-
-  def check_bookable
-    update_attribute(:bookable, bookable_hours > 0)
   end
 end
