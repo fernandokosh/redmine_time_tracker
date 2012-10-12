@@ -48,7 +48,7 @@
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
-            <div class="task_form_input"><%= f.text_field :comments %></div>
+            <div class="task_form_input"><%= f.text_field :comments, :size => 30, :maxlength => 255 %></div>
           </div>
 
           <div class="task_form_sub_fields">

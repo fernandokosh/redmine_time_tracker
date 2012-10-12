@@ -17,6 +17,7 @@ class TimeLog < ActiveRecord::Base
 
   # prevent that updating the time_log results in negative bookable_time
   validate :check_time_spent, :on => :update
+  validates :comments, :length => {:maximum => 255}, :allow_blank => true
 
   scope :bookable, where(:bookable => true)
 
