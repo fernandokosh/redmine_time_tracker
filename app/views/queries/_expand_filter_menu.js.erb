@@ -1,3 +1,7 @@
+$(document).ready(function () {
+    addButtonsToFilter();
+});
+
 $(document).on('change', '#add_filter_select', null, function (e) {
     addButtonsToFilter();
 });
@@ -6,8 +10,8 @@ $(document).on('click', '#filters-table td.field input[type=checkbox]', null, fu
     toggleExpansionVisibility();
 });
 
-$(document).ready(function () {
-    addButtonsToFilter();
+$(document).on('change', '#operators_tt_start_date', null, function (e) {
+    toggleExpansionVisibility();
 });
 
 function addButtonsToFilter() {
