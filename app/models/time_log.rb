@@ -107,4 +107,8 @@ class TimeLog < ActiveRecord::Base
     # every gap between the bookings represents bookable time so we sum up the time to show it as bookable time
     hours_spent - hours_booked
   end
+
+  def check_bookable
+    update_attribute(:bookable, bookable_hours > 0)
+  end
 end
