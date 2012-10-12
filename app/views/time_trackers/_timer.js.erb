@@ -9,6 +9,8 @@ $(document).ready(function () {
         h < 10 ? h = "0" + h.toString() : h = h.toString();
         m < 10 ? m = "0" + m.toString() : m = m.toString();
         s < 10 ? s = "0" + s.toString() : s = s.toString();
-        $('#tt_running_time').html(h + ":" + m + ":" + s);
+        if (!(h == "NaN" || m == "NaN" || s == "NaN")) {
+            $('#tt_running_time').html(h + ":" + m + ":" + s);
+        }
     }, 1000);
 });
