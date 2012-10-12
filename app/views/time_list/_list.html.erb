@@ -5,8 +5,7 @@
         <table class="list">
           <thead>
           <tr>
-            <!-- TODO check if following JS function works with my entries instead of issues as well -->
-            <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(Element.up(this, "form")); return false;',
+            <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(this); return false;',
                                                              :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
             </th>
             <% query.columns.each do |column| %>
@@ -49,10 +48,8 @@
                   <% end %>
               <% end %>
 
-              <!-- look at issues\_list! the following line contains a method to add css-classes dynamically there.. -->
               <tr id="booking-entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
                 <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
-                <!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
                 <%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
               </tr>
           <% end -%>

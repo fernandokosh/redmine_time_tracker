@@ -10,8 +10,7 @@
                 <table class="list">
                   <thead>
                   <tr>
-                    <!-- TODO check if following JS function works with my entries instead of issues as well -->
-                    <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(Element.up(this, "form")); return false;',
+                    <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(this); return false;',
                                                                      :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
                     </th>
                     <% query.columns.each do |column| %>
@@ -54,7 +53,6 @@
                           <% end %>
                       <% end %>
 
-                      <!-- look at issues\_list! the following line contains a method to add css-classes dynamically there.. -->
                       <tr id="entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
                         <%= render :partial => 'time_logs/list_entry', :locals => {:entry => entry, :query => query} %>
                       </tr>
