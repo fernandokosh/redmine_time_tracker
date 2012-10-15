@@ -16,7 +16,7 @@ module IssuesHelperPatch
   module InstanceMethods
     def sidebar_queries_with_time_tracker
       sidebar_queries_without_time_tracker
-      if %w(tt_reporting time_list).include? controller_name
+      if %w(tt_reporting tt_bookings_list).include? controller_name
         @sidebar_queries.delete_if { |item| !item.tt_query? }
       else
         @sidebar_queries.delete_if { |item| item.tt_query? }

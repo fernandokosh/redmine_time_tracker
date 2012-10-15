@@ -1,4 +1,4 @@
-class TimeListController < ApplicationController
+class TtBookingsListController < ApplicationController
   unloadable
 
   menu_item :time_tracker_menu_tab_list
@@ -33,11 +33,9 @@ class TimeListController < ApplicationController
                                   :offset => @offset,
                                   :limit => @limit)
       @booking_count_by_group = @query.booking_count_by_group
-
-      render :template => 'time_list/index'
-    else
-      render :template => 'time_list/index'
     end
+
+    render :template => 'tt_bookings_list/index'
   rescue ActiveRecord::RecordNotFound
     render_404
   end

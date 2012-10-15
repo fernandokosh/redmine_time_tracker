@@ -9,7 +9,7 @@
 <h2><%= @query.new_record? ? l(:time_tracker_label_menu_tab_logs) : h(@query.name) %></h2>
 <% html_title(@query.new_record? ? l(:time_tracker_label_menu_tab_logs) : @query.name) %>
 
-<%= form_tag({:controller => 'time_list', :action => 'index'},
+<%= form_tag({:controller => 'tt_bookings_list', :action => 'index'},
              :method => :get, :id => 'query_form') do %>
     <%= hidden_field_tag 'set_filter', '1' %>
     <%= hidden_field_tag 'tt_query', true %>
@@ -58,7 +58,7 @@
     <% if @bookings.empty? %>
         <p class="nodata"><%= l(:label_no_data) %></p>
     <% else %>
-        <%= render :partial => 'time_list/list', :locals => {:bookings => @bookings, :query => @query} %>
+        <%= render :partial => 'tt_bookings_list/list', :locals => {:bookings => @bookings, :query => @query} %>
         <p class="pagination"><%= pagination_links_full @booking_pages, @booking_count %></p>
     <% end %>
 <% end %>
@@ -67,4 +67,4 @@
     <%= render_sidebar_queries %>
 <% end %>
 
-<%= context_menu time_list_context_menu_path %>
+<%= context_menu tt_bookings_list_context_menu_path %>
