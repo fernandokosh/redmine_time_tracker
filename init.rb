@@ -40,6 +40,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                                                 :time_logs => [:actions, :update, :delete, :add_booking, :show_booking, :show_edit, :get_list_entry],
                                                 :time_bookings => [:actions, :show_edit, :update, :delete, :get_list_entry],
                                                 :tt_bookings_list => [:index],
+                                                :tt_logs_list => [:index],
                                                 :tt_overview => [:index],
                                                 :tt_info => [:index],
                                                 :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject]},
@@ -57,6 +58,7 @@ Redmine::Plugin.register :redmine_time_tracker do
   Redmine::MenuManager.map :timetracker_menu do |menu|
     menu.push :time_tracker_menu_tab_overview, {:controller => 'tt_overview', :action => 'index'}, :caption => :time_tracker_label_menu_tab_overview, :if => Proc.new { User.current.logged? }
     menu.push :time_tracker_menu_tab_bookings_list, {:controller => 'tt_bookings_list', :action => 'index'}, :caption => :time_tracker_label_menu_tab_bookings_list, :if => Proc.new { User.current.logged? }
+    menu.push :time_tracker_menu_tab_logs_list, {:controller => 'tt_logs_list', :action => 'index'}, :caption => :time_tracker_label_menu_tab_logs_list, :if => Proc.new { User.current.logged? }
     menu.push :time_tracker_menu_tab_active_trackers, {:controller => 'tt_info', :action => 'index'}, :caption => :time_tracker_label_menu_tab_active_trackers, :if => Proc.new { User.current.logged? }
     menu.push :time_tracker_menu_tab_reporting, {:controller => 'tt_reporting', :action => 'index'}, :caption => :time_tracker_label_menu_tab_reports, :if => Proc.new { User.current.logged? }
   end

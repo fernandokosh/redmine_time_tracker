@@ -19,7 +19,7 @@ module MenuPatch
       if (project && !project.new_record?)
         :project_menu
       else
-        if %w(tt_overview tt_info tt_reporting tt_bookings_list).include? params[:controller]
+        if %w(tt_overview tt_info tt_reporting tt_bookings_list tt_logs_list).include? params[:controller]
           :timetracker_menu
         else
           :application_menu

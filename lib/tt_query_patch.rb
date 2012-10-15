@@ -27,8 +27,8 @@ module QueryPatch
       base.add_available_column(QueryColumn.new(:get_formatted_start_time, :caption => :field_tt_start))
       base.add_available_column(QueryColumn.new(:get_formatted_stop_time, :caption => :field_tt_stop))
       base.add_available_column(QueryColumn.new(:get_formatted_time, :caption => :field_tt_time))
-      base.add_available_column(QueryColumn.new(:get_formatted_bookable_hours, :caption => :field_tt_bookable))
-      base.add_available_column(QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_issue, :groupable => "#{Issue.table_name}.subject"))
+      base.add_available_column(QueryColumn.new(:get_formatted_bookable_hours, :caption => :field_tt_log_bookable_hours))
+      base.add_available_column(QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_booking_issue, :groupable => "#{Issue.table_name}.subject"))
     end
   end
 
@@ -123,10 +123,14 @@ module QueryPatch
       tq = Query.new
 
       # unless-statements are used as workaround to get the code working for the migration file "011_add_default_tt_query"
-      @available_filters['tt_project'] = tq.available_filters_without_time_tracker["project_id"].clone unless tq.available_filters_without_time_tracker["project_id"].nil?
-      @available_filters['tt_start_date'] = {:type => :date, :order => 2}
-      @available_filters['tt_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
-      @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
+      @available_filters['tt_booking_project'] = tq.available_filters_without_time_tracker["project_id"].clone unless tq.available_filters_without_time_tracker["project_id"].nil?
+      @available_filters['tt_booking_start_date'] = {:type => :date, :order => 2}
+      @available_filters['tt_booking_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
+      @available_filters['tt_booking_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
+
+      #TODO localize labels!
+      @available_filters['tt_log_start_date'] = {:type => :date, :order => 2}
+      @available_filters["tt_log_bookable"] = {:type => :list, :order => 7, :values => [["bookable", 0]]}
 
       @available_filters.each do |field, options|
         options[:name] ||= l(options[:label] || "field_#{field}".gsub(/_id$/, ''))
@@ -197,7 +201,8 @@ module QueryPatch
 
     # Returns the logs count
     def log_count
-      TimeLog.bookable.
+      #TimeLog.bookable.
+      TimeLog.
           includes(:user).
           where(statement).
           count(:id)
@@ -211,7 +216,8 @@ module QueryPatch
       if grouped?
         begin
           gbs = group_by_statement
-          r = TimeLog.bookable.
+          #r = TimeLog.bookable.
+          r = TimeLog.
               includes(:user).
               group(gbs).
               where(statement).
@@ -234,7 +240,8 @@ module QueryPatch
       order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
       order_option = nil if order_option.blank?
 
-      TimeLog.bookable.
+      #TimeLog.bookable.
+      TimeLog.
           #includes([:project, :issue, :user]).
           includes(:user, :time_bookings).
           where(statement).
@@ -248,7 +255,7 @@ module QueryPatch
 
     # sql statements for where clauses have to be in an "sql_for_#{filed-name}_field" method
     # so we have to implement some where-clauses for every new filter here
-    def sql_for_tt_project_field(field, operator, value)
+    def sql_for_tt_booking_project_field(field, operator, value)
       if value.delete('mine')
         value += User.current.memberships.map(&:project_id).map(&:to_s)
       end
@@ -259,36 +266,69 @@ module QueryPatch
       end
     end
 
-    def sql_for_tt_start_date_field(field, operator, value)
-      case operator
-        when "="
-          "DATE(#{TimeBooking.table_name}.started_on) = '#{Time.parse(value[0]).to_date}'"
-        when "><"
-          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.parse(value[0]).to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.parse(value[1]).to_date}'"
-        when "t"
-          "DATE(#{TimeBooking.table_name}.started_on) = '#{Time.now.localtime.to_date}'"
-        when "w"
-          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.now.localtime.beginning_of_week.to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.now.localtime.end_of_week.to_date}'"
-        # following filter is used as workaround for custom-filters. so the logic implemented here is not "none"!
-        # instead it represents "this month"
-        when "!*"
-          "DATE(#{TimeBooking.table_name}.started_on) >= '#{Time.now.localtime.beginning_of_month.to_date}' AND DATE(#{TimeBooking.table_name}.started_on) <= '#{Time.now.localtime.end_of_month.to_date}'"
-        when "*"
-          "DATE(#{TimeBooking.table_name}.started_on) IS NOT NULL"
-        else
-          "#{TimeBooking.table_name}.started_on >= '#{(Time.now.localtime-2.weeks).beginning_of_day.to_date}'"
+    def sql_for_tt_XX_start_date_field(table, operator, value)
+      t = case table
+            when "log"
+              TimeLog.table_name
+            when "booking"
+              TimeBooking.table_name
+            else
+              nil
+          end
+
+      if t.nil?
+        ""
+      else
+        case operator
+          when "="
+            "DATE(#{t}.started_on) = '#{Time.parse(value[0]).to_date}'"
+          when "><"
+            "DATE(#{t}.started_on) >= '#{Time.parse(value[0]).to_date}' AND DATE(#{t}.started_on) <= '#{Time.parse(value[1]).to_date}'"
+          when "t"
+            "DATE(#{t}.started_on) = '#{Time.now.localtime.to_date}'"
+          when "w"
+            "DATE(#{t}.started_on) >= '#{Time.now.localtime.beginning_of_week.to_date}' AND DATE(#{t}.started_on) <= '#{Time.now.localtime.end_of_week.to_date}'"
+          # following filter is used as workaround for custom-filters. so the logic implemented here is not "none"!
+          # instead it represents "this month"
+          when "!*"
+            "DATE(#{t}.started_on) >= '#{Time.now.localtime.beginning_of_month.to_date}' AND DATE(#{t}.started_on) <= '#{Time.now.localtime.end_of_month.to_date}'"
+          when "*"
+            "DATE(#{t}.started_on) IS NOT NULL"
+          else
+            "#{t}.started_on >= '#{(Time.now.localtime-2.weeks).beginning_of_day.to_date}'"
+        end
       end
     end
 
-    def sql_for_tt_issue_field(field, operator, value)
+    def sql_for_tt_log_start_date_field(table, operator, value)
+      sql_for_tt_XX_start_date_field("log", operator, value)
+    end
+
+    def sql_for_tt_booking_start_date_field(table, operator, value)
+      sql_for_tt_XX_start_date_field("booking", operator, value)
+    end
+
+    def sql_for_tt_booking_issue_field(field, operator, value)
       "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
     end
 
-    def sql_for_tt_user_field(field, operator, value)
+    def sql_for_tt_booking_user_field(field, operator, value)
       if value.delete('me')
         value += User.current.id.to_s.to_a
       end
       "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+    end
+
+    def sql_for_tt_log_bookable_field(field, operator, value)
+      # actual implementation only has one possible value, so we only have to look for the operator
+      case operator
+        when "="
+          "#{TimeLog.table_name}.bookable = 't'"
+        when "!"
+          "#{TimeLog.table_name}.bookable = 'f'"
+        else
+          ""
+      end
     end
   end
 end

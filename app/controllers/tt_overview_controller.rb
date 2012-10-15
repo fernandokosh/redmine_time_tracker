@@ -22,6 +22,7 @@ class TtOverviewController < ApplicationController
     time_logs_query
     # group list by date per default // TODO replace this with some kind of user-settings later!
     @query_logs.group_by ||= "tt_log_date"
+    #@query.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}}
 
     sort_init(@query_logs.sort_criteria.empty? ? [['tt_log_date', 'desc']] : @query_logs.sort_criteria)
     tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")

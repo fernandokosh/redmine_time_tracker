@@ -18,6 +18,7 @@ match '/time_bookings/update', :to => 'time_bookings#update', :via => [:put]
 match '/time_bookings/delete', :to => 'time_bookings#delete', :via => [:get, :post]
 match '/time_bookings/get_list_entry', :to => 'time_bookings#get_list_entry', :via => [:get, :post]
 match '/tt_bookings_list', :to => 'tt_bookings_list#index', :via => [:get, :post]
+match '/tt_logs_list', :to => 'tt_logs_list#index', :via => [:get, :post]
 match '/tt_overview', :to => 'tt_overview#index', :via => [:get, :post]
 match '/tt_info', :to => 'tt_info#index', :via => [:get, :post]
 match '/tt_completer/get_issue', :to => 'tt_completer#get_issue', :via => [:get]
@@ -27,5 +28,6 @@ match '/tt_date_shifter/get_prev_time_span', :to => 'tt_date_shifter#get_prev_ti
 match '/tt_date_shifter/get_next_time_span', :to => 'tt_date_shifter#get_next_time_span', :via => [:get]
 match '/tt_overview/context_menu', :to => 'context_menus#tt_overview', :as => 'tt_overview_context_menu'
 match '/tt_bookings_list/context_menu', :to => 'context_menus#tt_bookings_list', :as => 'tt_bookings_list_context_menu'
+# TODO insert context menu for logs_list
 match '/tt_reporting', :to => 'tt_reporting#index', :via => [:get, :post]
 match '/tt_print_report', :to => 'tt_reporting#print_report', :via => [:get]
