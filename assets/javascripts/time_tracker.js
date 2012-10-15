@@ -4,6 +4,8 @@ function hideMultiFormButtons(button_class) {
     $('input.'+button_class).each(function (a,b) {
         if ( last != $(this).parent().parent().index()) {
             $(this).hide();
+        }else {
+            $(this).show();
         }
     });
 }
