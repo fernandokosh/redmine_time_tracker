@@ -46,7 +46,7 @@ ru:
   time_tracker_label_main_menu: "Таймер"
   time_tracker_label_menu_tab_active_trackers: "Активные таймеры"
   time_tracker_label_menu_tab_overview: "Обзор"
-  time_tracker_label_menu_tab_logs: "Логи"
+  time_tracker_label_menu_tab_bookings_list: "Логи"
   time_tracker_label_none: "< нет >"
   time_tracker_label_project: "Проект"
   time_tracker_label_start_date: "Начальная дата"

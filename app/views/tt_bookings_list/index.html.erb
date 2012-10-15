@@ -6,8 +6,8 @@
   <% end %>
 </div>
 
-<h2><%= @query.new_record? ? l(:time_tracker_label_menu_tab_logs) : h(@query.name) %></h2>
-<% html_title(@query.new_record? ? l(:time_tracker_label_menu_tab_logs) : @query.name) %>
+<h2><%= @query.new_record? ? l(:time_tracker_label_menu_tab_bookings_list) : h(@query.name) %></h2>
+<% html_title(@query.new_record? ? l(:time_tracker_label_menu_tab_bookings_list) : @query.name) %>
 
 <%= form_tag({:controller => 'tt_bookings_list', :action => 'index'},
              :method => :get, :id => 'query_form') do %>

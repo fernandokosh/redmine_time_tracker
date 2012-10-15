@@ -1,7 +1,7 @@
 class TtBookingsListController < ApplicationController
   unloadable
 
-  menu_item :time_tracker_menu_tab_list
+  menu_item :time_tracker_menu_tab_bookings_list
   before_filter :authorize_global
 
   helper :queries
