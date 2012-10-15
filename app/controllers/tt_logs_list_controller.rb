@@ -18,7 +18,7 @@ class TtLogsListController < ApplicationController
     #@query.filters = {:tt_bookable => {:operator => "=", :values => [User.current.id.to_s]}}
 
     # temporarily limit the available filters and columns for the view!
-    @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_log_') }
+    @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_log_') && !key.to_s.starts_with?('tt_user') }
     @query.available_columns.delete_if { |item| !([:id, :user, :tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :comments, :get_formatted_bookable_hours].include? item.name) }
 
     sort_init(@query.sort_criteria.empty? ? [['tt_log_date', 'desc']] : @query.sort_criteria)

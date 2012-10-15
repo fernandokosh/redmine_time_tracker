@@ -126,11 +126,11 @@ module QueryPatch
       @available_filters['tt_booking_project'] = tq.available_filters_without_time_tracker["project_id"].clone unless tq.available_filters_without_time_tracker["project_id"].nil?
       @available_filters['tt_booking_start_date'] = {:type => :date, :order => 2}
       @available_filters['tt_booking_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
-      @available_filters['tt_booking_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
+      @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
 
       #TODO localize labels!
       @available_filters['tt_log_start_date'] = {:type => :date, :order => 2}
-      @available_filters["tt_log_bookable"] = {:type => :list, :order => 7, :values => [["bookable", 0]]}
+      @available_filters["tt_log_bookable"] = {:type => :list, :order => 7, :values => [["true", 1]]}
 
       @available_filters.each do |field, options|
         options[:name] ||= l(options[:label] || "field_#{field}".gsub(/_id$/, ''))
@@ -201,7 +201,6 @@ module QueryPatch
 
     # Returns the logs count
     def log_count
-      #TimeLog.bookable.
       TimeLog.
           includes(:user).
           where(statement).
@@ -216,7 +215,6 @@ module QueryPatch
       if grouped?
         begin
           gbs = group_by_statement
-          #r = TimeLog.bookable.
           r = TimeLog.
               includes(:user).
               group(gbs).
@@ -240,9 +238,7 @@ module QueryPatch
       order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
       order_option = nil if order_option.blank?
 
-      #TimeLog.bookable.
       TimeLog.
-          #includes([:project, :issue, :user]).
           includes(:user, :time_bookings).
           where(statement).
           order(order_option).
@@ -312,20 +308,27 @@ module QueryPatch
       "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
     end
 
-    def sql_for_tt_booking_user_field(field, operator, value)
+    def sql_for_tt_user_field(field, operator, value)
       if value.delete('me')
         value += User.current.id.to_s.to_a
       end
       "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
     end
 
-    def sql_for_tt_log_bookable_field(field, operator, value)
-      # actual implementation only has one possible value, so we only have to look for the operator
+    def sql_for_tt_log_bookable_field(field, operator, value = ["1"])
       case operator
         when "="
-          "#{TimeLog.table_name}.bookable = 't'"
+          if value[0] == "1"
+            "#{TimeLog.table_name}.bookable = 't'"
+          else
+            "#{TimeLog.table_name}.bookable = 'f'"
+          end
         when "!"
-          "#{TimeLog.table_name}.bookable = 'f'"
+          if value[0] == "1"
+            "#{TimeLog.table_name}.bookable = 'f'"
+          else
+            "#{TimeLog.table_name}.bookable = 't'"
+          end
         else
           ""
       end

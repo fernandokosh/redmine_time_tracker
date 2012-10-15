@@ -17,8 +17,8 @@ class TtBookingsListController < ApplicationController
     @query.column_names = @query.column_names || [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
 
     # temporarily limit the available filters and columns for the view!
-    @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_booking_') }
-    @query.available_columns.delete_if { |item| !([:id, :user,:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
+    @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_booking_') && !key.to_s.starts_with?('tt_user') }
+    @query.available_columns.delete_if { |item| !([:id, :user, :project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
 
     sort_init(@query.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
