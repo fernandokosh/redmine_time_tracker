@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var data = <%= chart_data %>;
     var ticks = [<%= raw chart_ticks.map {|tick| tick.blank? ? "" : "'#{tick.strftime("%d %b")}'"}.join(',') %>];
+    var high_dat = [<%= raw highlighter_data.map {|dat| "['#{dat[0].strftime("%d %b")}', #{dat[1].round(1)}]"}.join(',') %>];
 
     var plot1 = $.jqplot(
             '<%= print ? 'tt_report-print-chart' : 'tt_reporting_chart' %>',
@@ -27,12 +28,20 @@ $(document).ready(function () {
                         <% end %>
                         min:0,
                         pad:0.75,
-                        tickOptions:{formatString:'%d h'}
+                        tickOptions:{formatString:'%d<%= l(:tt_hours_sign) %>'}
                     }
                 },
                 grid:{
                     background:"#ffffff",
                     shadow:false
+                },
+                highlighter:{
+                    tooltipContentEditor:function (str, seriesIndex, pointIndex, plot) {
+                        var point = high_dat[pointIndex];
+                        return point[0] + this.tooltipSeparator + point[1] + "<%= l(:tt_hours_sign) %>";
+                    },
+                    show:true,
+                    showMarker:false
                 }
             });
 });

@@ -85,6 +85,7 @@ def fetch_chart_data
     stop_date = [@bookings.last.started_on.to_date, @bookings.first.started_on.to_date].max
     @chart_data = Array.new
     @chart_ticks = Array.new
+    @highlighter_data = Array.new
 
     (start_date..stop_date).map do |date|
       hours = 0
@@ -92,6 +93,7 @@ def fetch_chart_data
         hours += tb.hours_spent if tb.started_on.to_date == date
       end
       @chart_data.push(hours)
+      @highlighter_data.push([date, hours])
 
       #to get readable labels, we have to blank out some of them if there are to many
       if (stop_date - start_date).days > 6.days

@@ -1,6 +1,7 @@
 <%= javascript_include_tag 'jqplot/jquery.jqplot.min.js', :plugin => 'redmine_time_tracker' %>
 <%= javascript_include_tag 'jqplot/plugins/jqplot.barRenderer.min.js', :plugin => 'redmine_time_tracker' %>
 <%= javascript_include_tag 'jqplot/plugins/jqplot.categoryAxisRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+<%= javascript_include_tag 'jqplot/plugins/jqplot.highlighter.min.js', :plugin => 'redmine_time_tracker' %>
 <%= stylesheet_link_tag 'jquery.jqplot.min.css', :plugin => 'redmine_time_tracker' %>
 
 <div class="contextual">
@@ -86,5 +87,5 @@
 <!--<%= context_menu issues_context_menu_path %>-->
 
 <% unless @bookings.nil? || @bookings.empty? %>
-    <%= javascript_tag render :partial => 'chart', :formats => [:js], :locals => {:chart_data => @chart_data, :chart_ticks => @chart_ticks, :print => false} %>
+    <%= javascript_tag render :partial => 'chart', :formats => [:js], :locals => {:chart_data => @chart_data, :chart_ticks => @chart_ticks, :highlighter_data => @highlighter_data, :print => false} %>
 <% end %>

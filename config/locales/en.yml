@@ -37,6 +37,7 @@ en:
   time_tracker_delete_booking_fail: "The time booking has already been deleted"
   time_tracker_delete_success: "Time tracker successfully deleted"
   time_tracker_delete_booking_success: "Time booking successfully deleted"
+  tt_hours_sign: "h"
   tt_update_booking_not_allowed: "Updating time bookings not allowed!"
   tt_update_booking_success: "Time booking successfully updated"
   tt_update_log_not_allowed: "Updating time logs not allowed!"
