@@ -10,14 +10,14 @@ $(document).on('click', '#filters-table td.field input[type=checkbox]', null, fu
     toggleExpansionVisibility();
 });
 
-$(document).on('change', '#operators_tt_start_date', null, function (e) {
+$(document).on('change', '#operators_<%= filed_id %>', null, function (e) {
     toggleExpansionVisibility();
 });
 
 function addButtonsToFilter() {
 <% if @query.tt_query? %>
-    if ($('#tr_tt_start_date').find('span.tt_expansion').length == 0) {
-        $('#tr_tt_start_date td.values').prepend(
+    if ($('#tr_<%= filed_id %>').find('span.tt_expansion').length == 0) {
+        $('#tr_<%= filed_id %> td.values').prepend(
                 '<span class="tt_expansion"><%= button_to_function raw("&larr;"), "shift_time_span('prev')" %></span>' +
                         '<span class="tt_expansion"><%= button_to_function raw("&rarr;"), "shift_time_span('next')" %></span>'
         );
@@ -27,10 +27,10 @@ function addButtonsToFilter() {
 }
 
 function toggleExpansionVisibility() {
-    if ($('#cb_tt_start_date').is(':checked') && $('#operators_tt_start_date').val() != "*") {
-        $('#tr_tt_start_date').find('span.tt_expansion').show();
+    if ($('#cb_<%= filed_id %>').is(':checked') && $('#operators_<%= filed_id %>').val() != "*") {
+        $('#tr_<%= filed_id %>').find('span.tt_expansion').show();
     } else {
-        $('#tr_tt_start_date').find('span.tt_expansion').hide();
+        $('#tr_<%= filed_id %>').find('span.tt_expansion').hide();
     }
 }
 
@@ -39,7 +39,7 @@ function toggleExpansionVisibility() {
 function shift_time_span(direction) {
     // setting default time_span to null
     var op = null;
-    switch ($('#operators_tt_start_date').val()) {
+    switch ($('#operators_<%= filed_id %>').val()) {
         case "=":
             op = "is";
             break;
@@ -61,34 +61,34 @@ function shift_time_span(direction) {
 
     if (op != null) {
         var action = "get_" + direction + "_time_span";
-        var date1 = $('#values_tt_start_date_1').val();
-        var date2 = $('#values_tt_start_date_2').val();
+        var date1 = $('#values_<%= filed_id %>_1').val();
+        var date2 = $('#values_<%= filed_id %>_2').val();
 
         $.ajax({url:'tt_date_shifter/' + action + '.json?date1=' + date1 + '&date2=' + date2 + '&op=' + op,
             type:'GET',
             success:function (ds) {
-                $('#values_tt_start_date_1').val(ds.start_date);
-                $('#values_tt_start_date_2').val(ds.stop_date);
+                $('#values_<%= filed_id %>_1').val(ds.start_date);
+                $('#values_<%= filed_id %>_2').val(ds.stop_date);
 
                 switch (ds.special) {
                     case "today":
-                        $('#operators_tt_start_date').val('t');
+                        $('#operators_<%= filed_id %>').val('t');
                         break;
                     case "thisWeek":
-                        $('#operators_tt_start_date').val('w');
+                        $('#operators_<%= filed_id %>').val('w');
                         break;
                     case "thisMonth":
-                        $('#operators_tt_start_date').val('!*');
+                        $('#operators_<%= filed_id %>').val('!*');
                         break;
                     default:
                         if (op == "is" || op == "today") {
-                            $('#operators_tt_start_date').val('=');
+                            $('#operators_<%= filed_id %>').val('=');
                         } else {
-                            $('#operators_tt_start_date').val('><');
+                            $('#operators_<%= filed_id %>').val('><');
                         }
                         break;
                 }
-                $('#operators_tt_start_date').change();
+                $('#operators_<%= filed_id %>').change();
             }
         });
     }
