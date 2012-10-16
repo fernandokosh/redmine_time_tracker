@@ -128,9 +128,8 @@ module QueryPatch
       @available_filters['tt_booking_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
       @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
 
-      #TODO localize labels!
       @available_filters['tt_log_start_date'] = {:type => :date, :order => 2}
-      @available_filters["tt_log_bookable"] = {:type => :list, :order => 7, :values => [["true", 1]]}
+      @available_filters["tt_log_bookable"] = {:type => :list, :order => 7, :values => [[l(:time_tracker_label_true), 1]]}
 
       @available_filters.each do |field, options|
         options[:name] ||= l(options[:label] || "field_#{field}".gsub(/_id$/, ''))
