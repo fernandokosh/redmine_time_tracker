@@ -38,7 +38,7 @@
                         <td colspan="<%= query.columns.size + 1 %>">
                           <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                           <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
-                          <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : @booking_count_by_group[group] %>
+                          <span class="count">(<%= group.nil? ? @log_count_by_group[nil] : @log_count_by_group[group] %>
                             )</span>
                           <!-- TODO rewrite function-call -->
                           <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}", "toggleAllRowGroups(this)", :class => 'toggle-all') %>
@@ -48,7 +48,7 @@
                   <% end %>
               <% end %>
 
-              <tr id="booking-entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
+              <tr id="entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
                 <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
                 <%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
               </tr>

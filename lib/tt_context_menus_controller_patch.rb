@@ -32,6 +32,12 @@ module ContextMenusControllerControllerPatch
 
       render :layout => false
     end
+
+    def tt_logs_list
+      @time_log_ids = params[:ids]
+
+      render :layout => false
+    end
   end
 end
 
