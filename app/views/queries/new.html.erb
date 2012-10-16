@@ -4,7 +4,7 @@
 <%= form_tag(@project ? project_queries_path(@project) : queries_path, :onsubmit => 'selectAllOptions("selected_columns");') do %>
     <%= render :partial => 'form', :locals => {:query => @query} %>
     <% if @query.tt_query? %>
-        <%= hidden_field_tag 'tt_query', true %>
+        <%= hidden_field_tag 'tt_query_type', @query.tt_query_type %>
         <%= hidden_field_tag 'tt_request_referer', URI(request.referer).path %>
     <% end %>
     <%= submit_tag l(:button_save) %>

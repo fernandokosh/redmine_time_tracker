@@ -12,7 +12,7 @@
 <%= form_tag({:controller => 'tt_logs_list', :action => 'index'},
              :method => :get, :id => 'query_form') do %>
     <%= hidden_field_tag 'set_filter', '2' %>
-    <%= hidden_field_tag 'tt_query', true %>
+    <%= hidden_field_tag 'tt_query_type', 1 %>
     <div id="query_form_content" class="hide-when-print">
       <fieldset id="filters" class="collapsible <%= query.new_record? ? "" : "collapsed" %>">
         <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>

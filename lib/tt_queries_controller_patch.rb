@@ -8,7 +8,6 @@ module QueriesControllerPatch
     base.class_eval do
       alias_method_chain :new, :time_tracker
       alias_method_chain :create, :time_tracker
-      alias_method_chain :edit, :time_tracker
       alias_method_chain :update, :time_tracker
       alias_method_chain :destroy, :time_tracker
     end
@@ -20,17 +19,16 @@ module QueriesControllerPatch
   module InstanceMethods
     def new_with_time_tracker
       new_without_time_tracker
-      if params[:tt_query] == "true"
-        @query.tt_query = true
-        @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
-        @query.available_columns.delete_if { |item| !([:id, :user, :project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
+      q_type = params[:tt_query_type].to_i
+      if q_type > 0
+        @query.tt_query_type = q_type
         build_query_from_params
       end
     end
 
     def create_with_time_tracker
       @query = Query.new(params[:query])
-      @query.tt_query = (params[:tt_query] == "true" ? true : false)
+      @query.tt_query_type = params[:tt_query_type].to_i
       @query.user = User.current
       @query.project = params[:query_is_for_all] ? nil : @project
       @query.is_public = false unless User.current.allowed_to?(:manage_public_queries, @project) || User.current.admin?
@@ -49,16 +47,9 @@ module QueriesControllerPatch
       end
     end
 
-    def edit_with_time_tracker
-      if @query.tt_query?
-        @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
-        @query.available_columns.delete_if { |item| !([:id, :user, :project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
-      end
-    end
-
     def update_with_time_tracker
       @query.attributes = params[:query]
-      @query.tt_query = (params[:tt_query] == "true" ? true : false)
+      @query.tt_query_type = params[:tt_query_type].to_i
       @query.project = nil if params[:query_is_for_all]
       @query.is_public = false unless User.current.allowed_to?(:manage_public_queries, @project) || User.current.admin?
       build_query_from_params

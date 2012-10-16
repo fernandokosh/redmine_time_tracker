@@ -14,6 +14,8 @@ module QueryPatch
     base.send(:include, InstanceMethods)
     base.class_eval do
 
+      validate :tt_query_type_is_integer, :on => :update
+
       alias_method_chain :initialize, :time_tracker
       alias_method_chain :available_filters, :time_tracker
       alias_method_chain :sortable_columns, :time_tracker
@@ -37,18 +39,26 @@ module QueryPatch
 
   module InstanceMethods
 
-    def tt_query?
-      self.tt_query
+    def tt_query_type_is_integer
+      self.tt_query_type.is_a? Integer
     end
 
-    def tt_query=(flag)
-      if !self.tt_query? && flag
+    def tt_query?
+      self.tt_query_type != 0
+    end
+
+    # tt_query_types are:
+    #       0 => default Redmine Queries
+    #       1 => TimeLog Queries
+    #       2 => TimeBooking Queries
+    def tt_query_type=(type)
+      if !self.tt_query? && type != 0 # change from normal redmine query to tt_query-type
         self.filters.delete('status_id') if self.filters
-      elsif self.tt_query? && !flag
+      elsif self.tt_query? && type == 0 # change back from tt_query to standard redmine query
         self.filters ||= {'status_id' => {:operator => "o", :values => [""]}} # reset original values
       end
 
-      write_attribute(:tt_query, flag)
+      write_attribute(:tt_query_type, type)
       # to force a recalculation, we have to set columns and filters "nil"
       @available_columns = nil
       @available_filters = nil
@@ -103,8 +113,13 @@ module QueryPatch
     # the normal filter-menu at the issues-view will show columns which will lead in an error if used
     def available_columns_with_time_tracker
       @available_columns = available_columns_without_time_tracker
-      unless tt_query?
-        @available_columns.delete_if { |item| [:issue, :comments, :user, :tt_booking_date, :tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :get_formatted_time, :get_formatted_bookable_hours].include? item.name }
+      case tt_query_type
+        when 1
+          @available_columns.delete_if { |item| !([:id, :user, :tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :comments, :get_formatted_bookable_hours].include? item.name) }
+        when 2
+          @available_columns.delete_if { |item| !([:id, :user, :project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
+        else # show default redmine query-columns and remove the patched in ones
+          @available_columns.delete_if { |item| [:issue, :comments, :user, :tt_booking_date, :tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :get_formatted_time, :get_formatted_bookable_hours].include? item.name }
       end
       @available_columns
     end
@@ -118,18 +133,24 @@ module QueryPatch
       return @available_filters if @available_filters
 
       @available_filters = available_filters_without_time_tracker
+      @available_filters.clear # remove all the redmine filters
 
       # use raw Query as template to get the content for two complex fields without copying the source
       tq = Query.new
 
-      # unless-statements are used as workaround to get the code working for the migration file "011_add_default_tt_query"
-      @available_filters['tt_booking_project'] = tq.available_filters_without_time_tracker["project_id"].clone unless tq.available_filters_without_time_tracker["project_id"].nil?
-      @available_filters['tt_booking_start_date'] = {:type => :date, :order => 2}
-      @available_filters['tt_booking_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
-      @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
-
-      @available_filters['tt_log_start_date'] = {:type => :date, :order => 2}
-      @available_filters["tt_log_bookable"] = {:type => :list, :order => 7, :values => [[l(:time_tracker_label_true), 1]]}
+      case tt_query_type
+        when 1 # TimeLogs Query
+          @available_filters['tt_log_start_date'] = {:type => :date, :order => 2}
+          @available_filters["tt_log_bookable"] = {:type => :list, :order => 7, :values => [[l(:time_tracker_label_true), 1]]}
+          @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
+        when 2 # TimeBookings Query
+          @available_filters['tt_booking_project'] = tq.available_filters_without_time_tracker["project_id"].clone unless tq.available_filters_without_time_tracker["project_id"].nil?
+          @available_filters['tt_booking_start_date'] = {:type => :date, :order => 2}
+          @available_filters['tt_booking_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
+          @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
+        else
+          #change nothing. default is to handle standard redmine filters
+      end
 
       @available_filters.each do |field, options|
         options[:name] ||= l(options[:label] || "field_#{field}".gsub(/_id$/, ''))
