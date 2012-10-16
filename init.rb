@@ -41,7 +41,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                                                 :time_bookings => [:actions, :show_edit, :update, :delete, :get_list_entry],
                                                 :tt_bookings_list => [:index],
                                                 :tt_logs_list => [:index],
-                                                :tt_overview => [:index],
+                                                :tt_overview => [:index, :show_all_my_logs, :hide_all_my_logs],
                                                 :tt_info => [:index],
                                                 :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject]},
                      :require => :loggedin

@@ -20,6 +20,8 @@ match '/time_bookings/get_list_entry', :to => 'time_bookings#get_list_entry', :v
 match '/tt_bookings_list', :to => 'tt_bookings_list#index', :via => [:get, :post]
 match '/tt_logs_list', :to => 'tt_logs_list#index', :via => [:get, :post]
 match '/tt_overview', :to => 'tt_overview#index', :via => [:get, :post]
+match '/tt_overview/show_all_my_logs', :to => 'tt_overview#show_all_my_logs', :via => [:put]
+match '/tt_overview/hide_all_my_logs', :to => 'tt_overview#hide_all_my_logs', :via => [:put]
 match '/tt_info', :to => 'tt_info#index', :via => [:get, :post]
 match '/tt_completer/get_issue', :to => 'tt_completer#get_issue', :via => [:get]
 match '/tt_completer/get_issue_id', :to => 'tt_completer#get_issue_id', :via => [:get]
