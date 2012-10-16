@@ -7,9 +7,9 @@ class AddTtFlagQuery < ActiveRecord::Migration
   end
 
   def down
-    remove_column "#{Query.table_name}", :tt_query
     Query.all.each do |q|
       q.destroy if q.tt_query?
     end
+    remove_column "#{Query.table_name}", :tt_query
   end
 end
