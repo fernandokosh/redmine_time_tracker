@@ -9,7 +9,7 @@
                                                              :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
             </th>
             <% query.columns.each do |column| %>
-                <%= column_header(column) %>
+                <%= tt_column_header(column, :sort_bookings) %>
             <% end %>
           </tr>
           </thead>
@@ -17,14 +17,14 @@
           <tbody>
           <% bookings.each do |entry| -%>
               <% # workaround to enable group_by function with special columns   %>
-              <% if @query.grouped? %>
-                  <% gb_col = @query.group_by_column %>
+              <% if query.grouped? %>
+                  <% gb_col = query.group_by_column %>
                   <% if entry.send(gb_col.name).nil?
                        group = nil
                      else
                        group = case gb_col.name
                                  when :project then
-                                   @query.group_by_column.value(entry).to_s
+                                   query.group_by_column.value(entry).to_s
                                  when :tt_booking_date then
                                    entry.send('started_on').send('localtime').to_date.to_s
                                  when :issue then
@@ -37,7 +37,7 @@
                       <tr class="group open">
                         <td colspan="<%= query.columns.size + 1 %>">
                           <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
-                          <%= group.blank? ? 'None' : column_content(@query.group_by_column, entry) %>
+                          <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
                           <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : @booking_count_by_group[group] %>
                             )</span>
                           <!-- TODO rewrite function-call -->

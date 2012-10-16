@@ -8,34 +8,28 @@ class TtBookingsListController < ApplicationController
   include QueriesHelper
   helper :sort
   include SortHelper
+  helper :time_trackers
   include TimeTrackersHelper
 
   def index
-    tt_retrieve_query
-    # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
-    # which depend on issues
-    @query.column_names = @query.column_names || [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
+    time_bookings_query
 
-    # temporarily limit the available filters and columns for the view!
-    @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_booking_') && !key.to_s.starts_with?('tt_user') }
-    @query.available_columns.delete_if { |item| !([:id, :user, :project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
+    sort_init(@query_bookings.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query_bookings.sort_criteria)
+    tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
 
-    sort_init(@query.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query.sort_criteria)
-    sort_update(@query.sortable_columns)
-
-    if @query.valid?
+    if @query_bookings.valid?
       @limit = per_page_option
 
-      @booking_count = @query.booking_count
+      @booking_count = @query_bookings.booking_count
       @booking_pages = Paginator.new self, @booking_count, @limit, params['page']
       @offset ||= @booking_pages.current.offset
-      @bookings = @query.bookings(:order => sort_clause,
+      @bookings = @query_bookings.bookings(:order => sort_bookings_clause,
                                   :offset => @offset,
                                   :limit => @limit)
-      @booking_count_by_group = @query.booking_count_by_group
+      @booking_count_by_group = @query_bookings.booking_count_by_group
     end
 
-    render :template => 'tt_bookings_list/index'
+    render :template => 'tt_bookings_list/index', :locals => {:query => @query_bookings}
   rescue ActiveRecord::RecordNotFound
     render_404
   end

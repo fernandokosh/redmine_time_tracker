@@ -120,10 +120,9 @@ module TimeTrackersHelper
     # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
     # which depend on issues
     @query_logs.column_names = @query_logs.column_names || [:tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :comments, :get_formatted_bookable_hours]
-    @query_logs.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}}
 
     # temporarily limit the available filters and columns for the view!
-    @query_logs.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
+    @query_logs.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_log_') && !key.to_s.starts_with?('tt_user') }
     @query_logs.available_columns.delete_if { |item| !([:id, :user, :tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :comments, :get_formatted_bookable_hours].include? item.name) }
   end
 
@@ -137,7 +136,7 @@ module TimeTrackersHelper
     @query_bookings.column_names = @query_bookings.column_names || [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
 
     # temporarily limit the available filters and columns for the view!
-    @query_bookings.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
+    @query_bookings.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_booking_') && !key.to_s.starts_with?('tt_user') }
     @query_bookings.available_columns.delete_if { |item| !([:id, :user, :project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
   end
 end

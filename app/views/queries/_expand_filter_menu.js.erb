@@ -15,7 +15,7 @@ $(document).on('change', '#operators_<%= filed_id %>', null, function (e) {
 });
 
 function addButtonsToFilter() {
-<% if @query.tt_query? %>
+<% if query.tt_query? %>
     if ($('#tr_<%= filed_id %>').find('span.tt_expansion').length == 0) {
         $('#tr_<%= filed_id %> td.values').prepend(
                 '<span class="tt_expansion"><%= button_to_function raw("&larr;"), "shift_time_span('prev')" %></span>' +

@@ -9,7 +9,7 @@
                                                              :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
             </th>
             <% query.columns.each do |column| %>
-                <%= column_header(column) %>
+                <%= tt_column_header(column, :sort_logs) %>
             <% end %>
           </tr>
           </thead>

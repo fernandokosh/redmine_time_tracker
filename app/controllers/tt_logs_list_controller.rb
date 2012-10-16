@@ -8,34 +8,27 @@ class TtLogsListController < ApplicationController
   include QueriesHelper
   helper :sort
   include SortHelper
+  helper :time_trackers
   include TimeTrackersHelper
 
   def index
-    tt_retrieve_query
-    # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
-    # which depend on issues
-    @query.column_names = @query.column_names || [:tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :comments, :get_formatted_bookable_hours]
-    #@query.filters = {:tt_bookable => {:operator => "=", :values => [User.current.id.to_s]}}
+    time_logs_query
+    
+    sort_init(@query_logs.sort_criteria.empty? ? [['tt_log_date', 'desc']] : @query_logs.sort_criteria)
+    tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")
 
-    # temporarily limit the available filters and columns for the view!
-    @query.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_log_') && !key.to_s.starts_with?('tt_user') }
-    @query.available_columns.delete_if { |item| !([:id, :user, :tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :comments, :get_formatted_bookable_hours].include? item.name) }
-
-    sort_init(@query.sort_criteria.empty? ? [['tt_log_date', 'desc']] : @query.sort_criteria)
-    sort_update(@query.sortable_columns)
-
-    if @query.valid?
+    if @query_logs.valid?
       @limit = per_page_option
-      @log_count = @query.log_count
+      @log_count = @query_logs.log_count
       @log_pages = Paginator.new self, @log_count, @limit, params['page_logs']
       @log_offset ||= @log_pages.current.offset
-      @logs = @query.logs(:order => sort_clause,
+      @logs = @query_logs.logs(:order => sort_logs_clause,
                           :offset => @log_offset,
                           :limit => @limit)
-      @log_count_by_group = @query.log_count_by_group
+      @log_count_by_group = @query_logs.log_count_by_group
     end
 
-    render :template => 'tt_logs_list/index'
+    render :template => 'tt_logs_list/index', :locals => {:query => @query_logs}
   rescue ActiveRecord::RecordNotFound
     render_404
   end
