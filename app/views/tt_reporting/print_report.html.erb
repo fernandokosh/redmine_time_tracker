@@ -49,8 +49,8 @@
       <!--TODO insert grouped-functionality-->
       <tr id="entry-<%= entry.id %>" class="entry <%= cycle('odd', 'even') %>">
         <td class="tt_report-date"><%= entry.tt_booking_date %></td>
-        <td>
-          <div>
+        <td style="word-wrap: break-word;">
+          <div style="overflow: hidden;">
             <div style="min-height: 1em;"><%= entry.comments %></div>
             <div class="tt_list-project"><%= entry.project.name unless entry.project.nil? %></div>
           </div>

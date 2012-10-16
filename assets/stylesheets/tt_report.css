@@ -65,6 +65,7 @@
     .list th {
         padding-right: 1em;
         border-bottom: 1px solid #aaa;
+        vertical-align: top;
     }
 
     .list td:first-child,
@@ -88,6 +89,7 @@
     .list * {
         font-family: "Myriad Pro", Verdana, sans-serif;
         font-size: 11pt;
+        table-layout: fixed;
     }
 
     .list thead tr {
