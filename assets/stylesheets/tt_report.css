@@ -84,12 +84,12 @@
     .list {
         width: 100%;
         border-collapse: collapse;
+        table-layout: fixed;
     }
 
     .list * {
         font-family: "Myriad Pro", Verdana, sans-serif;
         font-size: 11pt;
-        table-layout: fixed;
     }
 
     .list thead tr {
