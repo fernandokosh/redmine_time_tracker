@@ -21,8 +21,8 @@ class TtReportingController < ApplicationController
       @booking_pages = Paginator.new self, @booking_count, @limit, params['page']
       @offset ||= @booking_pages.current.offset
       @bookings = @query_bookings.bookings(:order => sort_bookings_clause,
-                                  :offset => @offset,
-                                  :limit => @limit)
+                                           :offset => @offset,
+                                           :limit => @limit)
       @booking_count_by_group = @query_bookings.booking_count_by_group
 
     end
@@ -70,18 +70,6 @@ def fetch_query
 
   sort_init(@query_bookings.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query_bookings.sort_criteria)
   tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
-
-  #tt_retrieve_query
-  ## overwrite the initial column_names cause if no columns are specified, the Query class uses default values
-  ## which depend on issues
-  #@query_bookings.column_names = @query_bookings.column_names || [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
-  #
-  ## temporarily limit the available filters and columns for the view!
-  #@query_bookings.available_filters.delete_if { |key, value| !key.to_s.start_with?('tt_') }
-  #@query_bookings.available_columns.delete_if { |item| !([:id, :user, :project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time].include? item.name) }
-  #
-  #sort_init(@query_bookings.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query_bookings.sort_criteria)
-  #sort_update(@query_bookings.sortable_columns)
 end
 
 def fetch_chart_data
@@ -101,17 +89,13 @@ def fetch_chart_data
       @chart_data.push(hours)
       @highlighter_data.push([date, hours])
 
-      #to get readable labels, we have to blank out some of them if there are to many
-      if (stop_date - start_date).days > 6.days
-        # only set six labels and set the other blank
-        if (date - start_date).days % 6.days == 0
-          @chart_ticks.push(date)
-        else
-          @chart_ticks.push("")
-        end
-      else
-        # print date for every data-entry
+      # to get readable labels, we have to blank out some of them if there are to many
+      # only set 8 labels and set the other blank
+      gap = ((stop_date - start_date)/8).ceil
+      if (date - start_date) % gap == 0
         @chart_ticks.push(date)
+      else
+        @chart_ticks.push("")
       end
     end
   end
