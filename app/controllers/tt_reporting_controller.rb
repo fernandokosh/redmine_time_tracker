@@ -24,7 +24,6 @@ class TtReportingController < ApplicationController
                                            :offset => @offset,
                                            :limit => @limit)
       @booking_count_by_group = @query_bookings.booking_count_by_group
-
     end
 
     fetch_chart_data

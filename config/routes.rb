@@ -33,3 +33,4 @@ match '/tt_bookings_list/context_menu', :to => 'context_menus#tt_bookings_list',
 match '/tt_logs_list/context_menu', :to => 'context_menus#tt_logs_list', :as => 'tt_logs_list_context_menu'
 match '/tt_reporting', :to => 'tt_reporting#index', :via => [:get, :post]
 match '/tt_print_report', :to => 'tt_reporting#print_report', :via => [:get]
+match '/tt_menu_switcher/index', :to => 'tt_menu_switcher#index', :via => [:get]

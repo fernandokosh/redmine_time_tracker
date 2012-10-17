@@ -11,7 +11,17 @@ class TimeBooking < ActiveRecord::Base
   validates :time_entry_id, :presence => true, :unless => Proc.new { |tb| tb.virtual }
   validates_associated :virtual_comment, :if => Proc.new { |tb| tb.virtual }
 
-  # scope :last_two_weeks, where("started_on > ? ", (Time.now.localtime-2.weeks).beginning_of_day)
+  scope :visible, lambda {
+    ca = []
+    permission_list = [:tt_view_bookings, :tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings]
+    permission_list.each { |permission|
+      ca << [Project.allowed_to_condition(User.current, permission, {})]
+    }
+    cond = [ca.map { |c| c[0] }.join(" OR ")]
+
+    {:include => :project,
+     :conditions => cond}
+  }
 
   def initialize(args = {}, options = {})
     ActiveRecord::Base.transaction do

@@ -146,7 +146,7 @@ module QueryPatch
         when 2 # TimeBookings Query
           @available_filters['tt_booking_project'] = tq.available_filters_without_time_tracker["project_id"].clone unless tq.available_filters_without_time_tracker["project_id"].nil?
           @available_filters['tt_booking_start_date'] = {:type => :date, :order => 2}
-          @available_filters['tt_booking_issue'] = {:type => :list, :order => 4, :values => Issue.all.collect { |s| [s.subject, s.id.to_s] }}
+          @available_filters['tt_booking_issue'] = {:type => :list, :order => 4, :values => Issue.visible.all.collect { |s| [s.subject, s.id.to_s] }}
           @available_filters['tt_user'] = tq.available_filters_without_time_tracker["author_id"].clone unless tq.available_filters_without_time_tracker["author_id"].nil?
         else
           #change nothing. default is to handle standard redmine filters
@@ -162,7 +162,7 @@ module QueryPatch
     # Returns the bookings count
     def booking_count
       # TODO refactor includes
-      TimeBooking.
+      TimeBooking.visible.
           includes([:project, :virtual_comment, {:time_entry => :issue}, {:time_log => :user}]).
           where(statement).
           count(:id)
@@ -181,7 +181,7 @@ module QueryPatch
           # todo figure out the 'rails-way' to avoid ambiguous columns
           gbs = group_by_statement
           gbs = "#{Project.table_name}.name" if gbs == "project"
-          r = TimeBooking.
+          r = TimeBooking.visible.
               includes([:project, :virtual_comment, {:time_entry => :issue}, {:time_log => :user}]).
               group(gbs).
               where(statement).
@@ -205,7 +205,7 @@ module QueryPatch
       order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
       order_option = nil if order_option.blank?
 
-      TimeBooking.
+      TimeBooking.visible.
           includes([:project, :virtual_comment, {:time_entry => :issue}, {:time_log => :user}]).
           where(statement).
           order(order_option).
