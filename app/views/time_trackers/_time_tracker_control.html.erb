@@ -41,7 +41,7 @@
               <div class="task_form_bottom_fields">
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
-                  <div class="task_form_input"><%= select_tag :project_id_select, proj_list, :onchange => "$('time_tracker_project_id').value=this.value; updateTTControllerForm(this.form);", :disabled => !@time_tracker.issue_id.nil? %></div>
+                  <div class="task_form_input"><%= select_tag :project_id_select, proj_list, :onchange => "$('#time_tracker_project_id').val(this.value); updateTTControllerForm(this.form);", :disabled => !@time_tracker.issue_id.nil? %></div>
                   <%= f.hidden_field :project_id %>
                 </div>
                 <div class="task_form_sub_fields">

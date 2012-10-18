@@ -1,6 +1,6 @@
 module TimeTrackersHelper
   def issue_from_id(issue_id)
-    Issue.where(:id => issue_id).first
+    Issue.visible.where(:id => issue_id).first
   end
 
   def user_from_id(user_id)
@@ -8,7 +8,19 @@ module TimeTrackersHelper
   end
 
   def project_from_id(project_id)
-    Project.where(:id => project_id).first
+    Project.visible.where(:id => project_id).first
+  end
+
+  def permission_checker(permission_list, context, global = false)
+    flag = false
+    permission_list.each { |permission|
+      if global
+        flag ||= User.current.allowed_to_globally?(permission, {})
+      else
+        flag ||= User.current.allowed_to?(permission, context)
+      end
+    }
+    flag
   end
 
   def time_dist2string(dist)

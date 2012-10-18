@@ -38,14 +38,16 @@
                       <% if time_tracker.project_id.nil? %>
                           <td class="project"></td>
                       <% else %>
-                          <td class="project"><%= link_to_project help.project_from_id(time_tracker.project_id) %></td>
+                          <% project = help.project_from_id(time_tracker.project_id) %>
+                          <td class="project"><%= project.nil? ? "" : link_to_project(project) %></td>
                       <% end %>
                       <td class="start-date"><%= time_tracker.get_formatted_date %></td>
                       <td class="start-time"><%= time_tracker.get_formatted_time %></td>
                       <% if time_tracker.issue_id.nil? %>
                           <td class="issue"></td>
                       <% else %>
-                          <td class="issue"><%= link_to_issue help.issue_from_id(time_tracker.issue_id), :project => true %></td>
+                          <% issue = help.issue_from_id(time_tracker.issue_id) %>
+                          <td class="issue"><%= issue.nil? ? "" : link_to_issue(issue, :project => true) %></td>
                       <% end %>
                       <td class="comments"><%= time_tracker.comments %></td>
                       <td class="spent-time"><%= help.time_dist2string(time_tracker.running_time) %></td>

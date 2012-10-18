@@ -55,17 +55,23 @@ class TimeTrackersController < ApplicationController
       @time_tracker = get_current
       redirect_to :controller => 'tt_overview'
     end
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to :back
   end
 
   def delete
     time_tracker = TimeTracker.where(:id => params[:id]).first
-    time_tracker = nil unless User.current.id == time_tracker.user_id || User.current.admin? # user could only delete his own entries, except he's admin
-    if time_tracker.nil?
-      render :text => l(:time_tracker_delete_fail)
-    else
+    if User.current.id == time_tracker.user_id && User.current.allowed_to?([:tt_edit_own_time_logs], {}) || User.current.allowed_to_globally?([:tt_edit_time_logs], {}) # user could only delete his own entries, except he's admin
       time_tracker.destroy
-      render :text => l(:time_tracker_delete_success)
+    else
+      flash[:error] = l(:time_tracker_delete_fail)
     end
+    flash[:notice] = l(:time_tracker_delete_success)
+    redirect_to :back
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to :back
   end
 
   def update
@@ -89,37 +95,11 @@ class TimeTrackersController < ApplicationController
 
   end
 
-  def add_status_transition
-    transitions = params[:transitions].nil? ? {} : params[:transitions]
-    transitions[params[:from_id]] = params[:to_id]
-
-    render :partial => 'status_transition_list', :locals => {:transitions => transitions}
-  end
-
-  def delete_status_transition
-    transitions = params[:transitions].nil? ? {} : params[:transitions]
-    transitions.delete(params[:from_id])
-
-    render :partial => 'status_transition_list', :locals => {:transitions => transitions}
-  end
-
   protected
 
   def get_current
     current = TimeTracker.where(:user_id => User.current.id).first
     current.nil? ? TimeTracker.new : current
-  end
-
-  def apply_status_transition(issue)
-    unless issue == nil
-      new_status_id = Setting.plugin_redmine_time_tracker[:status_transitions][issue.status_id.to_s]
-      new_status = IssueStatus.where(:id => new_status_id).first
-      if issue.new_statuses_allowed_to(User.current).include?(new_status)
-        journal = @issue.init_journal(User.current, notes = l(:time_tracker_label_transition_journal))
-        @issue.status_id = new_status_id
-        @issue.save
-      end
-    end
   end
 
   private

@@ -38,42 +38,66 @@ Redmine::Plugin.register :redmine_time_tracker do
     map.project_module :redmine_timetracker_plugin_settings do
       # start/stop trackers, view own timeLogs, partially edit own timeLogs (issue, comments)
       map.permission :tt_log_time, {:time_logs => [:get_list_entry],
+                                    :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
+                                    :tt_info => [:index],
                                     :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
-                                    :time_trackers => [:delete, :start, :stop, :update]},
+                                    :time_trackers => [:start, :stop, :update]},
                      :require => :loggedin
       # all from :tt_log_time + completely edit own timeLogs
       map.permission :tt_edit_own_time_logs, {:time_logs => [:actions, :delete, :get_list_entry, :show_edit, :update],
+                                              :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
+                                              :tt_info => [:index],
                                               :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
                                               :time_trackers => [:delete, :start, :stop, :update]},
                      :require => :loggedin
       # all from :tt_edit_own_time_logs + completely edit foreign timeLogs
       map.permission :tt_edit_time_logs, {:time_logs => [:actions, :delete, :get_list_entry, :show_edit, :update],
-                                          :tt_logs_view => [:index],
+                                          :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
+                                          :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
+                                          :tt_logs_list => [:index],
+                                          :tt_info => [:index],
                                           :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
                                           :time_trackers => [:delete, :start, :stop, :update]},
                      :require => :loggedin
       # view only reports-page (view all foreign timeBookings)
       map.permission :tt_view_bookings, {:time_bookings => [:get_list_entry],
+                                         :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
+                                         :tt_print_report => [:index],
                                          :tt_reporting => [:index]},
                      :require => :loggedin
       # all from :tt_log_time + book time, view own timeBookings, partially edit own timeBookings (issue, comments, project)
       map.permission :tt_book_time, {:time_bookings => [:get_list_entry],
                                      :time_logs => [:actions, :add_booking, :get_list_entry, :show_booking],
+                                     :tt_bookings_list => [:index],
+                                     :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
+                                     :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
+                                     :tt_info => [:index],
                                      :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
+                                     :tt_print_report => [:index],
                                      :tt_reporting => [:index],
                                      :time_trackers => [:delete, :start, :stop, :update]},
                      :require => :loggedin
       # all from :tt_book_time + completely edit own timBookings
       map.permission :tt_edit_own_bookings, {:time_bookings => [:actions, :delete, :get_list_entry, :show_edit, :update],
                                              :time_logs => [:actions, :add_booking, :get_list_entry, :show_booking],
+                                             :tt_bookings_list => [:index],
+                                             :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
+                                             :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
+                                             :tt_info => [:index],
                                              :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
+                                             :tt_print_report => [:index],
                                              :tt_reporting => [:index],
                                              :time_trackers => [:delete, :start, :stop, :update]},
                      :require => :loggedin
       # all from :tt_edit_own_bookings + completely edit foreign timeBookings
       map.permission :tt_edit_bookings, {:time_bookings => [:actions, :delete, :get_list_entry, :show_edit, :update],
                                          :time_logs => [:actions, :add_booking, :get_list_entry, :show_booking],
+                                         :tt_bookings_list => [:index],
+                                         :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
+                                         :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
+                                         :tt_info => [:index],
                                          :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
+                                         :tt_print_report => [:index],
                                          :tt_reporting => [:index],
                                          :time_trackers => [:delete, :start, :stop, :update]},
                      :require => :loggedin

@@ -24,51 +24,61 @@ class TimeLogsController < ApplicationController
     end
 
     # send information which id's are touched to implement highlighting
-    redirect_to :controller => 'tt_overview', :tl_labids => last_added_booking_ids
+    redirect_to :back, :tl_labids => last_added_booking_ids
   end
 
   def add_booking(tl)
     time_log = TimeLog.where(:id => tl[:id]).first
     issue = issue_from_id(tl[:issue_id])
     last_added_booking_id = time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
-                         :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id])
+                                                 :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id])
     flash[:notice] = l(:success_add_booking)
     last_added_booking_id
-  rescue BookingError => e
+  rescue TimeLogError => e
     flash[:error] = e.message
   end
 
   def update(tl)
     time_log = TimeLog.where(:id => tl[:id]).first
-    if time_log.user_id == User.current.id || User.current.admin?
+    if time_log.user_id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}) || User.current.allowed_to_globally?(:tt_edit_time_logs, {})
       start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
       hours = time_string2hour(tl[:spent_time])
       stop = start + hours.hours
 
       time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
+      flash[:notice] = l(:tt_update_log_success)
     else
       flash[:error] = l(:tt_update_log_not_allowed)
     end
-    flash[:notice] = l(:tt_update_log_success)
-  rescue BookingError => e
+  rescue TimeLogError => e
     flash[:error] = e.message
   end
 
   def delete
-    if User.current.admin?
+    if help.permission_checker([:tt_edit_own_time_logs, :tt_edit_time_logs], {}, true)
       time_logs = TimeLog.where(:id => params[:time_log_ids]).all
       time_logs.each do |item|
-        if item.time_bookings.count == 0
-          item.destroy
+        if item.user == User.current && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}) || User.current.allowed_to_globally?(:tt_edit_time_logs, {})
+          if item.time_bookings.count == 0
+            item.destroy
+          else
+            booked_time = item.hours_spent - item.bookable_hours
+            item.stopped_at = item.started_on + booked_time.hours
+            item.bookable = false
+            item.save!
+          end
         else
-          booked_time = item.hours_spent - item.bookable_hours
-          item.stopped_at = item.started_on + booked_time.hours
-          item.bookable = false
-          item.save!
+          flash[:error] = l(:tt_error_not_allowed_to_delete_logs)
         end
       end
+      flash[:notice] = l(:tt_success_delete_time_logs)
+    else
+      flash[:error] = l(:tt_error_not_allowed_to_delete_logs)
     end
-    redirect_to :controller => 'tt_overview'
+    redirect_to :back
+  rescue StandardError => e
+    flash[:error] = e.message
+    redirect_to :back
   end
 
   def show_booking
@@ -94,5 +104,4 @@ class TimeLogsController < ApplicationController
       format.js
     end
   end
-
 end

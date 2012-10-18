@@ -67,6 +67,10 @@ private
 def fetch_query
   time_bookings_query
 
+  unless help.permission_checker([:tt_view_bookings, :tt_edit_bookings], {}, true)
+    @query_bookings.filters[:tt_user] = {:operator => "=", :values => [User.current.id.to_s]}
+  end
+
   sort_init(@query_bookings.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query_bookings.sort_criteria)
   tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
 end
@@ -91,7 +95,7 @@ def fetch_chart_data
       # to get readable labels, we have to blank out some of them if there are to many
       # only set 8 labels and set the other blank
       gap = ((stop_date - start_date)/8).ceil
-      if (date - start_date) % gap == 0
+      if gap == 0 || (date - start_date) % gap == 0
         @chart_ticks.push(date)
       else
         @chart_ticks.push("")

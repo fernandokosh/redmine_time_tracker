@@ -14,6 +14,10 @@ class TtBookingsListController < ApplicationController
   def index
     time_bookings_query
 
+    unless User.current.allowed_to_globally?(:tt_edit_bookings, {})
+      @query_bookings.filters[:tt_user] = {:operator => "=", :values => [User.current.id.to_s]}
+    end
+
     sort_init(@query_bookings.sort_criteria.empty? ? [['tt_booking_date', 'desc']] : @query_bookings.sort_criteria)
     tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
 
@@ -24,8 +28,8 @@ class TtBookingsListController < ApplicationController
       @booking_pages = Paginator.new self, @booking_count, @limit, params['page']
       @offset ||= @booking_pages.current.offset
       @bookings = @query_bookings.bookings(:order => sort_bookings_clause,
-                                  :offset => @offset,
-                                  :limit => @limit)
+                                           :offset => @offset,
+                                           :limit => @limit)
       @booking_count_by_group = @query_bookings.booking_count_by_group
     end
 

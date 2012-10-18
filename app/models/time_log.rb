@@ -1,4 +1,4 @@
-class BookingError < StandardError
+class TimeLogError < StandardError
   attr_reader :message
 
   def initialize(message)
@@ -27,7 +27,7 @@ class TimeLog < ActiveRecord::Base
   end
 
   def check_time_spent
-    raise BookingError, l(:tt_update_log_results_in_negative_time) if self.bookable_hours < 0
+    raise TimeLogError, l(:tt_update_log_results_in_negative_time) if self.bookable_hours < 0
   end
 
   def initialize(arguments = nil, *args)
@@ -49,8 +49,8 @@ class TimeLog < ActiveRecord::Base
     args[:spent_time].nil? ? args[:hours] = hours_spent(args[:started_on], args[:stopped_at]) : args[:hours] = help.time_string2hour(args[:spent_time])
     args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getlocal
 
-    raise BookingError, l(:error_booking_negative_time) if args[:hours] <= 0
-    raise BookingError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
+    raise TimeLogError, l(:error_booking_negative_time) if args[:hours] <= 0
+    raise TimeLogError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
 
     args[:time_log_id] = self.id
     # userid of booking will be set to the user who created timeLog, even if the admin will create the booking
@@ -61,7 +61,7 @@ class TimeLog < ActiveRecord::Base
       update_attribute(:bookable, (bookable_hours - tb.hours_spent > 0))
       tb.id # return the booking id to get the last added booking
     else
-      raise BookingError, l(:error_add_booking_failed)
+      raise TimeLogError, l(:error_add_booking_failed)
     end
   end
 

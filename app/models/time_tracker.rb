@@ -36,7 +36,7 @@ class TimeTracker < ActiveRecord::Base
   end
 
   before_save do
-    issue = issue_from_id(self.issue_id)
+    issue = help.issue_from_id(self.issue_id)
     if issue.nil?
       self.issue_id = self.issue_id_was unless self.issue_id.blank?
     else
@@ -50,7 +50,7 @@ class TimeTracker < ActiveRecord::Base
 
   def initialize(arguments = nil)
     unless arguments.nil?
-      issue = issue_from_id(arguments[:issue_id])
+      issue = help.issue_from_id(arguments[:issue_id])
       arguments[:issue_id] = nil if issue.nil?
     end
     super(arguments)
@@ -84,7 +84,7 @@ class TimeTracker < ActiveRecord::Base
         # if there already is a ticket-nr then we automatically associate the timeLog and the issue using a timeBooking-entry
         # and creating a time_entry
         if issue_id_set?
-          issue = issue_from_id(issue_id)
+          issue = help.issue_from_id(issue_id)
           unless issue.nil?
             # project_id will be set during the add_booking method
             time_log.project_id = issue.project_id
@@ -135,10 +135,6 @@ class TimeTracker < ActiveRecord::Base
     TimeTracker.where(:user_id => User.current.id).first
   end
 
-  def issue_from_id(issue_id)
-    Issue.where(:id => issue_id).first
-  end
-
   def issue_id_set?
     !issue_id.nil?
   end
@@ -146,7 +142,4 @@ class TimeTracker < ActiveRecord::Base
   def project_id_set?
     !project_id.nil?
   end
-
 end
-
-
