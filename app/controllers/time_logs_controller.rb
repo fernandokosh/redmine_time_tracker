@@ -34,7 +34,7 @@ class TimeLogsController < ApplicationController
                                                  :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id])
     flash[:notice] = l(:success_add_booking)
     last_added_booking_id
-  rescue TimeLogError => e
+  rescue StandardError => e
     flash[:error] = e.message
   end
 
@@ -50,7 +50,7 @@ class TimeLogsController < ApplicationController
     else
       flash[:error] = l(:tt_update_log_not_allowed)
     end
-  rescue TimeLogError => e
+  rescue StandardError => e
     flash[:error] = e.message
   end
 

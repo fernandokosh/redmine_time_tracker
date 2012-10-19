@@ -12,8 +12,12 @@ function updateTTControllerForm(obj) {
                 form.time_tracker_comments.value = tt.comments;
                 form.time_tracker_project_id.value = tt.project_id;
                 select_options = form.project_id_select;
-                for (i = 0; i < select_options.length; i++) {
-                    if (select_options[i].value == tt.project_id) select_options[i].selected = true;
+                if (tt.project_id == null) {
+                    select_options[0].selected = true;
+                } else {
+                    for (i = 0; i < select_options.length; i++) {
+                        if (select_options[i].value == tt.project_id) select_options[i].selected = true;
+                    }
                 }
                 dat = new Date(Date.parse(tt.started_on));
                 //form.time_tracker_start_time.value = dat.getHours().toString()+':'+dat.getMinutes().toString();

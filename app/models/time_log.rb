@@ -1,11 +1,3 @@
-class TimeLogError < StandardError
-  attr_reader :message
-
-  def initialize(message)
-    @message = message
-  end
-end
-
 class TimeLog < ActiveRecord::Base
   unloadable
 
@@ -21,13 +13,36 @@ class TimeLog < ActiveRecord::Base
 
   scope :bookable, where(:bookable => true)
 
+  # we have to check user-permissions. i some cass we have to forbid some or all of his actions
+  before_update do
+    # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
+    # have to change for special permissions in detail before saving the changes or undo them
+    if self.changed? && !User.current.allowed_to_globally?(:tt_edit_time_logs, {})
+      # changing the comments only could be allowed
+      if self.changed == ['comments']
+        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
+            self.user.id == User.current.id && help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
+        # want to change more than comments only? => needs more permission!
+      else
+        unless User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
+            self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
+          raise StandardError, l(:tt_error_not_allowed_to_change_logs) if self.user.id == User.current.id
+          raise StandardError, l(:tt_error_not_allowed_to_change_foreign_logs)
+        end
+      end
+    end
+  end
+
   after_save do
     # we have to keep the "bookable"-flag up-to-date
-    update_attribute(:bookable, bookable_hours > 0) if self.bookable != (bookable_hours > 0)
+    # update_column saves the value without running any callbacks or validations! this is  necessary here because
+    # bookable is a flag which should only be stored in DB to make faster DB-searches possible. so every time something
+    # changes on this object, this flag has to be checked!!
+    update_column(:bookable, bookable_hours > 0) if self.bookable != (bookable_hours > 0)
   end
 
   def check_time_spent
-    raise TimeLogError, l(:tt_update_log_results_in_negative_time) if self.bookable_hours < 0
+    raise StandardError, l(:tt_update_log_results_in_negative_time) if self.bookable_hours < 0
   end
 
   def initialize(arguments = nil, *args)
@@ -49,8 +64,8 @@ class TimeLog < ActiveRecord::Base
     args[:spent_time].nil? ? args[:hours] = hours_spent(args[:started_on], args[:stopped_at]) : args[:hours] = help.time_string2hour(args[:spent_time])
     args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getlocal
 
-    raise TimeLogError, l(:error_booking_negative_time) if args[:hours] <= 0
-    raise TimeLogError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
+    raise StandardError, l(:error_booking_negative_time) if args[:hours] <= 0
+    raise StandardError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
 
     args[:time_log_id] = self.id
     # userid of booking will be set to the user who created timeLog, even if the admin will create the booking
@@ -61,7 +76,7 @@ class TimeLog < ActiveRecord::Base
       update_attribute(:bookable, (bookable_hours - tb.hours_spent > 0))
       tb.id # return the booking id to get the last added booking
     else
-      raise TimeLogError, l(:error_add_booking_failed)
+      raise StandardError, l(:error_add_booking_failed)
     end
   end
 
@@ -110,6 +125,6 @@ class TimeLog < ActiveRecord::Base
   end
 
   def check_bookable
-    update_attribute(:bookable, bookable_hours > 0)
+    update_column(:bookable, bookable_hours > 0)
   end
 end

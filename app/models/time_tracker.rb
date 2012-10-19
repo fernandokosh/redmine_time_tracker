@@ -44,8 +44,28 @@ class TimeTracker < ActiveRecord::Base
     end
   end
 
+  # we have to check user-permissions. i some cass we have to forbid some or all of his actions
+  before_update do
+    # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
+    # have to change for special permissions in detail before saving the changes or undo them
+    if self.changed? && !User.current.allowed_to_globally?(:tt_edit_time_logs, {})
+      # changing the comments only could be allowed
+      if self.changed == ['comments']
+        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
+            self.user.id == User.current.id && help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
+        # want to change more than comments only? => needs more permission!
+      else
+        unless User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
+            self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
+          raise StandardError, l(:tt_error_not_allowed_to_change_logs) if self.user.id == User.current.id
+          raise StandardError, l(:tt_error_not_allowed_to_change_foreign_logs)
+        end
+      end
+    end
+  end
+
   def only_one_tracker
-    errors[:base] << :time_tracker_already_running_error unless current.nil?
+    raise StandardError, l(:time_tracker_already_running_error) unless current.nil?
   end
 
   def initialize(arguments = nil)

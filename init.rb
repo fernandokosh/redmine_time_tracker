@@ -37,7 +37,7 @@ Redmine::Plugin.register :redmine_time_tracker do
   Redmine::AccessControl.map do |map|
     map.project_module :redmine_timetracker_plugin_settings do
       # start/stop trackers, view own timeLogs, partially edit own timeLogs (issue, comments)
-      map.permission :tt_log_time, {:time_logs => [:get_list_entry],
+      map.permission :tt_log_time, {:time_logs => [:actions, :get_list_entry, :show_edit, :update],
                                     :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
                                     :tt_info => [:index],
                                     :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
@@ -66,7 +66,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                                          :tt_reporting => [:index]},
                      :require => :loggedin
       # all from :tt_log_time + book time, view own timeBookings, partially edit own timeBookings (issue, comments, project)
-      map.permission :tt_book_time, {:time_bookings => [:get_list_entry],
+      map.permission :tt_book_time, {:time_bookings => [:actions, :get_list_entry, :show_edit, :update],
                                      :time_logs => [:actions, :add_booking, :get_list_entry, :show_booking],
                                      :tt_bookings_list => [:index],
                                      :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],

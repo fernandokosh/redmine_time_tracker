@@ -1,11 +1,3 @@
-class TimeBookingError < StandardError
-  attr_reader :message
-
-  def initialize(message)
-    @message = message
-  end
-end
-
 class TimeBooking < ActiveRecord::Base
   unloadable
 
@@ -84,6 +76,8 @@ class TimeBooking < ActiveRecord::Base
   # we have to redefine some setters, to ensure a convenient way to update these attributes
 
   def issue=(issue)
+    return if issue == self.issue # no validation or permission checks necessary if there are no changes!
+
     if help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], {}, true) # check global permission to create/change a booking
       return unless self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_bookings, {}) || User.current.allowed_to_globally?(:tt_edit_bookings, {}) # users should only change their own entries or be admin
       user = self.user # use the user-info from the TimeLog, so the admin can change normal users entries too...
@@ -97,7 +91,7 @@ class TimeBooking < ActiveRecord::Base
           write_attribute(:virtual, true)
           write_attribute(:comments, comments) # should create a virtual comment
         else
-          raise TimeBookingError, l(:tt_error_could_not_set_issue) + " " + l(:tt_error_not_allowed_to_change_booking)
+          raise StandardError, l(:tt_error_could_not_set_issue) + " " + l(:tt_error_not_allowed_to_change_booking)
         end
       elsif !issue.nil? && issue.id != self.issue_id # issue changes => check if the user is able to change the entries on the actual project AND has the permission to book time on the new project
         if help.permission_checker([:tt_edit_own_bookings, :tt_edit_bookings], self.issue.project) && User.current.allowed_to?(:tt_book_time, issue.project) && User.current.allowed_to?(:log_time, issue.project)
@@ -114,25 +108,29 @@ class TimeBooking < ActiveRecord::Base
           write_attribute(:time_entry_id, time_entry.id)
           write_attribute(:project_id, issue.project.id)
         else
-          raise TimeBookingError, l(:tt_error_could_not_set_issue) + " " + l(:tt_error_not_allowed_to_change_booking)
+          raise StandardError, l(:tt_error_could_not_set_issue) + " " + l(:tt_error_not_allowed_to_change_booking)
         end
       end
     end
   end
 
   def project=(project)
+    return if project == self.project # no validation or permission checks necessary if there are no changes!
+
     unless self.user.id == User.current.id && User.current.allowed_to?(:tt_edit_own_bookings, self.project) || User.current.allowed_to?(:tt_edit_bookings, self.project)
-      raise TimeBookingError, l(:tt_error_could_not_set_project) + " " + l(:tt_error_not_allowed_to_change_booking)
+      raise StandardError, l(:tt_error_could_not_set_project) + " " + l(:tt_error_not_allowed_to_change_booking)
     end # users should only change their own entries or be admin
-        # only virtual bookings can choose projects. otherwise, the project will be set through the issue
+                                      # only virtual bookings can choose projects. otherwise, the project will be set through the issue
     write_attribute(:project_id, nil) if self.virtual? && project.nil?
     write_attribute(:project_id, project.id) if self.virtual? && self.user.allowed_to?(:log_time, project) && self.user.allowed_to?(:tt_book_time, project)
   end
 
   # this method is necessary to change start and stop at the same time without leaving boundaries
   def update_time(start, stop)
+    return if start == self.started_on && stop == self.stopped_at # no validation or permission checks necessary if there are no changes!
+
     unless self.user.id == User.current.id && User.current.allowed_to?(:tt_edit_own_bookings, self.project) || User.current.allowed_to?(:tt_edit_bookings, self.project)
-      raise TimeBookingError, l(:tt_error_could_not_update_times) + " " + l(:tt_error_not_allowed_to_change_booking)
+      raise StandardError, l(:tt_error_could_not_update_times) + " " + l(:tt_error_not_allowed_to_change_booking)
     end # users should only change their own entries or be admin
     return if start < self.time_log.started_on || start >= self.time_log.stopped_at || stop <= self.time_log.started_on || stop > self.time_log.stopped_at || start == stop
 
@@ -153,8 +151,8 @@ class TimeBooking < ActiveRecord::Base
   end
 
   def comments=(comments)
-    unless self.user.id == User.current.id && User.current.allowed_to?(:tt_edit_own_bookings, self.project) || User.current.allowed_to?(:tt_edit_bookings, self.project)
-      raise TimeBookingError, l(:tt_error_could_not_set_comments) + " " + l(:tt_error_not_allowed_to_change_booking)
+    unless self.user.id == User.current.id && help.permission_checker([:tt_book_time, :tt_edit_own_bookings], self.project) || User.current.allowed_to?(:tt_edit_bookings, self.project)
+      raise StandardError, l(:tt_error_could_not_set_comments) + " " + l(:tt_error_not_allowed_to_change_booking)
     end # users should only change their own entries or be admin
     if self.virtual
       vcomment = VirtualComment.where(:time_booking_id => self.id).first_or_create

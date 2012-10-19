@@ -83,16 +83,15 @@ class TimeTrackersController < ApplicationController
       format.json { render :json => @time_tracker }
     end
       # if something went wrong, return the original object
-  rescue
+  rescue StandardError => e
     @time_tracker = get_current
     # todo figure out a way to show errors, even on ajax requests!
-    flash[:error] = @time_tracker.errors.to_hash unless @time_tracker.errors.empty?
+    flash[:error] = e.message
     respond_to do |format|
       format.html { render :nothing => true }
       format.xml { render :xml => @time_tracker }
       format.json { render :json => @time_tracker }
     end
-
   end
 
   protected

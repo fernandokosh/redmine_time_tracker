@@ -29,7 +29,7 @@ class TimeBookingsController < ApplicationController
     issue = Issue.where(:id => tb[:issue_id]).first
     issue.nil? ? project = Project.where(:id => tb[:project_id]).first : project = issue.project
 
-    if time_booking.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_bookings, {}) || User.current.allowed_to_globally?(:tt_edit_time_bookings, {})
+    if time_booking.user.id == User.current.id && help.permission_checker([:tt_book_time, :tt_edit_own_bookings], time_booking.project) || User.current.allowed_to?(:tt_edit_bookings, time_booking.project)
       start = Time.parse(tb[:tt_booking_date] + " " + tb[:start_time])
       hours = time_string2hour(tb[:spent_time])
       stop = start + hours.hours
@@ -46,15 +46,15 @@ class TimeBookingsController < ApplicationController
     else
       flash[:error] = l(:tt_update_booking_not_allowed)
     end
-  rescue TimeBookingError => e
+  rescue StandardError => e
     flash[:error] = e.message
   end
 
   def delete
-    if help.permission_checker([:tt_edit_own_time_bookings, :tt_edit_time_bookings], {}, true)
+    if help.permission_checker([:tt_edit_own_bookings, :tt_edit_bookings], {}, true)
       time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
       time_bookings.each do |item|
-        if item.user == User.current && User.current.allowed_to_globally?(:tt_edit_own_time_bookings, {}) || User.current.allowed_to_globally?(:tt_edit_time_bookings, {})
+        if item.user == User.current && User.current.allowed_to_globally?(:tt_edit_own_bookings, {}) || User.current.allowed_to_globally?(:tt_edit_bookings, {})
           tl = TimeLog.where(:id => item.time_log_id, :user_id => User.current.id).first
           item.destroy
           tl.check_bookable # we should set the bookable_flag after deleting bookings
@@ -67,7 +67,7 @@ class TimeBookingsController < ApplicationController
       flash[:error] = l(:tt_error_not_allowed_to_delete_bookings)
     end
     redirect_to :back
-  rescue TimeBookingError => e
+  rescue StandardError => e
     flash[:error] = e.message
     redirect_to :back
   end
