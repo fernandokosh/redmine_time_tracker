@@ -22,6 +22,9 @@ class TimeLog < ActiveRecord::Base
       if self.changed == ['comments']
         raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
             self.user.id == User.current.id && help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
+      elsif (self.changed - ['comments', 'issue_id', 'project_id']).empty?
+        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
+            self.user.id == User.current.id && help.permission_checker([:tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
         # want to change more than comments only? => needs more permission!
       else
         unless User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
@@ -38,6 +41,7 @@ class TimeLog < ActiveRecord::Base
     # update_column saves the value without running any callbacks or validations! this is  necessary here because
     # bookable is a flag which should only be stored in DB to make faster DB-searches possible. so every time something
     # changes on this object, this flag has to be checked!!
+    self.reload
     update_column(:bookable, bookable_hours > 0) if self.bookable != (bookable_hours > 0)
   end
 
