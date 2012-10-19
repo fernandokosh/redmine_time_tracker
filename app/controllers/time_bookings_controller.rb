@@ -44,7 +44,7 @@ class TimeBookingsController < ApplicationController
       tl.check_bookable
       flash[:notice] = l(:tt_update_booking_success)
     else
-      flash[:error] = l(:tt_update_booking_not_allowed)
+      flash[:error] = l(:tt_error_not_allowed_to_change_booking)
     end
   rescue StandardError => e
     flash[:error] = e.message

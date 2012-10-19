@@ -48,7 +48,7 @@ class TimeLogsController < ApplicationController
       time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
       flash[:notice] = l(:tt_update_log_success)
     else
-      flash[:error] = l(:tt_update_log_not_allowed)
+      flash[:error] = l(:tt_error_not_allowed_to_change_logs)
     end
   rescue StandardError => e
     flash[:error] = e.message
