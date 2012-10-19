@@ -54,8 +54,8 @@ class TimeBookingsController < ApplicationController
     if help.permission_checker([:tt_edit_own_bookings, :tt_edit_bookings], {}, true)
       time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
       time_bookings.each do |item|
-        if item.user == User.current && User.current.allowed_to_globally?(:tt_edit_own_bookings, {}) || User.current.allowed_to_globally?(:tt_edit_bookings, {})
-          tl = TimeLog.where(:id => item.time_log_id, :user_id => User.current.id).first
+        if item.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, item.project) || User.current.allowed_to?(:tt_edit_bookings, item.project)
+          tl = TimeLog.where(:id => item.time_log_id, :user_id => item.user.id).first
           item.destroy
           tl.check_bookable # we should set the bookable_flag after deleting bookings
         else

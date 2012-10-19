@@ -44,7 +44,7 @@ class TimeTracker < ActiveRecord::Base
     end
   end
 
-  # we have to check user-permissions. i some cass we have to forbid some or all of his actions
+  # check user-permissions. in some cass we need to prevent some or all of his actions
   before_update do
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
     # have to change for special permissions in detail before saving the changes or undo them
@@ -53,6 +53,9 @@ class TimeTracker < ActiveRecord::Base
       if self.changed == ['comments']
         raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
             self.user.id == User.current.id && help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
+      elsif (self.changed - ['comments', 'issue_id', 'project_id']).empty?
+        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
+            self.user.id == User.current.id && help.permission_checker([:tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
         # want to change more than comments only? => needs more permission!
       else
         unless User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||

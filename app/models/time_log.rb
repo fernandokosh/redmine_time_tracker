@@ -73,7 +73,7 @@ class TimeLog < ActiveRecord::Base
     tb = TimeBooking.create(args)
     # tb.persisted? will be true if transaction was successfully completed
     if tb.persisted?
-      update_attribute(:bookable, (bookable_hours - tb.hours_spent > 0))
+      update_column(:bookable, (bookable_hours - tb.hours_spent > 0))
       tb.id # return the booking id to get the last added booking
     else
       raise StandardError, l(:error_add_booking_failed)
