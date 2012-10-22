@@ -4,6 +4,14 @@
     }
 }
 
+input:disabled,
+select:disabled,
+input[readonly="readonly"] {
+    color: #545454;
+    background-color: #EBEBE4;
+    border: 1px solid #999;
+}
+
 fieldset#filters td.values input[type="button"] {
     height: auto;
 }
