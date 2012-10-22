@@ -1,7 +1,7 @@
 class TimeBooking < ActiveRecord::Base
   unloadable
 
-  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :virtual, :project, :project_id
+  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :virtual, :project, :project_id, :issue, :comments
   belongs_to :project
   belongs_to :time_log
   belongs_to :time_entry, :dependent => :delete
@@ -27,20 +27,28 @@ class TimeBooking < ActiveRecord::Base
   before_update do
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
     # have to change for special permissions in detail before saving the changes or undo them
-    if self.changed? && !User.current.allowed_to?(:tt_edit_bookings, self.project)
+    if self.changed?
       if self.changed == ['comments']
         raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless help.permission_checker([:tt_book_time, :tt_edit_bookings], self.project) ||
             self.user == User.current && help.permission_checker([:tt_edit_own_bookings, :tt_book_time], self.project)
-      elsif (self.changed - ['comments', 'issue_id', 'project_id']).empty?
-        raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless User.current.allowed_to?(:tt_edit_bookings, self.project) ||
+      elsif (self.changed - ['comments', 'issue_id', 'project_id', 'time_entry_id']).empty?
+        raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless help.permission_checker([:tt_book_time, :tt_edit_bookings], self.project) ||
             self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, self.project)
         # want to change more than comments only? => needs more permission!
       else
         unless User.current.allowed_to?(:tt_edit_bookings, self.project) ||
-            self.user == User.current && User.current.allowed_to?(:tt_edit_own_time_logs, self.project)
+            self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, self.project)
           raise StandardError, l(:tt_error_not_allowed_to_change_booking) if self.user == User.current
           raise StandardError, l(:tt_error_not_allowed_to_change_foreign_booking)
         end
+      end
+      # special checks for project-changes
+      if self.changed.include?('project_id')
+        old_project = Project.where(:id => self.project_id_was).first
+        new_project = Project.where(:id => self.project_id).first
+        # user tries to switch the time from one project to another, so we have to check his permissions on both projects before starting the update
+        raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless help.permission_checker([:tt_book_time, :tt_edit_bookings], old_project) && help.permission_checker([:tt_book_time, :tt_edit_bookings], new_project) ||
+            self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, old_project) && User.current.allowed_to?(:tt_edit_own_bookings, new_project)
       end
     end
   end

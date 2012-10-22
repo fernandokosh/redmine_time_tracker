@@ -40,16 +40,12 @@ class TimeLogsController < ApplicationController
 
   def update(tl)
     time_log = TimeLog.where(:id => tl[:id]).first
-    if time_log.user_id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}) || User.current.allowed_to_globally?(:tt_edit_time_logs, {})
-      start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
-      hours = time_string2hour(tl[:spent_time])
-      stop = start + hours.hours
+    start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
+    hours = time_string2hour(tl[:spent_time])
+    stop = start + hours.hours
 
-      time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
-      flash[:notice] = l(:tt_update_log_success)
-    else
-      flash[:error] = l(:tt_error_not_allowed_to_change_logs)
-    end
+    time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
+    flash[:notice] = l(:tt_update_log_success)
   rescue StandardError => e
     flash[:error] = e.message
   end

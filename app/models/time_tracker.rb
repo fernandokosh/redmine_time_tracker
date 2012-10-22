@@ -50,10 +50,10 @@ class TimeTracker < ActiveRecord::Base
     # have to change for special permissions in detail before saving the changes or undo them
     if self.changed? && !User.current.allowed_to_globally?(:tt_edit_time_logs, {})
       # changing the comments only could be allowed
-      if self.changed == ['comments']
+      if (self.changed - ['comments', 'round']).empty?
         raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
             self.user.id == User.current.id && help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
-      elsif (self.changed - ['comments', 'issue_id', 'project_id']).empty?
+      elsif (self.changed - ['comments', 'round', 'issue_id', 'project_id']).empty?
         raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
             self.user.id == User.current.id && help.permission_checker([:tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
         # want to change more than comments only? => needs more permission!
