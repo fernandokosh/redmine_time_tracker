@@ -48,18 +48,15 @@ class TimeTracker < ActiveRecord::Base
   before_update do
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
     # have to change for special permissions in detail before saving the changes or undo them
-    if self.changed? && !User.current.allowed_to_globally?(:tt_edit_time_logs, {})
+    if self.changed?
       # changing the comments only could be allowed
       if (self.changed - ['comments', 'round']).empty?
-        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
-            self.user.id == User.current.id && help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
+        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless permission_level > 0
       elsif (self.changed - ['comments', 'round', 'issue_id', 'project_id']).empty?
-        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
-            self.user.id == User.current.id && help.permission_checker([:tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
+        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless permission_level > 1
         # want to change more than comments only? => needs more permission!
       else
-        unless User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
-            self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
+        unless permission_level > 2
           raise StandardError, l(:tt_error_not_allowed_to_change_logs) if self.user.id == User.current.id
           raise StandardError, l(:tt_error_not_allowed_to_change_foreign_logs)
         end
@@ -164,5 +161,22 @@ class TimeTracker < ActiveRecord::Base
 
   def project_id_set?
     !project_id.nil?
+  end
+
+  private
+
+  def permission_level
+    case
+      when User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
+          self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
+        3
+      when User.current.allowed_to_globally?(:tt_edit_bookings, {}) ||
+          self.user.id == User.current.id && help.permission_checker([:tt_book_time, :tt_edit_own_bookings], {}, true)
+        2
+      when self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_log_time, {})
+        1
+      else
+        0
+    end
   end
 end

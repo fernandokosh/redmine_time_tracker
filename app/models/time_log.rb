@@ -20,15 +20,12 @@ class TimeLog < ActiveRecord::Base
     if self.changed? && !User.current.allowed_to_globally?(:tt_edit_time_logs, {})
       # changing the comments only could be allowed
       if self.changed == ['comments']
-        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
-            self.user.id == User.current.id && help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
+        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless permission_level > 0
       elsif (self.changed - ['comments', 'issue_id', 'project_id']).empty?
-        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless help.permission_checker([:tt_edit_time_logs, :tt_edit_bookings], {}, true) ||
-            self.user.id == User.current.id && help.permission_checker([:tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings], {}, true)
+        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless permission_level > 1
         # want to change more than comments only? => needs more permission!
       else
-        unless User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
-            self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
+        unless permission_level > 2
           raise StandardError, l(:tt_error_not_allowed_to_change_logs) if self.user.id == User.current.id
           raise StandardError, l(:tt_error_not_allowed_to_change_foreign_logs)
         end
@@ -130,5 +127,22 @@ class TimeLog < ActiveRecord::Base
 
   def check_bookable
     update_column(:bookable, bookable_hours > 0)
+  end
+
+  private
+
+  def permission_level
+    case
+      when User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
+          self.user == User.current && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
+        3
+      when User.current.allowed_to_globally?(:tt_edit_bookings, {}) ||
+          self.user == User.current && help.permission_checker([:tt_book_time, :tt_edit_own_bookings], {}, true)
+        2
+      when self.user == User.current && User.current.allowed_to_globally?(:tt_log_time, {})
+        1
+      else
+        0
+    end
   end
 end

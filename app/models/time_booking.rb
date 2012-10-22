@@ -28,16 +28,11 @@ class TimeBooking < ActiveRecord::Base
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
     # have to change for special permissions in detail before saving the changes or undo them
     if self.changed?
-      if self.changed == ['comments']
-        raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless help.permission_checker([:tt_book_time, :tt_edit_bookings], self.project) ||
-            self.user == User.current && help.permission_checker([:tt_edit_own_bookings, :tt_book_time], self.project)
-      elsif (self.changed - ['comments', 'issue_id', 'project_id', 'time_entry_id']).empty?
-        raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless help.permission_checker([:tt_book_time, :tt_edit_bookings], self.project) ||
-            self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, self.project)
+      if (self.changed - ['comments', 'issue_id', 'project_id', 'time_entry_id']).empty?
+        raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless permission_level > 0
         # want to change more than comments only? => needs more permission!
       else
-        unless User.current.allowed_to?(:tt_edit_bookings, self.project) ||
-            self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, self.project)
+        unless permission_level > 1
           raise StandardError, l(:tt_error_not_allowed_to_change_booking) if self.user == User.current
           raise StandardError, l(:tt_error_not_allowed_to_change_foreign_booking)
         end
@@ -148,7 +143,7 @@ class TimeBooking < ActiveRecord::Base
   def update_time(start, stop)
     return if start == self.started_on && stop == self.stopped_at # no validation or permission checks necessary if there are no changes!
 
-    return if start < self.time_log.started_on || start >= self.time_log.stopped_at || stop <= self.time_log.started_on || stop > self.time_log.stopped_at || start == stop
+    raise StandardError, l(:error_booking_to_much_time) if start < self.time_log.started_on || start >= self.time_log.stopped_at || stop <= self.time_log.started_on || stop > self.time_log.stopped_at || start == stop
 
     write_attribute(:started_on, start)
     write_attribute(:stopped_at, stop)
@@ -204,6 +199,18 @@ class TimeBooking < ActiveRecord::Base
   end
 
   private
+
+  def permission_level
+    case
+      when User.current.allowed_to?(:tt_edit_bookings, self.project) ||
+          self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, self.project)
+        2
+      when self.user == User.current && User.current.allowed_to?(:tt_book_time, self.project)
+        1
+      else
+        0
+    end
+  end
 
   def create_time_entry(args ={})
     # TODO check for user-specific setup (limitations for bookable times etc)
