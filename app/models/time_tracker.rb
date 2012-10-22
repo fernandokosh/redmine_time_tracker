@@ -64,6 +64,21 @@ class TimeTracker < ActiveRecord::Base
     end
   end
 
+  def permission_level
+    case
+      when User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
+          self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
+        3
+      when User.current.allowed_to_globally?(:tt_edit_bookings, {}) ||
+          self.user.id == User.current.id && help.permission_checker([:tt_book_time, :tt_edit_own_bookings], {}, true)
+        2
+      when self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_log_time, {})
+        1
+      else
+        0
+    end
+  end
+
   def only_one_tracker
     raise StandardError, l(:time_tracker_already_running_error) unless current.nil?
   end
@@ -161,22 +176,5 @@ class TimeTracker < ActiveRecord::Base
 
   def project_id_set?
     !project_id.nil?
-  end
-
-  private
-
-  def permission_level
-    case
-      when User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
-          self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
-        3
-      when User.current.allowed_to_globally?(:tt_edit_bookings, {}) ||
-          self.user.id == User.current.id && help.permission_checker([:tt_book_time, :tt_edit_own_bookings], {}, true)
-        2
-      when self.user.id == User.current.id && User.current.allowed_to_globally?(:tt_log_time, {})
-        1
-      else
-        0
-    end
   end
 end

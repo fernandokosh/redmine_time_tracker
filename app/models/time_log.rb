@@ -33,6 +33,21 @@ class TimeLog < ActiveRecord::Base
     end
   end
 
+  def permission_level
+    case
+      when User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
+          self.user == User.current && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
+        3
+      when User.current.allowed_to_globally?(:tt_edit_bookings, {}) ||
+          self.user == User.current && help.permission_checker([:tt_book_time, :tt_edit_own_bookings], {}, true)
+        2
+      when self.user == User.current && User.current.allowed_to_globally?(:tt_log_time, {})
+        1
+      else
+        0
+    end
+  end
+
   after_save do
     # we have to keep the "bookable"-flag up-to-date
     # update_column saves the value without running any callbacks or validations! this is  necessary here because
@@ -127,22 +142,5 @@ class TimeLog < ActiveRecord::Base
 
   def check_bookable
     update_column(:bookable, bookable_hours > 0)
-  end
-
-  private
-
-  def permission_level
-    case
-      when User.current.allowed_to_globally?(:tt_edit_time_logs, {}) ||
-          self.user == User.current && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {})
-        3
-      when User.current.allowed_to_globally?(:tt_edit_bookings, {}) ||
-          self.user == User.current && help.permission_checker([:tt_book_time, :tt_edit_own_bookings], {}, true)
-        2
-      when self.user == User.current && User.current.allowed_to_globally?(:tt_log_time, {})
-        1
-      else
-        0
-    end
   end
 end

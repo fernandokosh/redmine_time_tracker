@@ -48,6 +48,18 @@ class TimeBooking < ActiveRecord::Base
     end
   end
 
+  def permission_level
+    case
+      when User.current.allowed_to?(:tt_edit_bookings, self.project) ||
+          self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, self.project)
+        2
+      when self.user == User.current && User.current.allowed_to?(:tt_book_time, self.project)
+        1
+      else
+        0
+    end
+  end
+
   def initialize(args = {}, options = {})
     ActiveRecord::Base.transaction do
       super(nil)
@@ -199,18 +211,6 @@ class TimeBooking < ActiveRecord::Base
   end
 
   private
-
-  def permission_level
-    case
-      when User.current.allowed_to?(:tt_edit_bookings, self.project) ||
-          self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, self.project)
-        2
-      when self.user == User.current && User.current.allowed_to?(:tt_book_time, self.project)
-        1
-      else
-        0
-    end
-  end
 
   def create_time_entry(args ={})
     # TODO check for user-specific setup (limitations for bookable times etc)
