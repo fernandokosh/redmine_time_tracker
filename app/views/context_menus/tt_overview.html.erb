@@ -20,7 +20,7 @@
                                 :remote => false, :disabled => true
             else
               context_menu_link l(:time_tracker_label_continue),
-                                {:controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => @time_booking.virtual ? nil : @time_booking.time_entry.issue.id, :comments => @time_booking.comments}},
+                                {:controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => @time_booking.virtual? ? nil : @time_booking.time_entry.issue.id, :comments => @time_booking.comments}},
                                 :remote => false, :disabled => !User.current.allowed_to_globally?({:controller => 'time_trackers', :action => 'start'}, {})
             end %>
       </li>

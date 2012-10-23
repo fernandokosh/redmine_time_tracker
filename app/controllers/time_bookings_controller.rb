@@ -35,7 +35,8 @@ class TimeBookingsController < ApplicationController
 
     time_booking.update_time(start, stop)
 
-    time_booking.update_attributes!({:issue => issue, :project => project, :comments => tb[:comments]})
+    time_booking.update_attributes!({:project => project, :comments => tb[:comments]})
+    time_booking.update_attribute(:issue, issue) # have to set issue separately due to mass-assignment-rules
 
     tl.check_bookable
     flash[:notice] = l(:tt_update_booking_success)
