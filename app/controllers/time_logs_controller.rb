@@ -24,7 +24,7 @@ class TimeLogsController < ApplicationController
     end
 
     # send information which id's are touched to implement highlighting
-    redirect_to :back, :tl_labids => last_added_booking_ids
+    redirect_to :controller => URI(request.referer).path, :tl_labids => last_added_booking_ids
   end
 
   def add_booking(tl)
