@@ -138,7 +138,7 @@ class TimeBooking < ActiveRecord::Base
 
     write_attribute(:started_on, start)
     write_attribute(:stopped_at, stop)
-    self.time_entry.update_attributes(:spent_on => start, :hours => self.hours_spent) #also update TimeEntry
+    self.time_entry.update_attributes!(:spent_on => start, :hours => self.hours_spent) #also update TimeEntry
   end
 
   # following methods are necessary to use the query_patch, so we can use the powerful filter options of redmine
@@ -149,7 +149,7 @@ class TimeBooking < ActiveRecord::Base
   end
 
   def comments=(comments)
-    self.time_entry.update_attributes :comments => comments
+    self.time_entry.update_attributes! :comments => comments
   end
 
   def tt_booking_date
