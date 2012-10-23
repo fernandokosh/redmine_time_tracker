@@ -4,7 +4,7 @@ class TimeBooking < ActiveRecord::Base
   attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :project, :project_id
   belongs_to :project
   belongs_to :time_log
-  belongs_to :time_entry, :dependent => :delete
+  belongs_to :time_entry
   has_one :issue, :through => :time_entry
 
   validates_presence_of :time_log_id
@@ -45,6 +45,10 @@ class TimeBooking < ActiveRecord::Base
             self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, old_project) && User.current.allowed_to?(:tt_edit_own_bookings, new_project)
       end
     end
+  end
+
+  after_destroy do
+    self.time_log.check_bookable
   end
 
   def permission_level

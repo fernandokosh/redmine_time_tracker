@@ -8,6 +8,8 @@ require 'tt_user_patch'
 require 'tt_project_patch'
 require 'tt_menu_patch'
 require 'tt_query_patch'
+require 'tt_issue_patch'
+require 'tt_time_entry_patch'
 
 require 'tt_sort_helper_patch'
 require 'tt_application_helper_patch'
