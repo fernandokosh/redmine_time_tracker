@@ -92,6 +92,7 @@ en:
   time_tracker_label_transition_journal: "Status transition applied automatically due to the start of a time tracker."
   time_tracker_label_this_month: "this month"
   time_tracker_label_time: "Time"
+  time_tracker_label_timer: "Timer"
   time_tracker_label_time_spent: "Time spent"
   time_tracker_label_true: "True"
   time_tracker_label_update: "Update"
