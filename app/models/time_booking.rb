@@ -67,7 +67,7 @@ class TimeBooking < ActiveRecord::Base
         time_entry = create_time_entry({:project => proj, :issue => args[:issue], :user_id => args[:user_id], :comments => args[:comments], :started_on => args[:started_on], :activity_id => args[:activity_id], :hours => args[:hours]})
         super({:time_entry_id => time_entry.id, :time_log_id => args[:time_log_id], :started_on => args[:started_on], :stopped_at => args[:stopped_at], :project => proj})
       else
-        raise ActiveRecord::Rollback
+        raise StandardError, l(:tt_error_not_allowed_to_book_on_project)
       end
     end
   end
@@ -134,7 +134,6 @@ class TimeBooking < ActiveRecord::Base
 
     write_attribute(:started_on, start)
     write_attribute(:stopped_at, stop)
-                                                                  #self.time_entry.update_attributes(:spent_on => start, :hours => self.hours_spent) unless self.virtual? #also update TimeEntry
     self.time_entry.update_attributes(:spent_on => start, :hours => self.hours_spent) #also update TimeEntry
   end
 

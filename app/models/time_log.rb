@@ -69,7 +69,7 @@ class TimeLog < ActiveRecord::Base
   # method returns the booking.id if transaction was successfully completed, raises an error otherwise
   def add_booking(args = {})
     tea = TimeEntryActivity.where(:name => :time_tracker_activity).first
-    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => tea.id, :issue => nil, :spent_time => nil, :virtual => false, :project_id => self.project_id}
+    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => tea.id, :issue => nil, :spent_time => nil, :project_id => self.project_id}
     args = default_args.merge(args)
 
     # TODO check time boundaries

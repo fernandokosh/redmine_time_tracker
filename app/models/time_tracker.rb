@@ -27,7 +27,6 @@ class TimeTracker < ActiveRecord::Base
   # so after the input, the validations were called (before saving the object) after that
   # we take the input and convert it to fit into the DateTime-format
   after_validation do
-    # TODO check if user is allowed to change this entry
     # the following updates should only happen if the controller calls this method after an ui-input
     # in all other cases, the fields "start_time" and "date" might be empty
     unless self.start_time.nil? && self.date.nil?
@@ -118,19 +117,8 @@ class TimeTracker < ActiveRecord::Base
         time_log = TimeLog.create(:user_id => user_id, :started_on => started_on, :stopped_at => stop_time, :comments => comments)
         # if there already is a ticket-nr then we automatically associate the timeLog and the issue using a timeBooking-entry
         # and creating a time_entry
-        if issue_id_set?
-          issue = help.issue_from_id(issue_id)
-          unless issue.nil?
-            # project_id will be set during the add_booking method
-            time_log.project_id = issue.project_id
-            time_log.add_booking(:issue => issue)
-          end
-          # otherwise we check for a project-id and associate the timeLog with an project only, using the project_id-field
-          # of the timeLog. in that case we could create a virtual booking
-        elsif project_id_set?
-          time_log.project_id = project_id
-          time_log.add_booking(:virtual => true)
-        end
+        issue = help.issue_from_id(issue_id)
+        time_log.add_booking({:project_id => project_id, :issue => issue}) unless issue.nil? && project_id.nil?
         # after creating the TimeLog we can remove the TimeTracker, so the user can start a new one
         # print an error-message otherwise
         self.destroy if time_log.save
