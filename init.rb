@@ -48,6 +48,7 @@ Redmine::Plugin.register :redmine_time_tracker do
       # all from :tt_log_time + completely edit own timeLogs
       map.permission :tt_edit_own_time_logs, {:time_logs => [:actions, :delete, :get_list_entry, :show_edit, :update],
                                               :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
+                                              :tt_logs_list => [:index],
                                               :tt_info => [:index],
                                               :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
                                               :time_trackers => [:delete, :start, :stop, :update]},
@@ -127,7 +128,7 @@ Redmine::Plugin.register :redmine_time_tracker do
     menu.push :time_tracker_menu_tab_bookings_list, {:controller => 'tt_bookings_list', :action => 'index'}, :caption => :time_tracker_label_menu_tab_bookings_list,
               :if => permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings])
     menu.push :time_tracker_menu_tab_logs_list, {:controller => 'tt_logs_list', :action => 'index'}, :caption => :time_tracker_label_menu_tab_logs_list,
-              :if => permission_checker([:tt_edit_time_logs])
+              :if => permission_checker([:tt_edit_own_time_logs, :tt_edit_time_logs])
     menu.push :time_tracker_menu_tab_active_trackers, {:controller => 'tt_info', :action => 'index'}, :caption => :time_tracker_label_menu_tab_active_trackers,
               :if => permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_edit_time_logs, :tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings])
     menu.push :time_tracker_menu_tab_reporting, {:controller => 'tt_reporting', :action => 'index'}, :caption => :time_tracker_label_menu_tab_reports,

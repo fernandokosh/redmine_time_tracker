@@ -3,11 +3,6 @@
     <% if @logs.empty? %>
         <p class="nodata"><%= l(:label_no_data) %></p>
     <% else %>
-        <%= javascript_tag render :partial => "show_all_logs_checkbox_checker", :formats => [:js] %>
-        <div>
-          <%= check_box_tag "tt_cb_show_all_my_bookings", nil, session[:tt_show_all_my_logs] %>
-          <%= l(:time_tracker_label_show_all_my_logs) %>
-        </div>
         <%= render :partial => 'time_logs/list_unbooked_logs', :locals => {:logs => @logs, :query => @query_logs} %>
         <p class="pagination"><%= pagination_links_full @log_pages, @log_count, :page_param => :page_logs, :per_page_links => false %></p>
     <% end %>

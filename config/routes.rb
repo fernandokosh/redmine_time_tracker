@@ -13,8 +13,6 @@ match '/time_logs/show_edit', :to => 'time_logs#show_edit', :via => [:get, :post
 match '/time_logs/get_list_entry', :to => 'time_logs#get_list_entry', :via => [:get, :post]
 
 match '/tt_overview', :to => 'tt_overview#index', :via => [:get, :post]
-match '/tt_overview/show_all_my_logs', :to => 'tt_overview#show_all_my_logs', :via => [:put]
-match '/tt_overview/hide_all_my_logs', :to => 'tt_overview#hide_all_my_logs', :via => [:put]
 
 match '/time_trackers/stop', :to => 'time_trackers#stop', :via => [:get, :put, :post]
 match '/time_trackers/start', :to => 'time_trackers#start', :via => [:post, :get]

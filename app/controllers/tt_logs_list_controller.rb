@@ -13,7 +13,11 @@ class TtLogsListController < ApplicationController
 
   def index
     time_logs_query
-    
+
+    unless User.current.allowed_to_globally?(:tt_edit_time_logs, {})
+      @query_logs.filters[:tt_user] = {:operator => "=", :values => [User.current.id.to_s]}
+    end
+
     sort_init(@query_logs.sort_criteria.empty? ? [['tt_log_date', 'desc']] : @query_logs.sort_criteria)
     tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")
 
