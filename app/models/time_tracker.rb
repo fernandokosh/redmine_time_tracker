@@ -157,12 +157,4 @@ class TimeTracker < ActiveRecord::Base
   def current
     TimeTracker.where(:user_id => User.current.id).first
   end
-
-  def issue_id_set?
-    !issue_id.nil?
-  end
-
-  def project_id_set?
-    !project_id.nil?
-  end
 end

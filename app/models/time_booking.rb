@@ -121,7 +121,7 @@ class TimeBooking < ActiveRecord::Base
 
   def project=(project)
     return if project == self.project # no validation or permission checks necessary if there are no changes!
-    raise StandardError, "not possible to book time without Project" if project.nil?
+    raise StandardError, l(:tt_error_not_allowed_to_book_without_project) if project.nil?
 
     write_attribute(:project_id, project.id)
   end

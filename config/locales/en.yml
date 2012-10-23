@@ -45,6 +45,7 @@ en:
   time_tracker_delete_success: "Time tracker successfully deleted"
   time_tracker_delete_booking_success: "Time booking successfully deleted"
   tt_error_not_allowed_to_book_on_project: "You are not allowed to book time on the specified project!"
+  tt_error_not_allowed_to_book_without_project: "You are not allowed to book time without setting a project!"
   tt_error_not_allowed_to_change_foreign_booking: "You are not allowed to change a foreign TimeBooking!"
   tt_error_not_allowed_to_change_booking: "You are not allowed to change a TimeBooking!"
   tt_error_not_allowed_to_change_foreign_logs: "You are not allowed to change a foreign TimeLog!"
