@@ -37,7 +37,7 @@ Redmine::Plugin.register :redmine_time_tracker do
   settings :default => {:report_title => 'Report', :report_logo_url => '', :report_logo_width => '150'}, :partial => 'settings/time_tracker'
 
   Redmine::AccessControl.map do |map|
-    map.project_module :redmine_timetracker_plugin_settings do
+    map.project_module :redmine_timetracker_plugin do
       # start/stop trackers, view own timeLogs, partially edit own timeLogs (issue, comments)
       map.permission :tt_log_time, {:time_logs => [:actions, :get_list_entry, :show_edit, :update],
                                     :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],

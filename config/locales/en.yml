@@ -22,6 +22,7 @@ en:
   no_time_bookings: "No time bookings"
   no_time_tracker_running: "No time tracker is running"
   no_time_tracker_suspended: "No time tracker is suspended"
+  project_module_redmine_timetracker_plugin: "Time Tracker Plugin"
   permission_tt_log_time: "Create TimeLogs (global)"
   permission_tt_edit_own_time_logs: "Edit own TimeLogs (global)"
   permission_tt_edit_time_logs: "Edit all TimeLogs (global)"
