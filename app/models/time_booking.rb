@@ -127,7 +127,7 @@ class TimeBooking < ActiveRecord::Base
 
       write_attribute(:virtual, true)
       write_attribute(:comments, comments) # should create a virtual comment
-    elsif !issue.nil? && issue.id != self.issue_id # issue changes => check if the user is able to change the entries on the actual project AND has the permission to book time on the new project
+    elsif !issue.nil? && issue.id.to_s != self.issue_id # issue changes => check if the user is able to change the entries on the actual project AND has the permission to book time on the new project
       if self.virtual? # self.virtual is true, than we've got a new issue due to the statement ahead. so we change from virtual to normal booking!
         self.virtual_comment.destroy
         write_attribute(:virtual, false)
