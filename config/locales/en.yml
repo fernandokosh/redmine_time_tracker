@@ -51,6 +51,7 @@ en:
   tt_error_not_allowed_to_change_booking: "You are not allowed to change a TimeBooking!"
   tt_error_not_allowed_to_change_foreign_logs: "You are not allowed to change a foreign TimeLog!"
   tt_error_not_allowed_to_change_logs: "You are not allowed to change a TimeLog!"
+  tt_error_not_allowed_to_create_time_log: "You are not allowed to create a TimeLog!"
   tt_error_not_allowed_to_delete_bookings: "You are not allowed to delete TimeBooking!"
   tt_error_not_allowed_to_delete_logs: "You are not allowed to delete TimeLog!"
   tt_error_could_not_set_comments: "Could not set Comments!"

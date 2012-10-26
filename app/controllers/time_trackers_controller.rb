@@ -18,7 +18,7 @@ class TimeTrackersController < ApplicationController
         args[:comments]=params[:time_tracker][:comments] if args[:comments].nil?
       end
       # parse comments for issue-id
-      if args[:issue_id].nil? && args[:comments].strip.match(/\A#\d?\d*/)
+      if args[:issue_id].nil? && !args[:comments].nil? && args[:comments].strip.match(/\A#\d?\d*/)
         cut = args[:comments].strip.partition(/#\d?\d*/)
         issue_id = cut[1].sub(/#/, "").to_i
         unless help.issue_from_id(issue_id).nil?

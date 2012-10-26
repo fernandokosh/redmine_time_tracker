@@ -10,6 +10,9 @@ class TimeLog < ActiveRecord::Base
   # prevent that updating the time_log results in negative bookable_time
   validate :check_time_spent, :on => :update
   validates :comments, :length => {:maximum => 255}, :allow_blank => true
+  validates :user_id, :presence => true
+  validates :started_on, :presence => true
+  validates :stopped_at, :presence => true
 
   scope :bookable, where(:bookable => true)
 

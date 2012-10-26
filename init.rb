@@ -78,7 +78,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                                      :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
                                      :tt_print_report => [:index],
                                      :tt_reporting => [:index],
-                                     :time_trackers => [:delete, :start, :stop, :update]},
+                                     :time_trackers => [:start, :stop, :update]},
                      :require => :loggedin
       # all from :tt_book_time + completely edit own timBookings
       map.permission :tt_edit_own_bookings, {:time_bookings => [:actions, :delete, :get_list_entry, :show_edit, :update],
@@ -90,7 +90,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                                              :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
                                              :tt_print_report => [:index],
                                              :tt_reporting => [:index],
-                                             :time_trackers => [:delete, :start, :stop, :update]},
+                                             :time_trackers => [:start, :stop, :update]},
                      :require => :loggedin
       # all from :tt_edit_own_bookings + completely edit foreign timeBookings
       map.permission :tt_edit_bookings, {:time_bookings => [:actions, :delete, :get_list_entry, :show_edit, :update],
@@ -102,7 +102,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                                          :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
                                          :tt_print_report => [:index],
                                          :tt_reporting => [:index],
-                                         :time_trackers => [:delete, :start, :stop, :update]},
+                                         :time_trackers => [:start, :stop, :update]},
                      :require => :loggedin
     end
   end
