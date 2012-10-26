@@ -85,30 +85,38 @@ class TimeTrackersControllerTest < ActionController::TestCase
         end
       end
 
-      should "update only TT -comments and -round on own trackers" do
+      should "update only TT -comments on own trackers" do
         put :update, {:time_tracker => {:comments => "new comment"}}
         assert_response :success
         tt = TimeTracker.where(:id => 1).first
         assert_equal("new comment", tt.comments, "updated TT-comment")
+      end
 
+      should "update only TT -round on own trackers" do
         put :update, {:time_tracker => {:round => true}}
         assert_response :success
         tt = TimeTracker.where(:id => 1).first
         assert_equal(true, tt.round, "updated TT-round")
+      end
 
+      should "not update issue_id on own trackers" do
         put :update, {:time_tracker => {:issue_id => 2}}
         assert_response :success
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
         assert_equal(1, tt.issue_id, "illegally updated TT-issue_id")
+      end
 
+      should "not update project_id on own trackers" do
         put :update, {:time_tracker => {:issue_id => nil, :project_id => nil}}
         assert_response :success
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
         assert_equal(1, tt.issue_id, "illegally nullified issue_id")
         assert_equal(1, tt.project_id, "illegally updated TT-project_id")
+      end
 
+      should "not update time or date on own trackers" do
         put :update, {:time_tracker => {:start_time => "10:23:42", :date => "2012-10-23"}}
         assert_response :success
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
@@ -156,13 +164,85 @@ class TimeTrackersControllerTest < ActionController::TestCase
         end
       end
 
-      should "update own TimeTrackers completely" do
-        updating_own_time_trackers_completely
+      #=============================
+      # should "update own TimeTrackers completely"
+      should "update comments on own trackers" do
+        put :update, {:time_tracker => {:comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("new comment", tt.comments, "updated TT-comment")
       end
 
-      should "deny updating foreign TimeTrackers completely" do
-        deny_updating_foreign_time_trackers_completely
+      should "update round on own trackers" do
+        put :update, {:time_tracker => {:round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(true, tt.round, "updated TT-round")
       end
+
+      should "update issue_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(2, tt.issue_id, "updated TT-issue_id")
+      end
+
+      should "update project_id and issue_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => nil, :project_id => nil}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(nil, tt.issue_id, "nullified issue_id")
+        assert_equal(nil, tt.project_id, "updated TT-project_id")
+      end
+
+      should "update date and time on own trackers" do
+        put :update, {:time_tracker => {:start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("10:23:42", tt.started_on.localtime.to_time.strftime("%H:%M:%S"), "updated TT-start_time")
+        assert_equal("2012-10-23", tt.started_on.to_date.to_s(:db), "updated TT-date")
+      end
+      #=============================
+
+      #=============================
+      # should "deny updating foreign TimeTrackers completely"
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
+      should "not update round on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(false, tt.round, "not updated foreign TT-round")
+      end
+
+      should "not update issue_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not updated foreign TT-issue_id")
+      end
+
+      should "not update issue_id or project_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => nil, :project_id => nil}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not nullified foreign issue_id")
+        assert_equal(1, tt.project_id, "not updated foreign TT-project_id")
+      end
+
+      should "not update date or time on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+      end
+      #=============================
     end
 
     context "with :tt_edit_time_logs permission only" do
@@ -203,13 +283,85 @@ class TimeTrackersControllerTest < ActionController::TestCase
         end
       end
 
-      should "update own TimeTrackers completely" do
-        updating_own_time_trackers_completely
+      #=============================
+      # should "update own TimeTrackers completely"
+      should "update comments on own trackers" do
+        put :update, {:time_tracker => {:comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("new comment", tt.comments, "updated TT-comment")
       end
 
-      should "deny updating foreign TimeTrackers completely" do
-        deny_updating_foreign_time_trackers_completely
+      should "update round on own trackers" do
+        put :update, {:time_tracker => {:round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(true, tt.round, "updated TT-round")
       end
+
+      should "update issue_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(2, tt.issue_id, "updated TT-issue_id")
+      end
+
+      should "update project_id and issue_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => nil, :project_id => nil}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(nil, tt.issue_id, "nullified issue_id")
+        assert_equal(nil, tt.project_id, "updated TT-project_id")
+      end
+
+      should "update date and time on own trackers" do
+        put :update, {:time_tracker => {:start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("10:23:42", tt.started_on.localtime.to_time.strftime("%H:%M:%S"), "updated TT-start_time")
+        assert_equal("2012-10-23", tt.started_on.to_date.to_s(:db), "updated TT-date")
+      end
+      #=============================
+
+      #=============================
+      # should "deny updating foreign TimeTrackers completely"
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
+      should "not update round on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(false, tt.round, "not updated foreign TT-round")
+      end
+
+      should "not update issue_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not updated foreign TT-issue_id")
+      end
+
+      should "not update issue_id or project_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => nil, :project_id => nil}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not nullified foreign issue_id")
+        assert_equal(1, tt.project_id, "not updated foreign TT-project_id")
+      end
+
+      should "not update date or time on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+      end
+      #=============================
     end
 
     context "with :tt_view_bookings permission only" do
@@ -261,13 +413,87 @@ class TimeTrackersControllerTest < ActionController::TestCase
         end
       end
 
-      should "update everything but time and date on own TimeTrackers" do
-        update_everything_but_time_on_own_trackers
+      # ============================
+      #should "update everything but time and date on own TimeTrackers"
+      should "update comments on own trackers" do
+        put :update, {:time_tracker => {:comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("new comment", tt.comments, "updated TT-comment")
       end
 
-      should "deny updating foreign TimeTrackers completely" do
-        deny_updating_foreign_time_trackers_completely
+      should "update round on own trackers" do
+        put :update, {:time_tracker => {:round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(true, tt.round, "updated TT-round")
       end
+
+      should "update issue_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(2, tt.issue_id, "updated TT-issue_id")
+      end
+
+      should "update issue_id and project_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => nil, :project_id => nil}}
+        assert_response :success
+        #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(nil, tt.issue_id, "nullified issue_id")
+        assert_equal(nil, tt.project_id, "updated TT-project_id")
+      end
+
+      should "not update date or time on own trackers" do
+        put :update, {:time_tracker => {:start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated TT-start_time illegally")
+        assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
+      end
+      # ============================
+
+      #=============================
+      # should "deny updating foreign TimeTrackers completely"
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
+      should "not update round on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(false, tt.round, "not updated foreign TT-round")
+      end
+
+      should "not update issue_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not updated foreign TT-issue_id")
+      end
+
+      should "not update issue_id or project_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => nil, :project_id => nil}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not nullified foreign issue_id")
+        assert_equal(1, tt.project_id, "not updated foreign TT-project_id")
+      end
+
+      should "not update date or time on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+      end
+      #=============================
     end
 
     context "with :tt_edit_own_bookings permission only" do
@@ -302,13 +528,87 @@ class TimeTrackersControllerTest < ActionController::TestCase
         end
       end
 
-      should "update everything but time and date on own TimeTrackers" do
-        update_everything_but_time_on_own_trackers
+      # ============================
+      #should "update everything but time and date on own TimeTrackers"
+      should "update comments on own trackers" do
+        put :update, {:time_tracker => {:comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("new comment", tt.comments, "updated TT-comment")
       end
 
-      should "deny updating foreign TimeTrackers completely" do
-        deny_updating_foreign_time_trackers_completely
+      should "update round on own trackers" do
+        put :update, {:time_tracker => {:round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(true, tt.round, "updated TT-round")
       end
+
+      should "update issue_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(2, tt.issue_id, "updated TT-issue_id")
+      end
+
+      should "update issue_id and project_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => nil, :project_id => nil}}
+        assert_response :success
+        #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(nil, tt.issue_id, "nullified issue_id")
+        assert_equal(nil, tt.project_id, "updated TT-project_id")
+      end
+
+      should "not update date or time on own trackers" do
+        put :update, {:time_tracker => {:start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated TT-start_time illegally")
+        assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
+      end
+      # ============================
+
+      #=============================
+      # should "deny updating foreign TimeTrackers completely"
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
+      should "not update round on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(false, tt.round, "not updated foreign TT-round")
+      end
+
+      should "not update issue_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not updated foreign TT-issue_id")
+      end
+
+      should "not update issue_id or project_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => nil, :project_id => nil}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not nullified foreign issue_id")
+        assert_equal(1, tt.project_id, "not updated foreign TT-project_id")
+      end
+
+      should "not update date or time on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+      end
+      #=============================
     end
 
     context "with :tt_edit_bookings permission only" do
@@ -343,105 +643,87 @@ class TimeTrackersControllerTest < ActionController::TestCase
         end
       end
 
-      should "update everything but time and date on own TimeTrackers" do
-        update_everything_but_time_on_own_trackers
+      # ============================
+      #should "update everything but time and date on own TimeTrackers"
+      should "update comments on own trackers" do
+        put :update, {:time_tracker => {:comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("new comment", tt.comments, "updated TT-comment")
       end
 
-      should "deny updating foreign TimeTrackers completely" do
-        deny_updating_foreign_time_trackers_completely
+      should "update round on own trackers" do
+        put :update, {:time_tracker => {:round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(true, tt.round, "updated TT-round")
       end
+
+      should "update issue_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(2, tt.issue_id, "updated TT-issue_id")
+      end
+
+      should "update issue_id and project_id on own trackers" do
+        put :update, {:time_tracker => {:issue_id => nil, :project_id => nil}}
+        assert_response :success
+        #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal(nil, tt.issue_id, "nullified issue_id")
+        assert_equal(nil, tt.project_id, "updated TT-project_id")
+      end
+
+      should "not update date or time on own trackers" do
+        put :update, {:time_tracker => {:start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
+        tt = TimeTracker.where(:id => 1).first
+        assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated TT-start_time illegally")
+        assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
+      end
+      # ============================
+
+      #=============================
+      # should "deny updating foreign TimeTrackers completely"
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
+      should "not update round on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :round => true}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(false, tt.round, "not updated foreign TT-round")
+      end
+
+      should "not update issue_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => 2}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not updated foreign TT-issue_id")
+      end
+
+      should "not update issue_id or project_id on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :issue_id => nil, :project_id => nil}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal(1, tt.issue_id, "not nullified foreign issue_id")
+        assert_equal(1, tt.project_id, "not updated foreign TT-project_id")
+      end
+
+      should "not update date or time on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:42", :date => "2012-10-23"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+      end
+      #=============================
     end
-  end
-
-  # helper methods
-  protected
-
-  def update_everything_but_time_on_own_trackers
-    put :update, {:time_tracker => {:comments => "new comment"}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal("new comment", tt.comments, "updated TT-comment")
-
-    put :update, {:time_tracker => {:round => true}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal(true, tt.round, "updated TT-round")
-
-    put :update, {:time_tracker => {:issue_id => 2}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal(2, tt.issue_id, "updated TT-issue_id")
-
-    put :update, {:time_tracker => {:issue_id => nil, :project_id => nil}}
-    assert_response :success
-    #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal(nil, tt.issue_id, "nullified issue_id")
-    assert_equal(nil, tt.project_id, "updated TT-project_id")
-
-    put :update, {:time_tracker => {:start_time => "10:23:42", :date => "2012-10-23"}}
-    assert_response :success
-    #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated TT-start_time illegally")
-    assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
-  end
-
-  def updating_own_time_trackers_completely
-    put :update, {:time_tracker => {:comments => "new comment"}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal("new comment", tt.comments, "updated TT-comment")
-
-    put :update, {:time_tracker => {:round => true}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal(true, tt.round, "updated TT-round")
-
-    put :update, {:time_tracker => {:issue_id => 2}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal(2, tt.issue_id, "updated TT-issue_id")
-
-    put :update, {:time_tracker => {:issue_id => nil, :project_id => nil}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal(nil, tt.issue_id, "nullified issue_id")
-    assert_equal(nil, tt.project_id, "updated TT-project_id")
-
-    put :update, {:time_tracker => {:start_time => "10:23:42", :date => "2012-10-23"}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 1).first
-    assert_equal("10:23:42", tt.started_on.localtime.to_time.strftime("%H:%M:%S"), "updated TT-start_time")
-    assert_equal("2012-10-23", tt.started_on.to_date.to_s(:db), "updated TT-date")
-  end
-
-  def deny_updating_foreign_time_trackers_completely
-    put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 2).first
-    assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
-
-    put :update, {:time_tracker => {:id => 2, :round => true}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 2).first
-    assert_equal(false, tt.round, "not updated foreign TT-round")
-
-    put :update, {:time_tracker => {:id => 2, :issue_id => 2}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 2).first
-    assert_equal(1, tt.issue_id, "not updated foreign TT-issue_id")
-
-    put :update, {:time_tracker => {:id => 2, :issue_id => nil, :project_id => nil}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 2).first
-    assert_equal(1, tt.issue_id, "not nullified foreign issue_id")
-    assert_equal(1, tt.project_id, "not updated foreign TT-project_id")
-
-    put :update, {:time_tracker => {:id => 2, :start_time => "10:23:42", :date => "2012-10-23"}}
-    assert_response :success
-    tt = TimeTracker.where(:id => 2).first
-    assert_equal("11:47:03", tt.started_on.to_time.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
-    assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
   end
 end
