@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '../../test_helper'
-ActiveSupport::TestCase.fixture_path=File.dirname(__FILE__) + '/../fixtures/'
 
 class TimeTrackerTest < ActiveSupport::TestCase
   fixtures :time_trackers
