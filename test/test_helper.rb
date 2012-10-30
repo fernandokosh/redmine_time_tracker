@@ -5,4 +5,3 @@ ActiveSupport::TestCase.fixture_path=File.dirname(__FILE__) + '/fixtures/'
 # next two lines are necessary to get Unit-Tests handled by RubyMine
 require "minitest/reporters"
 MiniTest::Reporters.use!
-Time.zone = "UTC"
