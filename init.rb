@@ -39,14 +39,14 @@ Redmine::Plugin.register :redmine_time_tracker do
   Redmine::AccessControl.map do |map|
     map.project_module :redmine_timetracker_plugin do
       # start/stop trackers, view own timeLogs, partially edit own timeLogs (issue, comments)
-      map.permission :tt_log_time, {:time_logs => [:actions, :get_list_entry, :show_edit, :update],
+      map.permission :tt_log_time, {:time_logs => [:actions, :get_list_entry, :show_edit],
                                     :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
                                     :tt_info => [:index],
                                     :tt_overview => [:hide_all_my_logs, :index, :show_all_my_logs],
                                     :time_trackers => [:start, :stop, :update]},
                      :require => :loggedin
       # all from :tt_log_time + completely edit own timeLogs
-      map.permission :tt_edit_own_time_logs, {:time_logs => [:actions, :delete, :get_list_entry, :show_edit, :update],
+      map.permission :tt_edit_own_time_logs, {:time_logs => [:actions, :delete, :get_list_entry, :show_edit],
                                               :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
                                               :tt_logs_list => [:index],
                                               :tt_info => [:index],
@@ -54,7 +54,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                                               :time_trackers => [:delete, :start, :stop, :update]},
                      :require => :loggedin
       # all from :tt_edit_own_time_logs + completely edit foreign timeLogs
-      map.permission :tt_edit_time_logs, {:time_logs => [:actions, :delete, :get_list_entry, :show_edit, :update],
+      map.permission :tt_edit_time_logs, {:time_logs => [:actions, :delete, :get_list_entry, :show_edit],
                                           :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
                                           :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
                                           :tt_logs_list => [:index],
@@ -70,7 +70,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                      :require => :loggedin
       # all from :tt_log_time + book time, view own timeBookings, partially edit own timeBookings (issue, comments, project)
       map.permission :tt_book_time, {:time_bookings => [:actions, :get_list_entry, :show_edit, :update],
-                                     :time_logs => [:actions, :add_booking, :get_list_entry, :show_booking],
+                                     :time_logs => [:actions, :get_list_entry, :show_booking, :show_edit],
                                      :tt_bookings_list => [:index],
                                      :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
                                      :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
@@ -82,7 +82,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                      :require => :loggedin
       # all from :tt_book_time + completely edit own timBookings
       map.permission :tt_edit_own_bookings, {:time_bookings => [:actions, :delete, :get_list_entry, :show_edit, :update],
-                                             :time_logs => [:actions, :add_booking, :get_list_entry, :show_booking],
+                                             :time_logs => [:actions, :get_list_entry, :show_booking, :show_edit],
                                              :tt_bookings_list => [:index],
                                              :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
                                              :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
@@ -94,7 +94,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                      :require => :loggedin
       # all from :tt_edit_own_bookings + completely edit foreign timeBookings
       map.permission :tt_edit_bookings, {:time_bookings => [:actions, :delete, :get_list_entry, :show_edit, :update],
-                                         :time_logs => [:actions, :add_booking, :get_list_entry, :show_booking],
+                                         :time_logs => [:actions, :get_list_entry, :show_booking, :show_edit],
                                          :tt_bookings_list => [:index],
                                          :tt_completer => [:get_issue, :get_issue_id, :get_issue_subject],
                                          :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],

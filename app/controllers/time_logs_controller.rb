@@ -27,29 +27,6 @@ class TimeLogsController < ApplicationController
     redirect_to :controller => URI(request.referer).path, :tl_labids => last_added_booking_ids
   end
 
-  def add_booking(tl)
-    time_log = TimeLog.where(:id => tl[:id]).first
-    issue = issue_from_id(tl[:issue_id])
-    last_added_booking_id = time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
-                                                 :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id])
-    flash[:notice] = l(:success_add_booking)
-    last_added_booking_id
-  rescue StandardError => e
-    flash[:error] = e.message
-  end
-
-  def update(tl)
-    time_log = TimeLog.where(:id => tl[:id]).first
-    start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
-    hours = time_string2hour(tl[:spent_time])
-    stop = start + hours.hours
-
-    time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
-    flash[:notice] = l(:tt_update_log_success)
-  rescue StandardError => e
-    flash[:error] = e.message
-  end
-
   def delete
     if help.permission_checker([:tt_edit_own_time_logs, :tt_edit_time_logs], {}, true)
       time_logs = TimeLog.where(:id => params[:time_log_ids]).all
@@ -99,5 +76,30 @@ class TimeLogsController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  private
+
+  def add_booking(tl)
+    time_log = TimeLog.where(:id => tl[:id]).first
+    issue = issue_from_id(tl[:issue_id])
+    last_added_booking_id = time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
+                                                 :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id])
+    flash[:notice] = l(:success_add_booking)
+    last_added_booking_id
+  rescue StandardError => e
+    flash[:error] = e.message
+  end
+
+  def update(tl)
+    time_log = TimeLog.where(:id => tl[:id]).first
+    start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
+    hours = time_string2hour(tl[:spent_time])
+    stop = start + hours.hours
+
+    time_log.update_attributes!(:started_on => start, :stopped_at => stop, :comments => tl[:comments])
+    flash[:notice] = l(:tt_update_log_success)
+  rescue StandardError => e
+    flash[:error] = e.message
   end
 end

@@ -23,9 +23,15 @@ class TimeLog < ActiveRecord::Base
     if self.changed? && !User.current.allowed_to_globally?(:tt_edit_time_logs, {})
       # changing the comments only could be allowed
       if self.changed == ['comments']
-        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless permission_level > 0
+        unless permission_level > 0
+          raise StandardError, l(:tt_error_not_allowed_to_change_logs) if self.user.id == User.current.id
+          raise StandardError, l(:tt_error_not_allowed_to_change_foreign_logs)
+        end
       elsif (self.changed - ['comments', 'issue_id', 'project_id']).empty?
-        raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless permission_level > 1
+        unless permission_level > 1
+          raise StandardError, l(:tt_error_not_allowed_to_change_logs) if self.user.id == User.current.id
+          raise StandardError, l(:tt_error_not_allowed_to_change_foreign_logs)
+        end
         # want to change more than comments only? => needs more permission!
       else
         unless permission_level > 2

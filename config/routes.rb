@@ -5,9 +5,7 @@ match '/time_bookings/delete', :to => 'time_bookings#delete', :via => [:get, :po
 match '/time_bookings/get_list_entry', :to => 'time_bookings#get_list_entry', :via => [:get, :post]
 
 match '/time_logs/actions', :to => 'time_logs#actions', :via => [:get, :post, :put]
-match '/time_logs/update', :to => 'time_logs#update', :via => [:put]
 match '/time_logs/delete', :to => 'time_logs#delete', :via => [:get, :post]
-match '/time_logs/add_booking', :to => 'time_logs#add_booking', :via => [:get, :post, :put]
 match '/time_logs/show_booking', :to => 'time_logs#show_booking', :via => [:get, :post]
 match '/time_logs/show_edit', :to => 'time_logs#show_edit', :via => [:get, :post]
 match '/time_logs/get_list_entry', :to => 'time_logs#get_list_entry', :via => [:get, :post]
