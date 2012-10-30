@@ -23,29 +23,6 @@ class TimeBookingsController < ApplicationController
     end
   end
 
-  def update(tb)
-    time_booking = TimeBooking.where(:id => tb[:id]).first
-    tl = time_booking.time_log
-    issue = Issue.where(:id => tb[:issue_id]).first
-    issue.nil? ? project = Project.where(:id => tb[:project_id]).first : project = issue.project
-
-    start = Time.parse(tb[:tt_booking_date] + " " + tb[:start_time])
-    hours = time_string2hour(tb[:spent_time])
-    stop = start + hours.hours
-
-    time_booking.update_time(start, stop)
-
-    time_booking.update_attributes!(:project => project)
-    # have to set issue separately due to mass-assignment-rules
-    time_booking.update_attribute(:issue, issue)
-    time_booking.update_attribute(:comments, tb[:comments])
-
-    tl.check_bookable
-    flash[:notice] = l(:tt_update_booking_success)
-  rescue StandardError => e
-    flash[:error] = e.message
-  end
-
   def delete
     if help.permission_checker([:tt_edit_own_bookings, :tt_edit_bookings], {}, true)
       time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
@@ -79,4 +56,27 @@ class TimeBookingsController < ApplicationController
     end
   end
 
+  private
+
+  def update(tb)
+    time_booking = TimeBooking.where(:id => tb[:id]).first
+    tl = time_booking.time_log
+    issue = Issue.where(:id => tb[:issue_id]).first
+    issue.nil? ? project = Project.where(:id => tb[:project_id]).first : project = issue.project
+
+    start = Time.parse(tb[:tt_booking_date] + " " + tb[:start_time])
+    hours = time_string2hour(tb[:spent_time])
+    stop = start + hours.hours
+    time_booking.update_time(start, stop)
+
+    time_booking.update_attributes!(:project => project)
+    # have to set issue separately due to mass-assignment-rules
+    # TODO check if there is a security problem due to mass-assignment here!
+    time_booking.update_attributes!({:comments => tb[:comments], :issue => issue}, {:without_protection => true})
+
+    tl.check_bookable
+    flash[:notice] = l(:tt_update_booking_success)
+  rescue StandardError => e
+    flash[:error] = e.message
+  end
 end

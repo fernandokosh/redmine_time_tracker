@@ -27,8 +27,11 @@ class TimeBooking < ActiveRecord::Base
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
     # have to change for special permissions in detail before saving the changes or undo them
     if self.changed?
-      if (self.changed - ['comments', 'issue_id', 'project_id', 'time_entry_id']).empty?
-        raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless permission_level > 0
+      if (self.changed - ['comments', 'issue', 'project_id', 'time_entry_id']).empty?
+        unless permission_level > 0
+          raise StandardError, l(:tt_error_not_allowed_to_change_booking) if self.user == User.current
+          raise StandardError, l(:tt_error_not_allowed_to_change_foreign_booking)
+        end
         # want to change more than comments only? => needs more permission!
       else
         unless permission_level > 1
@@ -98,8 +101,11 @@ class TimeBooking < ActiveRecord::Base
   def issue=(issue)
     return if issue == self.issue # no validation or permission checks necessary if there are no changes!
 
-    self.time_entry.update_attribute(:issue, issue)
-                                  # check if project has to be updated also!
+    # workaround to get dirty-flag working even for associated fields!
+    @changed_attributes['issue'] = self.issue unless issue == self.issue
+
+    self.time_entry.update_attributes! :issue => issue
+    # check if project has to be updated also!
     unless issue.nil?
       if issue.project != self.project
         self.project = issue.project
@@ -127,6 +133,8 @@ class TimeBooking < ActiveRecord::Base
     return if project == self.project # no validation or permission checks necessary if there are no changes!
     raise StandardError, l(:tt_error_not_allowed_to_book_without_project) if project.nil?
 
+    # workaround to get dirty-flag working even for associated fields!
+    @changed_attributes['project_id'] = self.project.id unless project.id == self.project_id
     write_attribute(:project_id, project.id)
   end
 
@@ -149,6 +157,8 @@ class TimeBooking < ActiveRecord::Base
   end
 
   def comments=(comments)
+    # workaround to get dirty-flag working even for associated fields!
+    @changed_attributes['comments'] = self.comments unless comments == self.comments
     self.time_entry.update_attributes! :comments => comments
   end
 

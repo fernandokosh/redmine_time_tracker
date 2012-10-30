@@ -1,6 +1,5 @@
 match '/time_bookings/actions', :to => 'time_bookings#actions', :via => [:get, :post, :put]
 match '/time_bookings/show_edit', :to => 'time_bookings#show_edit', :via => [:get, :post]
-match '/time_bookings/update', :to => 'time_bookings#update', :via => [:put]
 match '/time_bookings/delete', :to => 'time_bookings#delete', :via => [:get, :post]
 match '/time_bookings/get_list_entry', :to => 'time_bookings#get_list_entry', :via => [:get, :post]
 
