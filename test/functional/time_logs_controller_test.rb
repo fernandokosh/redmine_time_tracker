@@ -262,6 +262,28 @@ class TimeLogsControllerTest < ActionController::TestCase
         Role.find(2).add_permission! :tt_book_time
       end
 
+      should "deny access" do
+        # actions leads to add_booking and/or update..
+        get :actions
+        assert_response 403, "on start TL"
+        get :delete
+        assert_response 403, "on delete TL"
+        get :show_edit
+        assert_response 403, "on show_edit"
+        get :get_list_entry
+        assert_response 403, "on get_list_entry"
+        @request.accept = "text/javascript"
+        get :show_booking
+        assert_response 200, "on show_booking"
+      end
+    end
+
+    context "with :tt_book_time and :tt_log_time permission" do
+      setup do
+        Role.find(2).add_permission! :tt_log_time
+        Role.find(2).add_permission! :tt_book_time
+      end
+
       should "allow access" do
         get :actions
         assert_response 302, "on TL actions"
@@ -327,6 +349,28 @@ class TimeLogsControllerTest < ActionController::TestCase
         Role.find(2).add_permission! :tt_edit_own_bookings
       end
 
+      should "deny access" do
+        # actions leads to add_booking and/or update..
+        get :actions
+        assert_response 403, "on start TL"
+        get :delete
+        assert_response 403, "on delete TL"
+        get :show_edit
+        assert_response 403, "on show_edit"
+        get :get_list_entry
+        assert_response 403, "on get_list_entry"
+        @request.accept = "text/javascript"
+        get :show_booking
+        assert_response 200, "on show_booking"
+      end
+    end
+
+    context "with :tt_edit_own_bookings and :tt_log_time permission" do
+      setup do
+        Role.find(2).add_permission! :tt_log_time
+        Role.find(2).add_permission! :tt_edit_own_bookings
+      end
+
       should "allow access" do
         get :actions
         assert_response 302, "on TL actions"
@@ -389,6 +433,28 @@ class TimeLogsControllerTest < ActionController::TestCase
 
     context "with :tt_edit_bookings permission only" do
       setup do
+        Role.find(2).add_permission! :tt_edit_bookings
+      end
+
+      should "deny access" do
+        # actions leads to add_booking and/or update..
+        get :actions
+        assert_response 403, "on start TL"
+        get :delete
+        assert_response 403, "on delete TL"
+        get :show_edit
+        assert_response 403, "on show_edit"
+        get :get_list_entry
+        assert_response 403, "on get_list_entry"
+        @request.accept = "text/javascript"
+        get :show_booking
+        assert_response 200, "on show_booking"
+      end
+    end
+
+    context "with :tt_edit_bookings and :tt_log_time permission" do
+      setup do
+        Role.find(2).add_permission! :tt_log_time
         Role.find(2).add_permission! :tt_edit_bookings
       end
 

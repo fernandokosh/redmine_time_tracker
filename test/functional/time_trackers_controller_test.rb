@@ -386,6 +386,24 @@ class TimeTrackersControllerTest < ActionController::TestCase
         Role.find(2).add_permission! :tt_book_time
       end
 
+      should "deny access" do
+        get :start
+        assert_response 403, "on start TT"
+        get :update
+        assert_response 403, "on update TT"
+        get :stop
+        assert_response 403, "on stop TT"
+        get :delete
+        assert_response 403, "on delete TT"
+      end
+    end
+
+    context "with :tt_book_time and :tt_log_time permission" do
+      setup do
+        Role.find(2).add_permission! :tt_log_time
+        Role.find(2).add_permission! :tt_book_time
+      end
+
       should "allow access" do
         get :start
         assert_response 302, "on start TT"
@@ -501,6 +519,24 @@ class TimeTrackersControllerTest < ActionController::TestCase
         Role.find(2).add_permission! :tt_edit_own_bookings
       end
 
+      should "deny access" do
+        get :start
+        assert_response 403, "on start TT"
+        get :update
+        assert_response 403, "on update TT"
+        get :stop
+        assert_response 403, "on stop TT"
+        get :delete
+        assert_response 403, "on delete TT"
+      end
+    end
+
+    context "with :tt_edit_own_bookings and :tt_log_time permission" do
+      setup do
+        Role.find(2).add_permission! :tt_log_time
+        Role.find(2).add_permission! :tt_edit_own_bookings
+      end
+
       should "allow access" do
         get :start
         assert_response 302, "on start TT"
@@ -613,6 +649,24 @@ class TimeTrackersControllerTest < ActionController::TestCase
 
     context "with :tt_edit_bookings permission only" do
       setup do
+        Role.find(2).add_permission! :tt_edit_bookings
+      end
+
+      should "deny access" do
+        get :start
+        assert_response 403, "on start TT"
+        get :update
+        assert_response 403, "on update TT"
+        get :stop
+        assert_response 403, "on stop TT"
+        get :delete
+        assert_response 403, "on delete TT"
+      end
+    end
+
+    context "with :tt_edit_bookings and :tt_log_time permission" do
+      setup do
+        Role.find(2).add_permission! :tt_log_time
         Role.find(2).add_permission! :tt_edit_bookings
       end
 
