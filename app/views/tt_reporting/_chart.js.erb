@@ -26,8 +26,10 @@ $(document).ready(function () {
                         <% if print %>
                         fontSize:'10px',
                         <% end %>
+                        autoscale:true,
                         min:0,
-                        pad:0.75,
+                        pad:1,
+                        tickInterval: 1,
                         tickOptions:{formatString:'%d<%= l(:tt_hours_sign) %>'}
                     }
                 },
