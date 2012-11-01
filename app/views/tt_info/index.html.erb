@@ -7,7 +7,7 @@
   <% unless @time_trackers.nil? %>
       <div id="all-time-trackers-list">
         <% if @time_trackers.nil? || @time_trackers.is_a?(Array) && @time_trackers.empty? %>
-            <p class="msg"><%= l(:no_time_tracker) %></p>
+            <p class="nodata"><%= l(:no_time_tracker) %></p>
         <% else %>
             <div class="autoscroll">
               <table class="list">
