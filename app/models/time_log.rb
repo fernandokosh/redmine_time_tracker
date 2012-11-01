@@ -16,6 +16,16 @@ class TimeLog < ActiveRecord::Base
 
   scope :bookable, where(:bookable => true)
 
+  scope :visible, lambda {
+    if help.permission_checker([:tt_log_time, :tt_edit_own_time_logs], {}, true)
+      where(:user_id => User.current.id)
+    elsif help.permission_checker([:tt_edit_time_logs], {}, true)
+      {:conditions => "1 = 1"}
+    else
+      {:conditions => "1 = 0"}
+    end
+  }
+
   # we have to check user-permissions. i some cass we have to forbid some or all of his actions
   before_update do
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we

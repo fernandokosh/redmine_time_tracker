@@ -1,6 +1,8 @@
 <% include_calendar_headers_tags %>
 
+<% if help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_edit_time_logs], {}, true) %>
 <%= render 'time_trackers/time_tracker_control' %>
+<% end %>
 
 <%= render 'tt_overview/logs_ov' %>
 <%= render 'tt_overview/bookings_ov' %>
