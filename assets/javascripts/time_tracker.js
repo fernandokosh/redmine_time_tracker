@@ -1,13 +1,59 @@
 function hideMultiFormButtons(button_class) {
-    var last = $('input.'+button_class).parent().parent().last().index();
+    var last = $('input.' + button_class).parent().parent().last().index();
 
-    $('input.'+button_class).each(function (a,b) {
-        if ( last != $(this).parent().parent().index()) {
+    $('input.' + button_class).each(function (a, b) {
+        if (last != $(this).parent().parent().index()) {
             $(this).hide();
-        }else {
+        } else {
             $(this).show();
         }
     });
+}
+
+// ================== validation helpers ============================
+
+function input_validator(name) {
+    var start_field = $("#" + name + "_start_time");
+    var stop_field = $("#" + name + "_stop_time");
+    var spent_field = $("#" + name + "_spent_time");
+
+    var max_time_field = $("#" + name + "_max_time");
+    var min_time_field = $("#" + name + "_min_time");
+    var max_spent_time_field = $("#" + name + "_max_spent_time");
+
+    var start = timeString2sec(start_field.val());
+    var stop = timeString2sec(stop_field.val());
+    var spent_time = timeString2sec(spent_field.val());
+    var max_time = timeString2sec(max_time_field.val());
+    var min_time = timeString2sec(min_time_field.val());
+    var max_spent_time = timeString2sec(max_spent_time_field.val());
+
+    if (spent_time > max_spent_time) {
+        spent_field.addClass('invalid');
+    } else {
+        spent_field.removeClass('invalid');
+    }
+
+    if (start < min_time || start > max_time) {
+        start_field.addClass('invalid');
+    } else {
+        start_field.removeClass('invalid');
+    }
+
+    if (stop < min_time || stop > max_time) {
+        stop_field.addClass('invalid');
+    } else {
+        stop_field.removeClass('invalid');
+    }
+
+    var invalid = false;
+    start_field.parents('form:first').find('input').each(function () {
+        if ($(this).hasClass('invalid')) {
+            invalid = true;
+        }
+    });
+
+    start_field.parents('form:first').find(':submit').attr('disabled', invalid);
 }
 
 // ================== booking_form helpers ============================
@@ -26,6 +72,7 @@ function updateBookingHours(name) {
     } else {
         spent_field.val(calcBookingHelper(start, stop, 1));
     }
+    input_validator(name);
 }
 
 function updateBookingStop(name) {
@@ -34,6 +81,7 @@ function updateBookingStop(name) {
     var spent_field = $("#" + name + "_spent_time");
 
     stop_field.val(calcBookingHelper(start_field.val(), spent_field.val(), 2));
+    input_validator(name);
 }
 
 function updateBookingProject(name) {
@@ -63,6 +111,9 @@ function updateBookingProject(name) {
             error:function () {
                 project_id_select.attr('disabled', false);
                 issue_id_field.addClass('invalid');
+            },
+            complete:function () {
+                input_validator(name);
             }
         });
     }

@@ -1,5 +1,4 @@
 // ================== time_tracker_controller helpers ============================
-// TODO set "checked"-flag when all functionality is tested using jquery
 function updateTTControllerForm(obj) {
     if (obj.nodeName == "FORM") {
         var form = obj;

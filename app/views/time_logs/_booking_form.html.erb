@@ -28,20 +28,23 @@
             <%= f.hidden_field :project_id %>
           </div>
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
+            <div class="input_hint"><%= l(:time_tracker_label_start_time) + " (min: #{time_log.get_formatted_start_time})" %></div>
             <div class="task_form_input">
+              <%= hidden_field_tag "time_log_add_booking_#{time_log.id}_min_time", time_log.get_formatted_start_time %>
               <%= f.text_field :start_time, :value => time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
+            <div class="input_hint"><%= l(:time_tracker_label_stop_time) + " (max: #{time_log.get_formatted_stop_time})" %></div>
             <div class="task_form_input">
+              <%= hidden_field_tag "time_log_add_booking_#{time_log.id}_max_time", time_log.get_formatted_stop_time %>
               <%= f.text_field :stop_time, :value => (time_log.started_on + time_log.bookable_hours.hours).localtime.strftime("%H:%M:%S"), :size => "10", :placeholder => "stop", :onchange => "updateBookingHours('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_time_spent) %></div>
+            <div class="input_hint"><%= l(:time_tracker_label_time_spent) + " (max: #{time_log.get_formatted_bookable_hours})" %></div>
             <div class="task_form_input">
+              <%= hidden_field_tag "time_log_add_booking_#{time_log.id}_max_spent_time", time_log.get_formatted_bookable_hours %>
               <%= f.text_field :spent_time, :value => time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>

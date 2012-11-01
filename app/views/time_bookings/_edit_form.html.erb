@@ -30,15 +30,17 @@
           </div>
 
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
+            <div class="input_hint"><%= l(:time_tracker_label_start_time) + " (min: #{time_booking.time_log.get_formatted_start_time})" %></div>
             <div class="task_form_input">
+              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_min_time", time_booking.time_log.get_formatted_start_time %>
               <%= f.text_field :start_time, :value => time_booking.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours('time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 2 %>
             </div>
           </div>
 
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
+            <div class="input_hint"><%= l(:time_tracker_label_stop_time) + " (max: #{time_booking.time_log.get_formatted_stop_time})" %></div>
             <div class="task_form_input">
+              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_max_time", time_booking.time_log.get_formatted_stop_time %>
               <%= f.text_field :stop_time, :value => time_booking.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours('time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 2 %>
             </div>
           </div>
@@ -54,8 +56,9 @@
           </div>
 
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_time_spent) %></div>
+            <div class="input_hint"><%= l(:time_tracker_label_time_spent) + " (max: #{help.time_dist2string(((time_booking.time_log.bookable_hours + time_booking.hours_spent) * 3600).to_i)})" %></div>
             <div class="task_form_input">
+              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_max_spent_time", help.time_dist2string(((time_booking.time_log.bookable_hours + time_booking.hours_spent) * 3600).to_i) %>
               <%= f.text_field :spent_time, :value => time_booking.get_formatted_time, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 2 %>
             </div>
           </div>
