@@ -1,7 +1,7 @@
 class TimeBooking < ActiveRecord::Base
   unloadable
 
-  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :project, :project_id
+  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :project
   belongs_to :project
   belongs_to :time_log
   belongs_to :time_entry
@@ -27,7 +27,7 @@ class TimeBooking < ActiveRecord::Base
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
     # have to change for special permissions in detail before saving the changes or undo them
     if self.changed?
-      if (self.changed - ['comments', 'issue', 'project_id', 'time_entry_id']).empty?
+      if (self.changed - ['comments', 'issue', 'project', 'time_entry_id']).empty?
         unless permission_level > 0
           raise StandardError, l(:tt_error_not_allowed_to_change_booking) if self.user == User.current
           raise StandardError, l(:tt_error_not_allowed_to_change_foreign_booking)
@@ -40,9 +40,9 @@ class TimeBooking < ActiveRecord::Base
         end
       end
       # special checks for project-changes
-      if self.changed.include?('project_id')
-        old_project = Project.where(:id => self.project_id_was).first
-        new_project = Project.where(:id => self.project_id).first
+      if self.changed.include?('project')
+        old_project = self.project_was
+        new_project = self.project
         # user tries to switch the time from one project to another, so we have to check his permissions on both projects before starting the update
         raise StandardError, l(:tt_error_not_allowed_to_change_booking) unless help.permission_checker([:tt_book_time, :tt_edit_bookings], old_project) && help.permission_checker([:tt_book_time, :tt_edit_bookings], new_project) ||
             self.user == User.current && User.current.allowed_to?(:tt_edit_own_bookings, old_project) && User.current.allowed_to?(:tt_edit_own_bookings, new_project)
@@ -134,8 +134,8 @@ class TimeBooking < ActiveRecord::Base
     raise StandardError, l(:tt_error_not_allowed_to_book_without_project) if project.nil?
 
     # workaround to get dirty-flag working even for associated fields!
-    @changed_attributes['project_id'] = self.project.id unless project.id == self.project_id
-    write_attribute(:project_id, project.id)
+    @changed_attributes['project'] = self.project unless project == self.project
+    write_attribute(:project, project)
   end
 
   # this method is necessary to change start and stop at the same time without leaving boundaries
