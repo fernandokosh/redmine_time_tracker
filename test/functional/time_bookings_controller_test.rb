@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '../../test_helper'
 
 class TimeBookingsControllerTest < ActionController::TestCase
   fixtures :projects, :users, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
-           :enumerations, :time_entries, :time_bookings
+           :enumerations, :time_entries, :time_bookings, :time_logs
 
   def setup
     @controller = TimeBookingsController.new
