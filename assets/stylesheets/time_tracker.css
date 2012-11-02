@@ -17,8 +17,9 @@ fieldset#filters td.values input[type="button"] {
 }
 
 .invalid {
-    border-style: solid;
-    border-color: red;
+    border: 2px solid #D00;
+    background-color: #FFE3E3;
+    color: #800;
 }
 
 tr.entry {
