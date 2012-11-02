@@ -34,17 +34,25 @@ function input_validator(name) {
         spent_field.removeClass('invalid');
     }
 
-    if (start < min_time || start > max_time) {
+    // if the stop-time looks smaller than the start-time, we assume a booking over midnight
+    var om = false;
+    if (min_time > max_time) {
+        om = true;
+    }
+
+    // first statement checks for over-midnight booking | second one checks normal boundaries
+    if (om && start < min_time && start > max_time || !om && (start < min_time || start > max_time)) {
         start_field.addClass('invalid');
     } else {
         start_field.removeClass('invalid');
     }
 
-    if (stop < min_time || stop > max_time) {
+    if (om && stop < min_time && stop > max_time || !om && (stop < min_time || stop > max_time)) {
         stop_field.addClass('invalid');
     } else {
         stop_field.removeClass('invalid');
     }
+//    }
 
     var invalid = false;
     start_field.parents('form:first').find('input').each(function () {
