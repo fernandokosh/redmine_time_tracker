@@ -23,7 +23,7 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
             <div class="task_form_input">
-              <%= select_tag "time_log_add_booking_#{time_log.id}_project_id_select", proj_list, :onchange => "$('#time_log_add_booking_#{time_log.id}_project_id').val(this.value)" %>
+              <%= select_tag "time_log_add_booking_#{time_log.id}_project_id_select", proj_list, :onchange => "$('#time_log_add_booking_#{time_log.id}_project_id').val(this.value); input_validator('time_log_add_booking_#{time_log.id}');" %>
             </div>
             <%= f.hidden_field :project_id %>
           </div>

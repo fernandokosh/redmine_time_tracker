@@ -16,6 +16,8 @@ function input_validator(name) {
     var start_field = $("#" + name + "_start_time");
     var stop_field = $("#" + name + "_stop_time");
     var spent_field = $("#" + name + "_spent_time");
+    var proj_id_field = $("#" + name + "_project_id");
+    var proj_select = $("#" + name + "_project_id_select");
 
     var max_time_field = $("#" + name + "_max_time");
     var min_time_field = $("#" + name + "_min_time");
@@ -27,11 +29,20 @@ function input_validator(name) {
     var max_time = timeString2sec(max_time_field.val());
     var min_time = timeString2sec(min_time_field.val());
     var max_spent_time = timeString2sec(max_spent_time_field.val());
+    var proj_id = proj_id_field.val();
 
     if (spent_time > max_spent_time) {
         spent_field.addClass('invalid');
     } else {
         spent_field.removeClass('invalid');
+    }
+
+    if (proj_id == "") {
+        proj_select.addClass('invalid');
+        proj_id_field.addClass('invalid');
+    }else{
+        proj_select.removeClass('invalid');
+        proj_id_field.removeClass('invalid');
     }
 
     var date_field = $("#" + name + "_tt_booking_date"); // exists only in edit-bookings-form
