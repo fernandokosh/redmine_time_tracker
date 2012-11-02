@@ -101,16 +101,18 @@ class TimeBooking < ActiveRecord::Base
   def issue=(issue)
     return if issue == self.issue # no validation or permission checks necessary if there are no changes!
 
-    # workaround to get dirty-flag working even for associated fields!
-    @changed_attributes['issue'] = self.issue unless issue == self.issue
-
-    self.time_entry.update_attributes! :issue => issue
     # check if project has to be updated also!
     unless issue.nil?
       if issue.project != self.project
+        # if the new issue is part of another project we first have to nullify the issue, change the project and than set
+        # the new issue_id otherwise updating the redmine time_entry will fail
+        self.time_entry.update_attributes! :issue => nil
         self.project = issue.project
       end
     end
+    # workaround to get dirty-flag working even for associated fields!
+    @changed_attributes['issue'] = self.issue unless issue == self.issue
+    self.time_entry.update_attributes! :issue => issue #also update TimeEntry
   end
 
   def issue
@@ -142,6 +144,7 @@ class TimeBooking < ActiveRecord::Base
       end
     end
     write_attribute(:project_id, project.id)
+    self.time_entry.update_attributes! :project => project #also update TimeEntry
   end
 
   # this method is necessary to change start and stop at the same time without leaving boundaries
