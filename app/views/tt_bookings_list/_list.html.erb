@@ -30,8 +30,7 @@
                                  when :issue then
                                    entry.send('issue').send('subject') unless entry.send('issue') == l(:time_tracker_label_none)
                                end
-                     end
-                  %>
+                     end %>
                   <% if group != previous_group %>
                       <% reset_cycle %>
                       <tr class="group open">
