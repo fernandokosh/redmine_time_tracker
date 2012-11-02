@@ -60,6 +60,7 @@ en:
   tt_error_could_not_update_times: "Could not update times!"
   tt_success_delete_time_logs: "Successful deleted TimeLog"
   tt_hours_sign: "h"
+  tt_min_sign: "min"
   tt_update_booking_success: "Time booking successfully updated"
   tt_update_log_results_in_negative_time: "Updating time log would result in negative bookable time. Not allowed!"
   tt_update_log_success: "Time log successfully updated"

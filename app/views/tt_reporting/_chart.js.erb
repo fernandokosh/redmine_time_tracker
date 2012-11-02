@@ -40,10 +40,16 @@ $(document).ready(function () {
                 highlighter:{
                     tooltipContentEditor:function (str, seriesIndex, pointIndex, plot) {
                         var point = high_dat[pointIndex];
-                        return point[0] + this.tooltipSeparator + point[1] + "<%= l(:tt_hours_sign) %>";
+                        return point[0] + this.tooltipSeparator + time_dist2string(point[1] * 3600);
                     },
                     show:true,
                     showMarker:false
                 }
             });
 });
+
+function time_dist2string(dist) {
+    var h = Math.floor(dist / 3600);
+    var m = Math.floor((dist - h * 3600) / 60);
+    return h.toString() + "<%= l(:tt_hours_sign) %> " + m.toString() + "<%= l(:tt_min_sign) %>";
+}
