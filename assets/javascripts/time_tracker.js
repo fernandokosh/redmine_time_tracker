@@ -34,6 +34,20 @@ function input_validator(name) {
         spent_field.removeClass('invalid');
     }
 
+    var date_field = $("#" + name + "_tt_booking_date"); // exists only in edit-bookings-form
+    if (date_field.length > 0) {
+        var valid_dates_field = $("#" + name + "_valid_dates"); // exists only in edit-bookings-form
+        var date = date_field.val();
+        var valid_dates = valid_dates_field.val().split(" ");
+
+        date_field.addClass('invalid');
+        $.each(valid_dates, function (key, value) {
+            if (value == date) {
+                date_field.removeClass('invalid');
+            }
+        });
+    }
+
     // if the stop-time looks smaller than the start-time, we assume a booking over midnight
     var om = false;
     if (min_time > max_time) {
