@@ -48,4 +48,10 @@
           <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => time_log.id}, :remote => true %>
       <% end %>
     </td>
+
+    <%= javascript_tag do %>
+        var cols = $("#entry-<%= time_log.id %>").parents('form:first').find('thead > tr > th').length;
+        var myTD = $("#entry-<%= time_log.id %> > td")[1];
+        myTD.setAttribute('colspan', cols - 1);
+    <% end %>
 <% end %>

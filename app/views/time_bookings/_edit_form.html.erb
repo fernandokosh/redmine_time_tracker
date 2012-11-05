@@ -68,4 +68,10 @@
       <% end %>
       <%= javascript_tag render :partial => 'edit_form_autocomplete', :locals => {:time_booking => time_booking} %>
     </td>
+
+    <%= javascript_tag do %>
+        var cols = $("#booking-entry-<%= time_booking.id %>").parents('form:first').find('thead > tr > th').length;
+        var myTD = $("#booking-entry-<%= time_booking.id %> > td")[1];
+        myTD.setAttribute('colspan', cols - 1);
+    <% end %>
 <% end %>
