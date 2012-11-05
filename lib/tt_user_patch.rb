@@ -8,6 +8,8 @@ module UserPatch
     base.class_eval do
       has_many :time_logs
       has_many :time_bookings, :through => :time_logs
+
+      alias_method_chain :remove_references_before_destroy, :time_tracker
     end
   end
 
@@ -15,6 +17,12 @@ module UserPatch
   end
 
   module InstanceMethods
+    def remove_references_before_destroy_with_time_tracker
+      remove_references_before_destroy_without_time_tracker
+
+      substitute = User.anonymous
+      TimeLog.update_all ['user_id = ?', substitute.id], ['user_id = ?', id]
+    end
   end
 end
 

@@ -23,7 +23,7 @@ module QueryPatch
       alias_method_chain :group_by_sort_order, :time_tracker
 
       base.add_available_column(QueryColumn.new(:comments, :caption => :field_tt_comments))
-      base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.to_s", :caption => :field_tt_user))
+      base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
       base.add_available_column(QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeBooking.table_name}.started_on)"))
       base.add_available_column(QueryColumn.new(:tt_log_date, :sortable => "#{TimeLog.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeLog.table_name}.started_on)"))
       base.add_available_column(QueryColumn.new(:get_formatted_start_time, :caption => :field_tt_start))
