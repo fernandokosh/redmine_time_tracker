@@ -20,7 +20,6 @@ module QueryPatch
       alias_method_chain :available_filters, :time_tracker
       alias_method_chain :sortable_columns, :time_tracker
       alias_method_chain :available_columns, :time_tracker
-      alias_method_chain :group_by_sort_order, :time_tracker
 
       base.add_available_column(QueryColumn.new(:comments, :caption => :field_tt_comments))
       base.add_available_column(QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user))
@@ -88,13 +87,6 @@ module QueryPatch
         ops
       else
         Query.operators_by_filter_type
-      end
-    end
-
-    # standard is unable to order groups! but we want to, so we do not define a default ;)
-    def group_by_sort_order_with_time_tracker
-      unless tt_query?
-        group_by_sort_order_without_time_tracker
       end
     end
 
