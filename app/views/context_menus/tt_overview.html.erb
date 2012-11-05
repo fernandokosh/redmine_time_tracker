@@ -13,8 +13,9 @@
   <% end %>
 
   <% unless @time_booking_ids.nil? %>
+      <% tt = TimeTracker.where(:user_id => User.current.id).first %>
       <li>
-        <%= if @time_booking.nil? then
+        <%= if @time_booking.nil? || !tt.nil? then
               context_menu_link l(:time_tracker_label_continue),
                                 {:controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => nil, :comments => nil}},
                                 :remote => false, :disabled => true
