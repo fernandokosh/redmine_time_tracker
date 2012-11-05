@@ -2,8 +2,8 @@
 <% if !time_tracker.nil? %>
     <%# A time tracker exists, display the stop action %>
     <li>
-      <% suffix = time_tracker.issue_id.nil? ? l(:time_tracker_label_timer) : ' #' + time_tracker.issue_id.to_s %>
-      <%= link_to l(:stop_time_tracker).capitalize + suffix,
+      <% suffix = time_tracker.issue_id.nil? ? l(:time_tracker_label_timer) : '#' + time_tracker.issue_id.to_s %>
+      <%= link_to l(:stop_time_tracker).capitalize + ' ' + suffix,
                   {:controller => 'time_trackers', :action => 'stop'},
                   :class => 'icon icon-stop',
                   :onclick => "contextMenuHide();",

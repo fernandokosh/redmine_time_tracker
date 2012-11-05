@@ -127,6 +127,7 @@ function updateBookingProject(name) {
     if (!issue_id || $.trim(issue_id) === "") {
         project_id_select.attr('disabled', false);
         issue_id_field.removeClass('invalid');
+        input_validator(name);
     } else {
         $.ajax({url:'/issues/' + issue_id + '.json',
             type:'GET',
