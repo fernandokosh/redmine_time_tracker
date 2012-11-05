@@ -325,7 +325,10 @@ module QueryPatch
     end
 
     def sql_for_tt_booking_issue_field(field, operator, value)
-      "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+      sql = "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+      unless operator == "="
+        sql << " OR #{Issue.table_name}.id IS NULL"
+      end
     end
 
     def sql_for_tt_user_field(field, operator, value)
