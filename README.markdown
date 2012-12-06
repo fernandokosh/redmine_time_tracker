@@ -2,7 +2,7 @@
 
 **This Plugin is in full development and therefore should NOT be considered stable or complete in any way. Do not expect any support until the anouncement of a stable release**
 
-(current version works on redmine-trunk (Revision 10864) only!)
+**(current version works on redmine-trunk (Revision 10864) only!)**
 
 # Redmine Time Tracker plugin
 
