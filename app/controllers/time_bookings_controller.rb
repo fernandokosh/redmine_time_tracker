@@ -3,6 +3,8 @@ class TimeBookingsController < ApplicationController
 
   before_filter :authorize_global
 
+  helper :queries
+  include QueriesHelper
   include TimeTrackersHelper
 
   def actions

@@ -4,6 +4,8 @@ class TtReportingController < ApplicationController
   menu_item :time_tracker_menu_tab_reporting
   before_filter :authorize_global
 
+  helper :issues
+  include IssuesHelper
   helper :queries
   include QueriesHelper
   helper :sort
