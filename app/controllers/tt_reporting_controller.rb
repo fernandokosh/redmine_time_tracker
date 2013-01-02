@@ -78,13 +78,14 @@ def fetch_query
 end
 
 def fetch_chart_data
+  @chart_data = Array.new
+  @chart_ticks = Array.new
+  @highlighter_data = Array.new
+  
   if @query_bookings.valid? && !(@bookings.empty? || @bookings.nil?)
     # if the user changes the date-order for the table values, we have to reorder it for the chart
     start_date = [@bookings.last.started_on.to_date, @bookings.first.started_on.to_date].min
     stop_date = [@bookings.last.started_on.to_date, @bookings.first.started_on.to_date].max
-    @chart_data = Array.new
-    @chart_ticks = Array.new
-    @highlighter_data = Array.new
 
     (start_date..stop_date).map do |date|
       hours = 0
