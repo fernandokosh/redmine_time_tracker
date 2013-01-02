@@ -1,6 +1,5 @@
-gem "test-unit"
-
 group :test do
+  gem "test-unit"
   if RUBY_PLATFORM =~ /(win32|w32)/
     gem "win32console", '1.3.0'
   end
