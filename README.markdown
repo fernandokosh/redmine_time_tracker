@@ -53,4 +53,6 @@ To track time referring an issue, you can use the context menu (right click in t
 the issue list to start or stop the timer.
 
 ## Version History
+* 0.5.3 fixed routing error
+* 0.5.2 fixed error that resulted in reporting plot not being drawn with Ruby 1.8
 * 0.5.1 fixed minor bugs to run with Redmine 2.2.0
