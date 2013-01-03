@@ -1,7 +1,7 @@
 $(document).ready(function () {
-  var data = <%= chart_data %>;
-  var ticks = [<%= raw chart_ticks.map {|tick| tick.blank? ? "''" : "'#{tick.strftime("%d %b")}'"}.join(',') %>];
-  var high_dat = [<%= raw highlighter_data.map {|dat| "['#{dat[0].strftime("%d %b")}', #{dat[1].round(1)}]"}.join(',') %>];
+    var data = <%= chart_data.inspect %>;
+    var ticks = [<%= raw chart_ticks.map {|tick| tick.blank? ? "''" : "'#{tick.strftime("%d %b")}'"}.join(',') %>];
+    var high_dat = [<%= raw highlighter_data.map {|dat| "['#{dat[0].strftime("%d %b")}', #{ (dat[1] * 100).round * 0.01}]"}.join(',') %>];
 
     var plot1 = $.jqplot(
             '<%= print ? 'tt_report-print-chart' : 'tt_reporting_chart' %>',
@@ -46,7 +46,11 @@ $(document).ready(function () {
                     showMarker:false
                 }
             });
+            $(window).resize(function() {
+                    plot1.replot( {resetAxes: true } );
+                });
 });
+
 
 function time_dist2string(dist) {
     var h = Math.floor(dist / 3600);
