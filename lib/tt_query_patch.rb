@@ -334,15 +334,15 @@ module QueryPatch
       case operator
         when "="
           if value[0] == "1"
-            "#{TimeLog.table_name}.bookable = 't'"
+            "#{TimeLog.table_name}.bookable = " + connection.quoted_true
           else
-            "#{TimeLog.table_name}.bookable = 'f'"
+            "#{TimeLog.table_name}.bookable = " + connection.quoted_false
           end
         when "!"
           if value[0] == "1"
-            "#{TimeLog.table_name}.bookable = 'f'"
+            "#{TimeLog.table_name}.bookable = " + connection.quoted_false
           else
-            "#{TimeLog.table_name}.bookable = 't'"
+            "#{TimeLog.table_name}.bookable = " + connection.quoted_true
           end
         else
           ""

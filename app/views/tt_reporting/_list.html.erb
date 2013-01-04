@@ -35,8 +35,8 @@
                         <td colspan="<%= query.columns.size + 1 %>">
                           <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                           <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
-                          <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : @booking_count_by_group[group] %>
-                            )</span>
+                          <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : (@booking_count_by_group.keys[0].is_a?(Date) ? @booking_count_by_group[group.to_date] : @booking_count_by_group[group]) %>)
+                          </span>
                           <!-- TODO rewrite function-call -->
                           <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}", "toggleAllRowGroups(this)", :class => 'toggle-all') %>
                         </td>
