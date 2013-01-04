@@ -100,15 +100,13 @@ module TimeTrackersHelper
         params[:set_filter] == "3" && !@query_give_logs && @query_give_bookings ||
         session[:tt_user_logs_query].nil? && @query_give_logs ||
         session[:tt_user_bookings_query].nil? && @query_give_bookings
-      q_type =
-          case params[:set_filter]
-            when "2"
-              1
-            when "3"
-              2
-            else
-              0
-          end
+      if @query_give_logs
+        q_type = 1 # TimeLog Queries
+      elsif @query_give_bookings
+        q_type = 2 # TimeBooking Queries
+      else
+        q_type = 0 # default Redmine Queries
+      end
       # Give it a name, required to be valid
       # it is necessary to use the @ as prefix because methods like "build_query_from_params" depend on it!
       @query = Query.new(:tt_query_type => q_type, :name => "_")

@@ -58,6 +58,9 @@ class TimeTrackersController < ApplicationController
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to :back
+  rescue ActionController::RedirectBackError => e
+    flash[:error] = e.message
+    redirect_to :controller => 'tt_overview'
   end
 
   def delete
