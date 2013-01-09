@@ -48,7 +48,7 @@
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 1 %></div>
+            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('#{User.current.api_key}', 'time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 1 %></div>
           </div>
 
           <div class="task_form_sub_fields">
@@ -66,7 +66,7 @@
           <%= f.submit l(:time_tracker_label_update), :class => "tb_edit_form_update_button" %>
           <%= link_to l(:button_cancel), {:controller => 'time_bookings', :action => 'get_list_entry', :time_booking_id => time_booking.id}, :remote => true %>
       <% end %>
-      <%= javascript_tag render :partial => 'edit_form_autocomplete', :locals => {:time_booking => time_booking} %>
+      <%= javascript_tag render :partial => 'edit_form_autocomplete', :locals => {:key => User.current.api_key, :time_booking => time_booking} %>
     </td>
 
     <%= javascript_tag do %>

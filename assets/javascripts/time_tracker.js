@@ -117,7 +117,7 @@ function updateBookingStop(name) {
     input_validator(name);
 }
 
-function updateBookingProject(name) {
+function updateBookingProject(api_key, name) {
     var issue_id_field = $("#" + name + "_issue_id");
     var project_id_field = $("#" + name + "_project_id");
     var project_id_select = $("#" + name + "_project_id_select");
@@ -129,7 +129,7 @@ function updateBookingProject(name) {
         issue_id_field.removeClass('invalid');
         input_validator(name);
     } else {
-        $.ajax({url:'/issues/' + issue_id + '.json',
+        $.ajax({url:'/issues/' + issue_id + '.json?key=' + api_key,
             type:'GET',
             success:function (transport) {
                 issue_id_field.removeClass('invalid');

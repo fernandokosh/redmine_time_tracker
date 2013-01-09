@@ -68,6 +68,6 @@
           <% end %>
           <%= javascript_tag render :partial => 'time_trackers/timer', :formats => [:js], :locals => {:tracker => @time_tracker} %>
       <% end %>
-      <%= javascript_include_tag 'time_tracker_control.js', :plugin => 'redmine_time_tracker' %>
+      <%= javascript_tag render :partial => 'time_trackers/time_tracker_control_script', :formats => [:js], :locals => {:key => User.current.api_key} %>
   <% end %>
 </div>

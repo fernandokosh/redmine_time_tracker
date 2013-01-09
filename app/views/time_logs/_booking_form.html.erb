@@ -8,7 +8,7 @@
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('time_log_add_booking_#{time_log.id}')" %></div>
+            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('#{User.current.api_key}', 'time_log_add_booking_#{time_log.id}')" %></div>
           </div>
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
@@ -51,7 +51,7 @@
           <%= f.submit l(:time_tracker_label_book), :class => "tl_book_form_button" %>
           <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => time_log.id}, :remote => true %>
       <% end %>
-      <%= javascript_tag render :partial => 'booking_form_autocomplete', :locals => {:time_log => time_log} %>
+      <%= javascript_tag render :partial => 'booking_form_autocomplete', :locals => {:key => User.current.api_key, :time_log => time_log} %>
     </td>
 
     <%= javascript_tag do %>

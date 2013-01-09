@@ -1,5 +1,6 @@
 class TtCompleterController < ApplicationController
-  before_filter :js_auth, :authorize_global
+  before_filter :authorize_global
+  accept_api_auth :get_issue, :get_issue_id, :get_issue_subject
 
   def get_issue(flag = 0)
     compl = TtCompleter.new(:term => params[:term])
@@ -15,15 +16,5 @@ class TtCompleterController < ApplicationController
 
   def get_issue_subject
     get_issue 2
-  end
-
-  private
-
-  # following method is necessary to got ajax requests logged_in
-  def js_auth
-    respond_to do |format|
-      format.json { User.current = User.where(:id => session[:user_id]).first }
-      format.any {}
-    end
   end
 end

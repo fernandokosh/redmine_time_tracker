@@ -2,7 +2,7 @@
 function updateTTControllerForm(obj) {
     if (obj.nodeName == "FORM") {
         var form = obj;
-        $.ajax({url:'time_trackers/update.json?' + $("#" + form.id).serialize(),
+        $.ajax({url:'time_trackers/update.json?key=<%= key %>&' + $("#" + form.id).serialize(),
             type:'PUT',
             success:function (transport) {
                 var tt = transport.time_tracker;
@@ -39,31 +39,34 @@ function updateTTControllerForm(obj) {
     }
 }
 
-// ================== time_tracker_control add auto-completers ============================
-$(function () {
-    $('#time_tracker_issue_id').autocomplete({
-        source:'tt_completer/get_issue.json',
-        minLength:0,
-        select:function (event, ui) {
-            $('#time_tracker_comments').val(ui.item.data);
-            $('#time_tracker_comments').change();
-        }
-    });
-});
-
-$(function () {
-    $('#time_tracker_comments').autocomplete({
-        source:'tt_completer/get_issue.json',
-        minLength:0,
-        select:function (event, ui) {
-            if (this.form.id == "new_time_tracker") {
-                event.preventDefault();
-                $(this).val(ui.item.label);
-            } else {
-                $('#time_tracker_issue_id').val(ui.item.value);
+$(document).ready(function () {
+    $(function () {
+        $('#time_tracker_issue_id').autocomplete({
+            source:'tt_completer/get_issue.json?key=<%= key %>',
+            minLength:0,
+            select:function (event, ui) {
                 $('#time_tracker_comments').val(ui.item.data);
                 $('#time_tracker_comments').change();
             }
-        }
+        });
+    });
+});
+
+$(document).ready(function () {
+    $(function () {
+        $('#time_tracker_comments').autocomplete({
+            source:'tt_completer/get_issue.json?key=<%= key %>',
+            minLength:0,
+            select:function (event, ui) {
+                if (this.form.id == "new_time_tracker") {
+                    event.preventDefault();
+                    $(this).val(ui.item.label);
+                } else {
+                    $('#time_tracker_issue_id').val(ui.item.value);
+                    $('#time_tracker_comments').val(ui.item.data);
+                    $('#time_tracker_comments').change();
+                }
+            }
+        });
     });
 });
