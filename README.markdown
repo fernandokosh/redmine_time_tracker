@@ -31,23 +31,24 @@ Most current version is available at: [GitHub](https://github.com/hicknhack-soft
 ## Install
 
 1. Follow the Redmine plugin installation steps at http://www.redmine.org/wiki/redmine/Plugins Make sure the plugin is installed to `#{RAILS_ROOT}/plugins/redmine_time_tracker`
-2. Setup the database using the migrations. `redmine:plugins:migrate RAILS_ENV=production`
-3. Login to your Redmine install as an Administrator
-4. Setup the "log time" permissions for your roles
-5. Add "Time tracking" to the enabled modules for your project
-6. The link to the plugin should appear in the Main menu bar (upper left corner)
+1. Setup the database using the migrations. `redmine:plugins:migrate RAILS_ENV=production`
+1. Login to your Redmine install as an Administrator
+1. Setup the "log time" permissions for your roles
+1. Add "Time tracking" to the enabled modules for your project
+1. Activate "Enable REST web service" in the authentication tab in settings
+1. The link to the plugin should appear in the Main menu bar (upper left corner)
 
 ## Update via Git
 
 1. Open a shell to your Redmine's `#{RAILS_ROOT}/plugins/redmine_time_tracker` folder
-2. Update your git copy with `git pull`
-3. Update the database using the migrations. `redmine:plugins:migrate RAILS_ENV=production`
-4. Restart your Redmine
+1. Update your git copy with `git pull`
+1. Update the database using the migrations. `redmine:plugins:migrate RAILS_ENV=production`
+1. Restart your Redmine
 
 ## Usage
 
 To be able to use a time tracker, a user must have the 'log time' permission.
-Then, the time tracker menu will appear in the top left menu
+If this is true, the time tracker menu will be visible in the top left menu
 
 To track time referring an issue, you can use the context menu (right click in the issues list) in
 the issue list to start or stop the timer.
@@ -58,21 +59,20 @@ The Plugin is intended to help us create invoices for customers. This requires t
 
 ###Time Tracker
 
-The Stop-Watch. Time you spent get's "generated" by the Tracker 
+The stop watch. Time you spent get's "generated" by the tracker 
 
 ###Time Log
 
 A time log is a spent amount of time. If you stop the tracker, a time log is created. A time log has nothing attached to it. To add this time to issues or projects, you **book** time.
-If you enable Redmine's own time management you can are able to access these logs. Be aware that you should not edit time logs outside the interface provided by the plugin.
+If you enable Redmine's own time management you can are able to access these logs. Be aware that you should not edit time logs outside the interface provided by the plugin. Role permissions can be edited to disable logging. This might be useful for reviewers, that do not generate time own their own but want to look up statistics on a project or user.
 
 ###Time Booking
 
-A booking is time that is actually connected to a task (project or issue). To create a booking, you book time from a time log. You are not forces to spent the whole time of a single booking, you can divide as you wish. The only limitation is, that you cannot book more time than what was logged.
+A booking is time that is actually connected to a task (project or issue). To create a booking, you book time from a time log. You are not limited to spent the whole time of a single booking, you can divide as you wish. You however aren't able book more time than what was actually logged. The role you have on projects and their settings determine if you are able to edit bookings or are just allowed to create them.
 
 ###Settings
 
-The plugin offers a list of settings at the Redmine roles and permission settings page.
-You can set the size and file for a logo to be displayed at the report in the Redmine plugin settings.
+The plugin offers a list of settings at the Redmine roles and permission settings page. Also you can set the size and file for a logo to be displayed at the report in the Redmine plugin settings.
 
 ###Report
 
