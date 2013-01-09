@@ -52,7 +52,34 @@ Then, the time tracker menu will appear in the top left menu
 To track time referring an issue, you can use the context menu (right click in the issues list) in
 the issue list to start or stop the timer.
 
+## What's what?
+
+The Plugin is intendet to help us create invoices for customers. This requires the separation of time that was spent and time that is booked. Only booked times can be billed.
+
+###Time Tracker
+
+The Stop-Watch. Time you spent get's "generated" by the Tracker 
+
+###Time Log
+
+A time log is a spent amount of time. If you stop the tracker, a time log is created. A time log has nothing attached to it. To add this time to issues or projects, you **book** time.
+If you enable Redmine's own time management you can are able to access these logs. Be aware that you should not edit time logs outside the interface provided by the plugin.
+
+###Time Booking
+
+A booking is time that is actually connected to a task (project or issue). To create a booking, you book time from a time log. You are not forces to spent the whole time of a single booking, you can divide as you wish. The only limitation is, that you cannot book more time than what was logged.
+
+###Settings
+
+The plugin offers a list of settings at the Redmine roles and permission settings page.
+You can set the size and file for a logo to be displayed at the report in the Redmine plugin settings.
+
+###Report
+
+Reports are the method of generating invoices for customers. The layout is set up to be a simple list and you are able to generate a print-out. You can add you custom logo via the plugin settings in the Redmine adminstration.
+
 ## Version History
+
 * 0.5.3 fixed routing error
 * 0.5.2 fixed error that resulted in reporting plot not being drawn with Ruby 1.8
 * 0.5.1 fixed minor bugs to run with Redmine 2.2.0
