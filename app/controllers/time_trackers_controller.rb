@@ -2,7 +2,7 @@ class TimeTrackersController < ApplicationController
   unloadable
 
   menu_item :time_tracker_menu_tab_overview
-  before_filter :authorize_global
+  before_filter :js_auth, :authorize_global
   accept_api_auth :update
 
   # we could start an empty timeTracker to track time without any association.
@@ -103,5 +103,15 @@ class TimeTrackersController < ApplicationController
   def get_current
     current = TimeTracker.where(:user_id => User.current.id).first
     current.nil? ? TimeTracker.new : current
+  end
+
+  private
+
+  # following method is necessary to got ajax requests logged_in if REST-API is disabled
+  def js_auth
+    respond_to do |format|
+      format.json { User.current = User.where(:id => session[:user_id]).first }
+      format.any {}
+    end
   end
 end

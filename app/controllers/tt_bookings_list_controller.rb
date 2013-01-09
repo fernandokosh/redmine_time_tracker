@@ -2,7 +2,7 @@ class TtBookingsListController < ApplicationController
   unloadable
 
   menu_item :time_tracker_menu_tab_bookings_list
-  before_filter :authorize_global
+  before_filter :authorize_global, :check_settings_for_ajax
 
   helper :issues
   include IssuesHelper
@@ -38,5 +38,11 @@ class TtBookingsListController < ApplicationController
     render :template => 'tt_bookings_list/index', :locals => {:query => @query_bookings}
   rescue ActiveRecord::RecordNotFound
     render_404
+  end
+
+  private
+
+  def check_settings_for_ajax
+    flash[:error] = l(:force_auth_requires_rest_api) if Setting.login_required? && !Setting.rest_api_enabled?
   end
 end

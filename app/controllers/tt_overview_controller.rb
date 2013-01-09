@@ -2,7 +2,7 @@ class TtOverviewController < ApplicationController
   unloadable
 
   menu_item :time_tracker_menu_tab_overview
-  before_filter :authorize_global
+  before_filter :authorize_global, :check_settings_for_ajax
 
   helper :queries
   include QueriesHelper
@@ -60,5 +60,11 @@ class TtOverviewController < ApplicationController
                                            :limit => @limit)
       @booking_count_by_group = @query_bookings.booking_count_by_group
     end
+  end
+
+  private
+
+  def check_settings_for_ajax
+    flash[:error] = l(:force_auth_requires_rest_api) if Setting.login_required? && !Setting.rest_api_enabled?
   end
 end

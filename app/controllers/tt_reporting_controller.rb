@@ -2,7 +2,7 @@ class TtReportingController < ApplicationController
   unloadable
 
   menu_item :time_tracker_menu_tab_reporting
-  before_filter :authorize_global
+  before_filter :authorize_global, :check_settings_for_ajax
 
   helper :issues
   include IssuesHelper
@@ -105,4 +105,8 @@ def fetch_chart_data
       end
     end
   end
+end
+
+def check_settings_for_ajax
+  flash[:error] = l(:force_auth_requires_rest_api) if Setting.login_required? && !Setting.rest_api_enabled?
 end

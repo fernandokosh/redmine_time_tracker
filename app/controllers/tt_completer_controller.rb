@@ -1,5 +1,5 @@
 class TtCompleterController < ApplicationController
-  before_filter :authorize_global
+  before_filter :js_auth, :authorize_global
   accept_api_auth :get_issue, :get_issue_id, :get_issue_subject
 
   def get_issue(flag = 0)
@@ -16,5 +16,15 @@ class TtCompleterController < ApplicationController
 
   def get_issue_subject
     get_issue 2
+  end
+
+  private
+
+  # following method is necessary to got ajax requests logged_in if REST-API is disabled
+  def js_auth
+    respond_to do |format|
+      format.json { User.current = User.where(:id => session[:user_id]).first }
+      format.any {}
+    end
   end
 end

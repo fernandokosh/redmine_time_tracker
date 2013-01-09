@@ -1,5 +1,5 @@
 class TtDateShifterController < ApplicationController
-  before_filter :authorize_global
+  before_filter :js_auth, :authorize_global
   accept_api_auth :get_prev_time_span, :get_next_time_span, :get_time_span
 
   def get_prev_time_span
@@ -21,6 +21,14 @@ class TtDateShifterController < ApplicationController
     end
     respond_to do |format|
       format.json { render :json => ds }
+    end
+  end
+
+  # following method is necessary to got ajax requests logged_in if REST-API is disabled
+  def js_auth
+    respond_to do |format|
+      format.json { User.current = User.where(:id => session[:user_id]).first }
+      format.any {}
     end
   end
 end

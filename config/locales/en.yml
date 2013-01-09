@@ -16,6 +16,7 @@ en:
   field_tt_stop: "Stop time"
   field_tt_time: "Time spent"
   field_tt_user: "User"
+  force_auth_requires_rest_api: "If 'Authentication required' was enabled in Redmine settings, the REST-API must be enabled also. Otherwise the TimeTracker plugin may not work properly!"
   list_time_trackers: "list"
   no_time_tracker: "No time tracker"
   no_time_logs: "No time logs"
