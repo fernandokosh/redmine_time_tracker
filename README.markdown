@@ -16,10 +16,10 @@ It will be individual adjustable for every user and seperate includable for any 
 * Detailed time tracking statistics for team management
 * Status monitor, watch currently tracked time of team
 * Detailed overview of spent time with filter options on (user, project, date)
-* Invoice generation on project basis including graphical time representation with customizabel company logo
-* User specific settings (bookable hours per day, timetracking on/off)
-* Project specific settings (timetracking on/off)
-* Admin page (setup users bookable hours limit, add/remove timelogs)
+* Invoice generation on project basis including graphical time representation with customizable company logo
+* User specific settings (time tracking on/off)
+* Project specific settings (time tracking on/off)
+* Admin page (add/remove time logs)
 
 ## Getting the plugin
 
@@ -54,7 +54,7 @@ the issue list to start or stop the timer.
 
 ## What's what?
 
-The Plugin is intendet to help us create invoices for customers. This requires the separation of time that was spent and time that is booked. Only booked times can be billed.
+The Plugin is intended to help us create invoices for customers. This requires the separation of time that was spent and time that is booked. Only booked times can be billed.
 
 ###Time Tracker
 
@@ -76,7 +76,7 @@ You can set the size and file for a logo to be displayed at the report in the Re
 
 ###Report
 
-Reports are the method of generating invoices for customers. The layout is set up to be a simple list and you are able to generate a print-out. You can add you custom logo via the plugin settings in the Redmine adminstration.
+Reports are the method of generating invoices for customers. The layout is set up to be a simple list and you are able to generate a print-out. You can add you custom logo via the plugin settings in the Redmine administration.
 
 ## Version History
 
