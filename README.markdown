@@ -80,6 +80,9 @@ Reports are the method of generating invoices for customers. The layout is set u
 
 ## Version History
 
+* 0.6.2 enhanced error checking of correct settings in Redmine
+* 0.6.1 fixed error that resulted in authentication loop using the REST API 
+* 0.6 fixed error with time bookings on ruby 1.8.7
 * 0.5.3 fixed routing error
 * 0.5.2 fixed error that resulted in reporting plot not being drawn with Ruby 1.8
 * 0.5.1 fixed minor bugs to run with Redmine 2.2.0
