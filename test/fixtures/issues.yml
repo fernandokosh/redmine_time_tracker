@@ -1,0 +1,42 @@
+--- 
+issues_001: 
+  created_on: <%= 3.days.ago.to_s(:db) %>
+  project_id: 1
+  updated_on: <%= 1.day.ago.to_s(:db) %>
+  priority_id: 4
+  subject: Can't print recipes
+  id: 1
+  fixed_version_id: 
+  category_id: 1
+  description: Unable to print recipes
+  tracker_id: 1
+  assigned_to_id: 
+  author_id: 2
+  status_id: 1
+  start_date: <%= 1.day.ago.to_date.to_s(:db) %>
+  due_date: <%= 10.day.from_now.to_date.to_s(:db) %>
+  root_id: 1
+  lft: 1
+  rgt: 2
+  lock_version: 3
+issues_002: 
+  created_on: 2006-07-19 21:04:21 +02:00
+  project_id: 1
+  updated_on: 2006-07-19 21:09:50 +02:00
+  priority_id: 5
+  subject: Add ingredients categories
+  id: 2
+  fixed_version_id: 2
+  category_id:
+  description: Ingredients of the recipe should be classified by categories
+  tracker_id: 2
+  assigned_to_id: 2
+  author_id: 2
+  status_id: 2
+  start_date: <%= 2.day.ago.to_date.to_s(:db) %>
+  due_date:
+  root_id: 2
+  lft: 1
+  rgt: 2
+  lock_version: 3
+  done_ratio: 30

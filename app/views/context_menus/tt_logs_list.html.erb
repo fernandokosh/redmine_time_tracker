@@ -1,0 +1,13 @@
+<ul>
+  <% unless @time_log_ids.nil? %>
+      <li><%= context_menu_link l(:time_tracker_label_book), {:controller => 'time_logs', :action => 'show_booking', :time_log_ids => @time_log_ids},
+                                :remote => true, :disabled => !User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'show_booking'}, {}) %>
+      </li>
+      <li><%= context_menu_link l(:button_edit), {:controller => 'time_logs', :action => 'show_edit', :time_log_ids => @time_log_ids},
+                                :class => 'icon-edit', :remote => true, :disabled => !User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'show_edit'}, {}) %>
+      </li>
+      <li><%= context_menu_link l(:button_delete), {:controller => 'time_logs', :action => 'delete', :time_log_ids => @time_log_ids},
+                                :class => 'icon-del', :disabled => !User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'delete'}, {}) %>
+      </li>
+  <% end %>
+</ul>

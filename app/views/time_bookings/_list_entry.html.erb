@@ -1,0 +1,5 @@
+<td class="checkbox hide-when-print">
+  <%= check_box_tag("ids[]", entry.id, false, :id => nil) %>
+  <%= hidden_field_tag "entryClass", entry.class %>
+</td>
+<%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>

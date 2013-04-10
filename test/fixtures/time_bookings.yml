@@ -1,0 +1,14 @@
+tb_001:
+  id: 1
+  time_log_id: 1
+  time_entry_id: 1
+  started_on: 2012-10-25 11:47:03 +2
+  stopped_at: 2012-10-25 11:53:03 +2
+  project_id: 1
+tb_002:
+  id: 2
+  time_log_id: 2
+  time_entry_id: 2
+  started_on: 2012-10-25 08:47:03 +2
+  stopped_at: 2012-10-25 08:53:03 +2
+  project_id: 1

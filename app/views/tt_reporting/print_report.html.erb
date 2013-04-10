@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%= stylesheet_link_tag 'tt_report', :plugin => 'redmine_time_tracker', :media => "all" %>
+  <%= javascript_include_tag 'jquery-1.7.2-ui-1.8.21-ujs-2.0.3.js' %>
+  <%= javascript_include_tag 'jqplot/jquery.jqplot.min.js', :plugin => 'redmine_time_tracker' %>
+  <%= javascript_include_tag 'jqplot/plugins/jqplot.barRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+  <%= javascript_include_tag 'jqplot/plugins/jqplot.categoryAxisRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+  <%= javascript_include_tag 'jqplot/plugins/jqplot.highlighter.min.js', :plugin => 'redmine_time_tracker' %>
+  <%= stylesheet_link_tag 'jquery.jqplot.min.css', :plugin => 'redmine_time_tracker' %>
+
+</head>
+<body>
+<table style="width: 100%;">
+  <tr>
+    <td id="tt_report-title">
+      <h2><%= Setting.plugin_redmine_time_tracker[:report_title] %></h2>
+    </td>
+    <td id="tt_report-logo">
+      <%= image_tag @logo_url, :border => 0, :width => @logo_width, :alt => "Insert Your logo via plugin-settings", :plugin => (@logo_external ? nil : 'redmine_time_tracker') %>
+    </td>
+  </tr>
+</table>
+<table style="width: 100%;">
+  <tr>
+    <td id="tt_report-statistics">
+      <%= l(:time_tracker_report_total_time) %><br/>
+      <%= @total_booked_time %>
+    </td>
+    <td id="tt_report-chart-table">
+      <div id="tt_report-print-chart"></div>
+    </td>
+  </tr>
+</table>
+
+
+<table class="list">
+  <thead>
+  <tr>
+    <th class="tt_report-date"><%= l(:time_tracker_label_date) %></th>
+    <th class="tt_report-desc-head"><%= l(:time_tracker_label_description) %></th>
+    <th class="tt_report-time"><%= l(:time_tracker_label_time_spent) %></th>
+    <th class="tt_report-pers-head"><%= l(:time_tracker_label_person) %></th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <% @bookings.each do |entry| -%>
+      <!--TODO insert grouped-functionality-->
+      <tr id="entry-<%= entry.id %>" class="entry <%= cycle('odd', 'even') %>">
+        <td class="tt_report-date"><%= entry.tt_booking_date %></td>
+        <td style="word-wrap: break-word;">
+          <div style="overflow: hidden;">
+            <div style="min-height: 1em;"><%= entry.comments %></div>
+            <div class="tt_list-project"><%= entry.project.name unless entry.project.nil? %></div>
+          </div>
+        </td>
+        <td class="tt_report-time"><%= help.time_string4report(entry.get_formatted_time) %></td>
+        <td><%= entry.user.to_s %></td>
+      </tr>
+  <% end -%>
+
+  </tbody>
+</table>
+</body>
+</html>
+
+<%= javascript_tag render :partial => 'chart', :formats => [:js], :locals => {:chart_data => @chart_data, :chart_ticks => @chart_ticks, :highlighter_data => @highlighter_data, :print => true} %>

@@ -1,0 +1,29 @@
+--- 
+time_entries_001: 
+  created_on: 2012-10-25 11:47:02 +2
+  tweek: 43
+  tmonth: 10
+  project_id: 1
+  comments: original comment
+  updated_on: 2012-10-25 11:47:03 +2
+  activity_id: 17
+  spent_on: 2012-10-25
+  issue_id: 1
+  id: 1
+  hours: 0.1
+  user_id: 2
+  tyear: 2012
+time_entries_002:
+  created_on: 2012-10-25 08:47:02 +2
+  tweek: 43
+  tmonth: 10
+  project_id: 1
+  comments: original comment
+  updated_on: 2012-10-25 08:47:03 +2
+  activity_id: 17
+  spent_on: 2012-10-25
+  issue_id: 1
+  id: 2
+  hours: 0.1
+  user_id: 1
+  tyear: 2012

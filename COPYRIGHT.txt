@@ -1,4 +1,28 @@
 Redmine Time Tracker is a Redmine plugin that can be used to ease time tracking
+when working on issues and bring in additional features like statistics,
+employee management and invoicing.
+
+Copyright (C) 2012 Christian Reich
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+---
+
+Redmine Time Tracker is a derivative work based on Redmine Time Tracker, whose Copyright follows.
+
+Redmine Time Tracker is a Redmine plugin that can be used to ease time tracking
 when working on issues.
 
 Copyright (C) 2010 Jérémie Delaitre
@@ -16,3 +40,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+---
+
+This Plug-In uses "Highcharts JS" (http://www.highcharts.com) which is licensed under
+Creative Commons Attribution-NonCommercial 3.0 License for non commercial usage.
+http://creativecommons.org/licenses/by-nc/3.0/
+If you want to use this Plug-In for commercial usage, please respect the license terms
+of "Highcharts JS" which can be found on the Highcharts Homepage

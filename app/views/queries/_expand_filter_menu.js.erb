@@ -1,0 +1,95 @@
+$(document).ready(function () {
+    addButtonsToFilter();
+});
+
+$(document).on('change', '#add_filter_select', null, function (e) {
+    addButtonsToFilter();
+});
+
+$(document).on('click', '#filters-table td.field input[type=checkbox]', null, function (e) {
+    toggleExpansionVisibility();
+});
+
+$(document).on('change', '#operators_<%= filed_id %>', null, function (e) {
+    toggleExpansionVisibility();
+});
+
+function addButtonsToFilter() {
+<% if query.tt_query? %>
+    if ($('#tr_<%= filed_id %>').find('span.tt_expansion').length == 0) {
+        $('#tr_<%= filed_id %> td.values').prepend(
+                '<span class="tt_expansion"><%= button_to_function raw("&larr;"), "shift_time_span('prev')" %></span>' +
+                        '<span class="tt_expansion"><%= button_to_function raw("&rarr;"), "shift_time_span('next')" %></span>'
+        );
+    }
+    toggleExpansionVisibility();
+<% end %>
+}
+
+function toggleExpansionVisibility() {
+    if ($('#cb_<%= filed_id %>').is(':checked') && $('#operators_<%= filed_id %>').val() != "*") {
+        $('#tr_<%= filed_id %>').find('span.tt_expansion').show();
+    } else {
+        $('#tr_<%= filed_id %>').find('span.tt_expansion').hide();
+    }
+}
+
+// ================== helpers for date-filter chooser ============================
+
+function shift_time_span(direction) {
+    // setting default time_span to null
+    var op = null;
+    switch ($('#operators_<%= filed_id %>').val()) {
+        case "=":
+            op = "is";
+            break;
+        case "><":
+            op = "between";
+            break;
+        case "t":
+            op = "today";
+            break;
+        case "w":
+            op = "thisWeek";
+            break;
+        case "!*":
+            op = "thisMonth";
+            break;
+        default:
+            break;
+    }
+
+    if (op != null) {
+        var action = "get_" + direction + "_time_span";
+        var date1 = $('#values_<%= filed_id %>_1').val();
+        var date2 = $('#values_<%= filed_id %>_2').val();
+
+        $.ajax({url:'tt_date_shifter/' + action + '.json?date1=' + date1 + '&date2=' + date2 + '&op=' + op,
+            type:'GET',
+            success:function (ds) {
+                $('#values_<%= filed_id %>_1').val(ds.start_date);
+                $('#values_<%= filed_id %>_2').val(ds.stop_date);
+
+                switch (ds.special) {
+                    case "today":
+                        $('#operators_<%= filed_id %>').val('t');
+                        break;
+                    case "thisWeek":
+                        $('#operators_<%= filed_id %>').val('w');
+                        break;
+                    case "thisMonth":
+                        $('#operators_<%= filed_id %>').val('!*');
+                        break;
+                    default:
+                        if (op == "is" || op == "today") {
+                            $('#operators_<%= filed_id %>').val('=');
+                        } else {
+                            $('#operators_<%= filed_id %>').val('><');
+                        }
+                        break;
+                }
+                $('#operators_<%= filed_id %>').change();
+            }
+        });
+    }
+}

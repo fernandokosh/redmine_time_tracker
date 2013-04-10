@@ -1,0 +1,16 @@
+$(document).ready(function () {
+    window.setInterval(function () {
+        var start = new Date($('#time_tracker_date').val().replace(/\-/ig, '/') + ' ' + $('#time_tracker_start_time').val());
+        var now = new Date();
+        var diff = Math.floor((now - start) / 1000);
+        var h = Math.floor(diff / 3600);
+        var m = Math.floor((diff - h * 3600) / 60);
+        var s = Math.floor(diff - (h * 3600 + m * 60));
+        h < 10 ? h = "0" + h.toString() : h = h.toString();
+        m < 10 ? m = "0" + m.toString() : m = m.toString();
+        s < 10 ? s = "0" + s.toString() : s = s.toString();
+        if (!(h == "NaN" || m == "NaN" || s == "NaN")) {
+            $('#tt_running_time').html(h + ":" + m + ":" + s);
+        }
+    }, 1000);
+});

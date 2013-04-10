@@ -1,0 +1,20 @@
+</div> <%# Hack to close the div opened by redmine before rendering this view. This is to avoid the big box wrapping all the settings content. %>
+
+<h3><%= l(:time_tracker_settings_general_title) %></h3>
+
+<div class="box tabular">
+  <p>
+    <%= label_tag 'settings[report_title]', l(:time_tracker_report_title) %>
+    <%= text_field_tag 'settings[report_title]', @settings[:report_title], {:size => 23} %>
+  </p>
+  <p>
+    <%= label_tag 'settings[report_logo_url]', l(:time_tracker_report_logo_url) %>
+    <%= text_field_tag 'settings[report_logo_url]', @settings[:report_logo_url], {:size => 23} %>
+  </p>
+  <p>
+    <%= label_tag 'settings[report_logo_width]', l(:time_tracker_report_logo_width) %>
+    <%= text_field_tag 'settings[report_logo_width]', @settings[:report_logo_width], {:size => 5} %> (Pixel)
+  </p>
+</div>
+
+<%# The div is not close as redmine will close the one opened before rendering this view. As we close this div at the begining of the view, we need an open one before returning. %>

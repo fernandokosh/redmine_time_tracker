@@ -1,0 +1,36 @@
+<ul>
+
+  <% unless @time_log_ids.nil? %>
+      <li><%= context_menu_link l(:time_tracker_label_book), {:controller => 'time_logs', :action => 'show_booking', :time_log_ids => @time_log_ids},
+                                :remote => true, :disabled => !User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'show_booking'}, {}) %>
+      </li>
+      <li><%= context_menu_link l(:button_edit), {:controller => 'time_logs', :action => 'show_edit', :time_log_ids => @time_log_ids},
+                                :class => 'icon-edit', :remote => true, :disabled => !User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'show_edit'}, {}) %>
+      </li>
+      <li><%= context_menu_link l(:button_delete), {:controller => 'time_logs', :action => 'delete', :time_log_ids => @time_log_ids},
+                                :class => 'icon-del', :disabled => !User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'delete'}, {}) %>
+      </li>
+  <% end %>
+
+  <% unless @time_booking_ids.nil? %>
+      <% tt = TimeTracker.where(:user_id => User.current.id).first %>
+      <li>
+        <%= if @time_booking.nil? || !tt.nil? then
+              context_menu_link l(:time_tracker_label_continue),
+                                {:controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => nil, :comments => nil}},
+                                :remote => false, :disabled => true
+            else
+              context_menu_link l(:time_tracker_label_continue),
+                                {:controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => @time_booking.virtual? ? nil : @time_booking.time_entry.issue.id, :comments => @time_booking.comments}},
+                                :remote => false, :disabled => !User.current.allowed_to_globally?({:controller => 'time_trackers', :action => 'start'}, {})
+            end %>
+      </li>
+      <li><%= context_menu_link l(:button_edit), {:controller => 'time_bookings', :action => 'show_edit', :time_booking_ids => @time_booking_ids},
+                                :class => 'icon-edit', :remote => true, :disabled => !User.current.allowed_to_globally?({:controller => 'time_bookings', :action => 'show_edit'}, {}) %>
+      </li>
+      <li><%= context_menu_link l(:time_tracker_label_delete), {:controller => 'time_bookings', :action => 'delete', :time_booking_ids => @time_booking_ids},
+                                :class => 'icon-del', :remote => false, :disabled => !User.current.allowed_to_globally?({:controller => 'time_bookings', :action => 'delete'}, {}) %>
+      </li>
+  <% end %>
+
+</ul>

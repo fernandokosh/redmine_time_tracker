@@ -1,0 +1,108 @@
+@media screen, print {
+    body {
+        color: #484848;
+        /*width: 640px;*/
+        width: 210mm;
+        padding: 0;
+    }
+
+    * {
+        font-family: "Myriad Pro", Verdana, sans-serif;
+    }
+
+    h2 {
+        font-weight: bold;
+        font-size: 13pt;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tbody {
+        display: table-row-group;
+    }
+
+    .odd {
+        background-color: #f6f7f8;
+    }
+
+    .even {
+        background-color: #fff;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+
+    #tt_report-title {
+        width: 50%;
+    }
+
+    #tt_report-logo {
+        float: right;
+    }
+
+    #tt_report-statistics {
+        width: 15%;
+        font-weight: bold;
+        font-size: 11pt;
+    }
+
+    #tt_report-print-chart {
+        height: 300px;
+    }
+
+    .tt_report-desc-head {
+    }
+
+    .tt_report-date,
+    .tt_report-time {
+        white-space: nowrap;
+    }
+
+    .list td,
+    .list th {
+        padding-right: 1em;
+        border-bottom: 1px solid #aaa;
+        vertical-align: top;
+    }
+
+    .list td:first-child,
+    .list th:first-child {
+         padding-left: 1em;
+    }
+
+    .list td:last-child {
+        padding-right: 1em;
+    }
+
+    .list th {
+        border-bottom-color: #666;
+    }
+
+    .list {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .list * {
+        font-family: "Myriad Pro", Verdana, sans-serif;
+        font-size: 11pt;
+    }
+
+    .list thead tr {
+        background-color: #90D2E8;
+    }
+
+    .list tr th {
+        text-align: left;
+    }
+
+    .list td .tt_list-project {
+        position: relative;
+        overflow: hidden;
+        font-size: 8pt;
+    }
+}

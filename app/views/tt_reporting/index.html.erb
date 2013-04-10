@@ -1,0 +1,91 @@
+<%= javascript_include_tag 'jqplot/jquery.jqplot.min.js', :plugin => 'redmine_time_tracker' %>
+<%= javascript_include_tag 'jqplot/plugins/jqplot.barRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+<%= javascript_include_tag 'jqplot/plugins/jqplot.categoryAxisRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+<%= javascript_include_tag 'jqplot/plugins/jqplot.highlighter.min.js', :plugin => 'redmine_time_tracker' %>
+<%= stylesheet_link_tag 'jquery.jqplot.min.css', :plugin => 'redmine_time_tracker' %>
+
+<div class="contextual">
+  <% if !query.new_record? && query.editable_by?(User.current) %>
+      <%= link_to l(:button_edit), edit_query_path(query), :class => 'icon icon-edit' %>
+      <%= link_to l(:button_delete), query_path(query), :confirm => l(:text_are_you_sure),
+                  :method => :delete, :class => 'icon icon-del' %>
+  <% end %>
+</div>
+
+<h2><%= query.new_record? ? l(:time_tracker_label_menu_tab_reports) : h(query.name) %></h2>
+<% html_title(query.new_record? ? l(:time_tracker_label_menu_tab_reports) : query.name) %>
+
+<%= form_tag({:controller => 'tt_reporting', :action => 'index'},
+             :method => :get, :id => 'query_form') do %>
+    <%= hidden_field_tag 'set_filter', '3' %>
+    <%= hidden_field_tag 'tt_query_type', 2 %>
+    <div id="query_form_content" class="hide-when-print">
+      <fieldset id="filters" class="collapsible <%= query.new_record? ? "" : "collapsed" %>">
+        <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
+        <div style="<%= query.new_record? ? "" : "display: none;" %>">
+          <%= render :partial => 'queries/filters', :locals => {:query => query} %>
+          <%= javascript_tag render :partial => 'queries/expand_filter_menu', :formats => [:js], :locals => {:query => query, :filed_id => "tt_booking_start_date"} %>
+        </div>
+      </fieldset>
+      <fieldset class="collapsible collapsed">
+        <legend onclick="toggleFieldset(this);"><%= l(:label_options) %></legend>
+        <div style="display: none;">
+          <table>
+            <tr>
+              <td><%= l(:field_column_names) %></td>
+              <td><%= render :partial => 'queries/columns', :locals => {:query => query} %></td>
+            </tr>
+            <tr>
+              <td><label for='group_by'><%= l(:field_group_by) %></label></td>
+              <td><%= select_tag('group_by',
+                                 options_for_select(
+                                         [[]] + query.groupable_columns.collect { |c| [c.caption, c.name.to_s] },
+                                         query.group_by)
+                      ) %></td>
+            </tr>
+          </table>
+        </div>
+      </fieldset>
+    </div>
+    <p class="buttons hide-when-print">
+      <!-- TODO check link targets! they're project-related here but shouldn't! -->
+      <%= link_to_function l(:button_apply), 'submit_query_form("query_form")', :class => 'icon icon-checked' %>
+      <%= link_to l(:button_clear), {:set_filter => 3, :project_id => @project}, :class => 'icon icon-reload' %>
+      <% if query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %>
+          <%= link_to_function l(:button_save),
+                               "$('#query_form').attr('action', '#{ @project ? new_project_query_path(@project) : new_query_path }'); submit_query_form('query_form')",
+                               :class => 'icon icon-save' %>
+      <% end %>
+    </p>
+<% end %>
+
+<% unless @bookings.nil? %>
+    <div id="tt_reporting_chart" style="height: <%= @bookings.empty? ? '0' : '400px' %>"></div>
+<% end %>
+
+<%= error_messages_for 'query' %>
+<% if query.valid? %>
+    <% if @bookings.empty? %>
+        <p class="nodata"><%= l(:label_no_data) %></p>
+    <% else %>
+        <%= render :partial => 'tt_reporting/list', :locals => {:bookings => @bookings, :query => query} %>
+        <p class="pagination"><%= pagination_links_full @booking_pages, @booking_count %></p>
+    <% end %>
+<% end %>
+
+<% content_for :sidebar do %>
+    <%= render_sidebar_queries %>
+
+    <div id="tt_reporting-sidebar">
+      <h3>Reporting</h3>
+      <!--TODO insert statistics here-->
+      <%= link_to l(:time_tracker_label_print_report), :controller => :tt_reporting, :action => :print_report %>
+    </div>
+<% end %>
+
+<!-- TODO edit next line to insert own context menu -->
+<!--<%= context_menu issues_context_menu_path %>-->
+
+<% unless @bookings.nil? || @bookings.empty? %>
+    <%= javascript_tag render :partial => 'chart', :formats => [:js], :locals => {:chart_data => @chart_data, :chart_ticks => @chart_ticks, :highlighter_data => @highlighter_data, :print => false} %>
+<% end %>

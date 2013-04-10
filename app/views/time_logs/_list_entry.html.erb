@@ -1,0 +1,6 @@
+<td class="checkbox hide-when-print">
+  <%= check_box_tag("ids[]", entry.id, false, :id => nil) %>
+  <%= hidden_field_tag "entryClass", entry.class %>
+</td>
+<!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
+<%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>

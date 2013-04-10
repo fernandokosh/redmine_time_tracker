@@ -1,0 +1,17 @@
+# 6m 19s, still bookable
+tl_001:
+  id: 1
+  user_id: 2
+  started_on: 2012-10-25 11:47:03 +2
+  stopped_at: 2012-10-25 11:53:03 +2
+  project_id:
+  comments: original comment
+  bookable: true
+tl_002:
+  id: 2
+  user_id: 1
+  started_on: 2012-10-25 08:47:23 +2
+  stopped_at: 2012-10-25 08:53:42 +2
+  project_id:
+  comments: original comment
+  bookable: true

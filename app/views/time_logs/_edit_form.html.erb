@@ -1,0 +1,57 @@
+<% unless time_log.nil? %>
+    <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", time_log.id, false, :id => nil) %></td>
+    <td colspan=5>
+      <% prefix = "time_log_edit[]" %>
+      <%= fields_for prefix, time_log do |f| %>
+          <%= f.hidden_field(:id) %>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:field_tt_date) %></div>
+            <div class="task_form_input">
+              <%= f.text_field :tt_log_date, :size => "10", :placeholder => l(:time_tracker_label_start_date), :readonly => time_log.permission_level < 3 %>
+              <% unless time_log.permission_level < 3 %>
+                  <%= calendar_for("time_log_edit_#{time_log.id.to_s}_tt_log_date") %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
+            <div class="task_form_input">
+              <%= f.text_field :start_time, :value => time_log.get_formatted_start_time, :size => "10", :placeholder => l(:time_tracker_label_start_time), :onchange => "updateBookingHours('time_log_edit_#{time_log.id}')", :readonly => time_log.permission_level < 3 %>
+            </div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
+            <div class="task_form_input">
+              <%= f.text_field :stop_time, :value => time_log.get_formatted_stop_time, :size => "10", :placeholder => l(:time_tracker_label_stop_time), :onchange => "updateBookingHours('time_log_edit_#{time_log.id}')", :readonly => time_log.permission_level < 3 %>
+            </div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
+            <div class="task_form_input"><%= f.text_field :comments, :size => 30, :maxlength => 255, :readonly => time_log.permission_level < 1 %></div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_time) %></div>
+            <div class="task_form_input">
+              <%= f.text_field :spent_time, :value => time_log.get_formatted_time_span, :size => "12", :placeholder => l(:time_tracker_label_time), :onchange => "updateBookingStop('time_log_edit_#{time_log.id}')", :readonly => time_log.permission_level < 3 %>
+            </div>
+          </div>
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_booked_time) + "  " + time_log.get_formatted_booked_time %></div>
+          </div>
+
+          <%= f.submit l(:time_tracker_label_update), :class => "tl_edit_form_update_button" %>
+          <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => time_log.id}, :remote => true %>
+      <% end %>
+    </td>
+
+    <%= javascript_tag do %>
+        var cols = $("#entry-<%= time_log.id %>").parents('form:first').find('thead > tr > th').length;
+        var myTD = $("#entry-<%= time_log.id %> > td")[1];
+        myTD.setAttribute('colspan', cols - 1);
+    <% end %>
+<% end %>

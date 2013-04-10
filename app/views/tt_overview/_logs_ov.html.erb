@@ -1,0 +1,10 @@
+<%= error_messages_for 'query' %>
+<% if @query_logs.valid? %>
+    <% if @logs.empty? %>
+        <h3><%= l(:time_tracker_label_your_time_logs) %></h3>
+        <p class="nodata"><%= l(:label_no_data) %></p>
+    <% else %>
+        <%= render :partial => 'time_logs/list_unbooked_logs', :locals => {:logs => @logs, :query => @query_logs} %>
+        <p class="pagination"><%= pagination_links_full @log_pages, @log_count, :page_param => :page_logs, :per_page_links => false %></p>
+    <% end %>
+<% end %>
