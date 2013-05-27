@@ -21,12 +21,13 @@ require_dependency 'tt_time_tracker_hooks'
 
 Redmine::Plugin.register :redmine_time_tracker do
   name 'Redmine Time Tracker plugin'
-  author 'Christian Reich'
-  author_url 'mailto:christian.reich@hicknhack-software.com'
-  description 'This is a plugin to track time in Redmine'
-  version '0.6.2'
+  url 'https://github.com/hicknhack-software/redmine_time_tracker'
+  author 'HicknHack Software GmbH'
+  author_url 'http://www.hicknhack-software.com'
+  description 'Keep track of all the time. Associate it at your will. Create and print custom reports.'
+  version '0.3.0'
 
-  requires_redmine :version_or_higher => '2.2.0'
+  requires_redmine :version_or_higher => '2.3.1'
 
   #settings :default => {:refresh_rate => '60', :status_transitions => {}}, :partial => 'settings/time_tracker'
   settings :default => {:report_title => 'Report', :report_logo_url => '', :report_logo_width => '150'}, :partial => 'settings/time_tracker'
