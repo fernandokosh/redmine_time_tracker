@@ -4,13 +4,13 @@ ActiveSupport::Dependencies.autoload_paths << File.join(File.dirname(__FILE__), 
 
 require 'redmine'
 
-require_relative 'lib/tt_user_patch'
-require_relative 'lib/tt_project_patch'
-require_relative 'lib/tt_issue_patch'
-require_relative 'lib/tt_time_entry_patch'
+require 'tt_user_patch'
+require 'tt_project_patch'
+require 'tt_issue_patch'
+require 'tt_time_entry_patch'
 
-require_relative 'lib/tt_main_menu'
-require_relative 'lib/tt_context_menus_controller_patch'
+require 'tt_main_menu'
+require 'tt_context_menus_controller_patch'
 
 # workaround helping rails to find the helper-methods
 require File.join(File.dirname(__FILE__), 'app/helpers/application_helper.rb')
