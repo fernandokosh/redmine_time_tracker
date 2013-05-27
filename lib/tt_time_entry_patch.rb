@@ -1,17 +1,13 @@
-module TimeEntryPatch
-  def self.included(base)
-    base.send(:extend, ClassMethods)
-    base.send(:include, InstanceMethods)
-    base.class_eval do
+require_dependency 'time_entry'
+
+module TtTimeEntryPatch
+  extend ActiveSupport::Concern
+
+  included do
+    class_eval do
       has_one :time_booking, :dependent => :destroy
     end
   end
-
-  module ClassMethods
-  end
-
-  module InstanceMethods
-  end
 end
 
-TimeEntry.send(:include, TimeEntryPatch)
+TimeEntry.send :include, TtTimeEntryPatch

@@ -13,13 +13,13 @@ module TimeTrackersHelper
 
   def permission_checker(permission_list, context, global = false)
     flag = false
-    permission_list.each { |permission|
+    permission_list.each do |permission|
       if global
         flag ||= User.current.allowed_to_globally?(permission, {})
       else
         flag ||= User.current.allowed_to?(permission, context)
       end
-    }
+    end
     flag
   end
 
@@ -44,9 +44,43 @@ module TimeTrackersHelper
   end
 
   def tt_column_header(column, sort_arg)
-    column.sortable ? tt_sort_header_tag(sort_arg, column.name.to_s, :caption => column.caption,
-                                         :default_order => column.default_order) :
-        content_tag('th', h(column.caption))
+    if column.sortable
+      tt_sort_header_tag sort_arg, column.name.to_s, :caption => column.caption, :default_order => column.default_order
+    else
+      content_tag('th', h(column.caption))
+    end
+  end
+
+  def tt_sort_header_tag(sort_arg, column, options = {})
+    caption = options.delete(:caption) || column.to_s.humanize
+    default_order = options.delete(:default_order) || 'asc'
+    options[:title] = l(:label_sort_by, "\"#{caption}\"") unless options[:title]
+    content_tag('th', tt_sort_link(sort_arg, column, caption, default_order), options)
+  end
+
+  def tt_sort_link(sort_arg, column, caption, default_order)
+    css, order = nil, default_order
+
+    tt_sort_criteria = @sort_logs_criteria if sort_arg == :sort_logs
+    tt_sort_criteria = @sort_bookings_criteria if sort_arg == :sort_bookings
+    if column.to_s == tt_sort_criteria.first_key
+      if tt_sort_criteria.first_asc?
+        css = 'sort asc'
+        order = 'desc'
+      else
+        css = 'sort desc'
+        order = 'asc'
+      end
+    end
+    caption = column.to_s.humanize unless caption
+
+    sort_options = { sort_arg => tt_sort_criteria.add(column.to_s, order).to_param }
+    url_options = params.merge(sort_options)
+
+    # Add project_id to url_options
+    url_options = url_options.merge(:project_id => params[:project_id]) if params.has_key?(:project_id)
+
+    link_to_content_update(h(caption), url_options, :class => css)
   end
 
   def sort_logs_clause()
@@ -80,71 +114,43 @@ module TimeTrackersHelper
     sec.to_f / 3600
   end
 
-  def tt_retrieve_query
-    if !params[:query_id].blank?
+
+  def query_from_id
+    unless params[:query_id].blank?
       query = Query.find(params[:query_id], :conditions => "project_id IS NULL")
       raise ::Unauthorized unless query.visible?
       sess_info = {:filters => query.filters, :group_by => query.group_by, :column_names => query.column_names}
-      case query.tt_query_type
-        when 1
+      case query.class.queried_class.name
+        when 'TimeLog'
           session[:tt_user_logs_query] = sess_info
           @query_logs = query.clone
-        when 2
+        when 'TimeBooking'
           session[:tt_user_bookings_query] = sess_info
           @query_bookings = query.clone
-        else
-          # nothing to do here
       end
       sort_clear
-    elsif params[:set_filter] == "2" && @query_give_logs && !@query_give_bookings ||
-        params[:set_filter] == "3" && !@query_give_logs && @query_give_bookings ||
-        session[:tt_user_logs_query].nil? && @query_give_logs ||
-        session[:tt_user_bookings_query].nil? && @query_give_bookings
-      if @query_give_logs
-        q_type = 1 # TimeLog Queries
-      elsif @query_give_bookings
-        q_type = 2 # TimeBooking Queries
-      else
-        q_type = 0 # default Redmine Queries
-      end
-      # Give it a name, required to be valid
-      # it is necessary to use the @ as prefix because methods like "build_query_from_params" depend on it!
-      @query = Query.new(:tt_query_type => q_type, :name => "_")
-      build_query_from_params
-      sess_info = {:filters => @query.filters, :group_by => @query.group_by, :column_names => @query.column_names}
-
-      if params[:set_filter] == "2" || session[:tt_user_logs_query].nil? && @query_give_logs # overview list time_logs
-        session[:tt_user_logs_query] = sess_info
-        @query_logs = @query.clone
-      elsif params[:set_filter] == "3" || session[:tt_user_bookings_query].nil? && @query_give_bookings # overview list time_bookings
-        session[:tt_user_bookings_query] = sess_info
-        @query_bookings = @query.clone
-      end
-    elsif @query_give_logs && !@query_give_bookings # get time_logs for overview page
-      @query_logs = Query.find_by_id(session[:tt_user_logs_query][:id]) if session[:tt_user_logs_query][:id]
-      @query_logs ||= Query.new(:tt_query_type => 1, :name => "_", :filters => session[:tt_user_logs_query][:filters], :group_by => session[:tt_user_logs_query][:group_by], :column_names => session[:tt_user_logs_query][:column_names])
-    elsif !@query_give_logs && @query_give_bookings # get time_bookings for overview page
-      @query_bookings = Query.find_by_id(session[:tt_user_bookings_query][:id]) if session[:tt_user_bookings_query][:id]
-      @query_bookings ||= Query.new(:tt_query_type => 2, :name => "_", :filters => session[:tt_user_bookings_query][:filters], :group_by => session[:tt_user_bookings_query][:group_by], :column_names => session[:tt_user_bookings_query][:column_names])
     end
-    @query = nil
   end
 
   def time_logs_query
-    @query_give_logs = true
-    @query_give_bookings = false
-    tt_retrieve_query
-    # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
-    # which depend on issues
-    @query_logs.column_names = @query_logs.column_names || [:tt_log_date, :get_formatted_start_time, :get_formatted_stop_time, :comments, :get_formatted_bookable_hours]
+    @query_logs ||= if params[:set_filter] == '2' || session[:tt_user_logs_query].nil?
+      query = TimeLogQuery.new :name => 'x', :filters => {}
+      query.build_from_params(params)
+      session[:tt_user_logs_query] = {:filters => query.filters, :group_by => query.group_by, :column_names => query.column_names}
+      query.clone
+    else
+      TimeLogQuery.find_by_id(session[:tt_user_logs_query][:id]) if session[:tt_user_logs_query][:id]
+    end || TimeLogQuery.new(:name => 'x', :filters => session[:tt_user_logs_query][:filters] || {}, :group_by => session[:tt_user_logs_query][:group_by], :column_names => session[:tt_user_logs_query][:column_names])
   end
 
   def time_bookings_query
-    @query_give_logs = false
-    @query_give_bookings = true
-    tt_retrieve_query
-    # overwrite the initial column_names cause if no columns are specified, the Query class uses default values
-    # which depend on issues
-    @query_bookings.column_names = @query_bookings.column_names || [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
+    @query_bookings ||= if params[:set_filter] == '3' || session[:tt_user_bookings_query].nil?
+      query = TimeBookingQuery.new :name => 'x', :filters => {}
+      query.build_from_params(params)
+      session[:tt_user_bookings_query] = {:filters => query.filters, :group_by => query.group_by, :column_names => query.column_names}
+      query.clone
+    else
+      TimeBookingQuery.find_by_id(session[:tt_user_bookings_query][:id]) if session[:tt_user_bookings_query][:id]
+    end || TimeBookingQuery.new(:name => 'x', :filters => session[:tt_user_bookings_query][:filters] || {}, :group_by => session[:tt_user_bookings_query][:group_by], :column_names => session[:tt_user_bookings_query][:column_names])
   end
 end

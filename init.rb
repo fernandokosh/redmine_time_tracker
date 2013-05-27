@@ -1,24 +1,19 @@
 # encoding: utf-8
 Rails.logger.info 'Starting Time Tracker plugin for RedMine'
+ActiveSupport::Dependencies.autoload_paths << File.join(File.dirname(__FILE__), 'app/concerns')
 
 require 'redmine'
 
-# patching the user-class of redmine, so we can reference the users time-log easier
-require 'tt_user_patch'
-require 'tt_project_patch'
-require 'tt_menu_patch'
-require 'tt_query_patch'
-require 'tt_issue_patch'
-require 'tt_time_entry_patch'
+require_relative 'lib/tt_user_patch'
+require_relative 'lib/tt_project_patch'
+require_relative 'lib/tt_issue_patch'
+require_relative 'lib/tt_time_entry_patch'
 
-require 'tt_sort_helper_patch'
-require 'tt_application_helper_patch'
-require 'tt_queries_controller_patch'
-require 'tt_issues_helper_patch'
-require 'tt_context_menus_controller_patch'
+require_relative 'lib/tt_main_menu'
+require_relative 'lib/tt_context_menus_controller_patch'
 
 # workaround helping rails to find the helper-methods
-require File.join(File.dirname(__FILE__), "app", "helpers", "application_helper.rb")
+require File.join(File.dirname(__FILE__), 'app/helpers/application_helper.rb')
 
 # TODO rails 3.2 has assets-directories as sub-dirs in app, lib and vendor => maybe we should organize our assets that way!
 
@@ -97,6 +92,10 @@ Redmine::Plugin.register :redmine_time_tracker do
                                          :tt_overview => [:index],
                                          :tt_reporting => [:index, :print_report]},
                      :require => :loggedin
+
+      # only admin can
+      # :time_logs_queries => [:edit, :show, :update, :create, :destroy],
+      # :time_bookings_queries => [:edit, :show, :update, :create, :destroy],
     end
   end
 

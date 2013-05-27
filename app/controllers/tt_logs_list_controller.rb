@@ -10,8 +10,10 @@ class TtLogsListController < ApplicationController
   include QueriesHelper
   helper :sort
   include SortHelper
+  include TtSortHelper
   helper :time_trackers
   include TimeTrackersHelper
+  helper :time_logs_sidebar
 
   def index
     time_logs_query
@@ -26,8 +28,8 @@ class TtLogsListController < ApplicationController
     if @query_logs.valid?
       @limit = per_page_option
       @log_count = @query_logs.log_count
-      @log_pages = Paginator.new self, @log_count, @limit, params['page_logs']
-      @log_offset ||= @log_pages.current.offset
+      @log_pages = Paginator.new @log_count, @limit, params['page_logs']
+      @log_offset ||= @log_pages.offset
       @logs = @query_logs.logs(:order => sort_logs_clause,
                           :offset => @log_offset,
                           :limit => @limit)

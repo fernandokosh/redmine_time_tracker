@@ -8,6 +8,8 @@ class TtOverviewController < ApplicationController
   include QueriesHelper
   helper :sort
   include SortHelper
+  helper :tt_sort
+  include TtSortHelper
   helper :time_trackers
   include TimeTrackersHelper
 
@@ -18,6 +20,7 @@ class TtOverviewController < ApplicationController
 
     # time_log list  =======================
 
+    query_from_id
     # prepare query for time_logs
     time_logs_query
     # group list by date per default // TODO replace this with some kind of user-settings later!
@@ -27,10 +30,9 @@ class TtOverviewController < ApplicationController
     tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")
 
     if @query_logs.valid?
-      #@limit = per_page_option
       @log_count = @query_logs.log_count
-      @log_pages = Paginator.new self, @log_count, @limit, params['page_logs']
-      @log_offset ||= @log_pages.current.offset
+      @log_pages = Paginator.new @log_count, @limit, params['page_logs'], 'page_logs'
+      @log_offset ||= @log_pages.offset
       @logs = @query_logs.logs(:order => sort_logs_clause,
                                :offset => @log_offset,
                                :limit => @limit)
@@ -51,10 +53,9 @@ class TtOverviewController < ApplicationController
     tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
 
     if @query_bookings.valid?
-      #@limit = per_page_option
       @booking_count = @query_bookings.booking_count
-      @booking_pages = Paginator.new self, @booking_count, @limit, params['page_bookings']
-      @booking_offset ||= @booking_pages.current.offset
+      @booking_pages = Paginator.new @booking_count, @limit, params['page_bookings'], 'page_bookings'
+      @booking_offset ||= @booking_pages.offset
       @bookings = @query_bookings.bookings(:order => sort_bookings_clause,
                                            :offset => @booking_offset,
                                            :limit => @limit)

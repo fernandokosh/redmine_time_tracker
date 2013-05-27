@@ -5,6 +5,6 @@
         <p class="nodata"><%= l(:label_no_data) %></p>
     <% else %>
         <%= render :partial => 'time_bookings/list_bookings', :locals => {:bookings => @bookings, :query => @query_bookings} %>
-        <p class="pagination"><%= pagination_links_full @booking_pages, @booking_count, :page_param => :page_bookings, :per_page_links => false %></p>
+        <p class="pagination"><%= pagination_links_full @booking_pages, @booking_count, :per_page_links => false %></p>
     <% end %>
 <% end %>

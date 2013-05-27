@@ -10,10 +10,13 @@ class TtBookingsListController < ApplicationController
   include QueriesHelper
   helper :sort
   include SortHelper
+  include TtSortHelper
   helper :time_trackers
   include TimeTrackersHelper
+  helper :time_bookings_sidebar
 
   def index
+    query_from_id
     time_bookings_query
 
     unless User.current.allowed_to_globally?(:tt_edit_bookings, {})
@@ -27,8 +30,8 @@ class TtBookingsListController < ApplicationController
       @limit = per_page_option
 
       @booking_count = @query_bookings.booking_count
-      @booking_pages = Paginator.new self, @booking_count, @limit, params['page']
-      @offset ||= @booking_pages.current.offset
+      @booking_pages = Paginator.new @booking_count, @limit, params['page'], 'page'
+      @offset ||= @booking_pages.offset
       @bookings = @query_bookings.bookings(:order => sort_bookings_clause,
                                            :offset => @offset,
                                            :limit => @limit)

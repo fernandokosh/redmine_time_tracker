@@ -1,29 +1,23 @@
+require_dependency 'user'
 require_dependency 'project'
 require_dependency 'principal'
 
-module UserPatch
-  def self.included(base)
-    base.send(:extend, ClassMethods)
-    base.send(:include, InstanceMethods)
-    base.class_eval do
+# patching the user-class of redmine, so we can reference the users time-log easier
+module TtUserPatch
+  extend ActiveSupport::Concern
+
+  included do
+    class_eval do
       has_many :time_logs
       has_many :time_bookings, :through => :time_logs
-
-      alias_method_chain :remove_references_before_destroy, :time_tracker
     end
   end
 
-  module ClassMethods
-  end
-
-  module InstanceMethods
-    def remove_references_before_destroy_with_time_tracker
-      remove_references_before_destroy_without_time_tracker
-
-      substitute = User.anonymous
-      TimeLog.update_all ['user_id = ?', substitute.id], ['user_id = ?', id]
-    end
+  def remove_references_before_destroy
+    super
+    substitute = ::User.anonymous
+    TimeLog.update_all ['user_id = ?', substitute.id], ['user_id = ?', id]
   end
 end
 
-User.send(:include, UserPatch)
+User.send :include, TtUserPatch

@@ -18,13 +18,11 @@
 <%= form_tag({:controller => 'tt_reporting', :action => 'index'},
              :method => :get, :id => 'query_form') do %>
     <%= hidden_field_tag 'set_filter', '3' %>
-    <%= hidden_field_tag 'tt_query_type', 2 %>
     <div id="query_form_content" class="hide-when-print">
       <fieldset id="filters" class="collapsible <%= query.new_record? ? "" : "collapsed" %>">
         <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
         <div style="<%= query.new_record? ? "" : "display: none;" %>">
           <%= render :partial => 'queries/filters', :locals => {:query => query} %>
-          <%= javascript_tag render :partial => 'queries/expand_filter_menu', :formats => [:js], :locals => {:query => query, :filed_id => "tt_booking_start_date"} %>
         </div>
       </fieldset>
       <fieldset class="collapsible collapsed">
@@ -33,7 +31,7 @@
           <table>
             <tr>
               <td><%= l(:field_column_names) %></td>
-              <td><%= render :partial => 'queries/columns', :locals => {:query => query} %></td>
+              <td><%= render_query_columns_selection(query) %></td>
             </tr>
             <tr>
               <td><label for='group_by'><%= l(:field_group_by) %></label></td>

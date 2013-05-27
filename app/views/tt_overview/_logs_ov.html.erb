@@ -5,6 +5,6 @@
         <p class="nodata"><%= l(:label_no_data) %></p>
     <% else %>
         <%= render :partial => 'time_logs/list_unbooked_logs', :locals => {:logs => @logs, :query => @query_logs} %>
-        <p class="pagination"><%= pagination_links_full @log_pages, @log_count, :page_param => :page_logs, :per_page_links => false %></p>
+        <p class="pagination"><%= pagination_links_full @log_pages, @log_count, :per_page_links => false %></p>
     <% end %>
 <% end %>

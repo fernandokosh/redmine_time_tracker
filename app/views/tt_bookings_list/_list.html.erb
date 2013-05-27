@@ -8,7 +8,7 @@
             <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(this); return false;',
                                                              :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
             </th>
-            <% query.columns.each do |column| %>
+            <% query.inline_columns.each do |column| %>
                 <%= tt_column_header(column, :sort_bookings) %>
             <% end %>
           </tr>

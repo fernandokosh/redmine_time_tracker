@@ -1,3 +1,11 @@
+resources :time_booking_queries, :except => [:show, :index]
+resources :time_log_queries, :except => [:show, :index]
+
+resources :projects do
+  resources :time_booking_queries, :only => [:new, :create]
+  resources :time_log_queries, :only => [:new, :create]
+end
+
 match '/time_bookings/actions', :to => 'time_bookings#actions', :via => [:get, :post, :put]
 match '/time_bookings/show_edit', :to => 'time_bookings#show_edit', :via => [:get, :post]
 match '/time_bookings/delete', :to => 'time_bookings#delete', :via => [:get, :post]
