@@ -149,7 +149,7 @@ class TimeLog < ActiveRecord::Base
   end
 
   def tt_log_date
-    self.started_on.to_date.to_s(:db)
+    self.started_on.localtime.to_date.to_s(:db)
   end
 
   # returns the sum of bookable time of an time entry

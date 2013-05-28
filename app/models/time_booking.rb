@@ -173,7 +173,7 @@ class TimeBooking < ActiveRecord::Base
   end
 
   def tt_booking_date
-    self.started_on.to_date.to_s(:db)
+    self.started_on.localtime.to_date.to_s(:db)
   end
 
   def user

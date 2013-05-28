@@ -1,10 +1,15 @@
 class TimeTracker < ActiveRecord::Base
   unloadable
 
-  attr_accessible :comments, :issue_id, :project_id, :start_time, :date, :round
+  attr_accessible :comments, :issue_id, :issue_text, :project_id, :start_time, :date, :round
   attr_accessor :start_time, :date
 
   belongs_to :user
+
+  def to_json(options = {})
+    options[:methods] = :issue_text
+    super
+  end
 
   # to ensure that every user can run only one tracker at one time, we have to do some validations
   validate :only_one_tracker, :on => :create
@@ -125,6 +130,21 @@ class TimeTracker < ActiveRecord::Base
         self.destroy if time_log.save
       end
     end # TODO raise an error if stop is called while self is not valid!! controller should check that too
+  end
+
+  def issue_text=(value)
+    if !value.nil? and value.is_a?(String) and value.match(/\A\#(\d+)/)
+      self.issue_id = value.match(/\A\#(\d+)/)[1].to_i
+    end
+  end
+
+  def issue_text
+    issue = help.issue_from_id(self.issue_id)
+    if issue.nil?
+      ''
+    else
+      "\##{issue.id} #{issue.subject}"
+    end
   end
 
   def get_formatted_time

@@ -16,15 +16,15 @@ class TimeTrackersController < ApplicationController
       # TODO work out a nicer way to get the params from the form
       unless params[:time_tracker].nil?
         args[:issue_id]=params[:time_tracker][:issue_id] if args[:issue_id].nil?
-        args[:comments]=params[:time_tracker][:comments] if args[:comments].nil?
+        args[:comments]=params[:time_tracker][:comments].strip if args[:comments].nil?
       end
       # parse comments for issue-id
-      if args[:issue_id].nil? && !args[:comments].nil? && args[:comments].strip.match(/\A#\d?\d*/)
-        cut = args[:comments].strip.partition(/#\d?\d*/)
-        issue_id = cut[1].sub(/#/, "").to_i
-        unless help.issue_from_id(issue_id).nil?
+      if args[:issue_id].nil? && !args[:comments].nil? && args[:comments].match(/\A\#(\d+)/)
+        issue_id = args[:comments].match(/\A\#(\d+)/)[1].to_i
+        issue = help.issue_from_id(issue_id)
+        unless issue.nil?
           args[:issue_id] = issue_id
-          args[:comments] = cut[2].strip
+          args[:comments].sub!( /\A\##{issue_id}(\s+#{issue.subject})?\s*/, '' )
         end
       end
 
@@ -48,7 +48,7 @@ class TimeTrackersController < ApplicationController
       redirect_to :back
     else
       unless params[:time_tracker].nil?
-        @time_tracker.issue_id = params[:time_tracker][:issue_id]
+        @time_tracker.issue_text = params[:time_tracker][:issue_text]
         @time_tracker.comments = params[:time_tracker][:comments]
       end
       @time_tracker.stop

@@ -15,7 +15,7 @@
               <div class="task_form_top_fields">
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-                  <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => l(:time_tracker_label_issue), :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 2 %></div>
+                  <div class="task_form_input"><%= f.text_field :issue_text, :value => @time_tracker.issue_text, :size => "15", :placeholder => l(:time_tracker_label_issue), :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 2 %></div>
                 </div>
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
