@@ -1,10 +1,11 @@
-require File.dirname(__FILE__) + '../../test_helper'
+require_relative '../test_helper'
 
 class TimeTrackersControllerTest < ActionController::TestCase
   fixtures :projects, :users, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
            :enumerations, :time_entries, :time_trackers
 
   def setup
+    Timecop.travel(Time.local(2012, 10, 30, 12, 0, 0))
     @controller = TimeTrackersController.new
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new

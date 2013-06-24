@@ -1,10 +1,11 @@
-require File.dirname(__FILE__) + '../../test_helper'
+require_relative '../test_helper'
 
 class TimeLogsControllerTest < ActionController::TestCase
   fixtures :projects, :users, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
            :enumerations, :time_entries, :time_logs
 
   def setup
+    Timecop.travel(Time.local(2012, 10, 30, 12, 0, 0))
     @controller = TimeLogsController.new
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
@@ -53,7 +54,6 @@ class TimeLogsControllerTest < ActionController::TestCase
         @request.accept = "text/javascript"
         get :show_edit, {:time_log_ids => [1]}
         assert_response 200, "on show_edit"
-        flunk "test for get_list_entry not implemented yet!"
         get :get_list_entry, {:time_log_id => 1}
         assert_response 200, "on get_list_entry"
       end
@@ -120,8 +120,7 @@ class TimeLogsControllerTest < ActionController::TestCase
         @request.accept = "text/javascript"
         get :show_edit, {:time_log_ids => [1]}
         assert_response 200, "on show_edit"
-        flunk "test for get_list_entry not implemented yet!"
-        get :get_list_entry
+        get :get_list_entry, {:time_log_id => 1}
         assert_response 200, "on get_list_entry"
       end
 
@@ -185,8 +184,7 @@ class TimeLogsControllerTest < ActionController::TestCase
         @request.accept = "text/javascript"
         get :show_edit, {:time_log_ids => [1]}
         assert_response 200, "on show_edit"
-        flunk "test for get_list_entry not implemented yet!"
-        get :get_list_entry
+        get :get_list_entry, {:time_log_id => 1}
         assert_response 200, "on get_list_entry"
       end
 
@@ -292,7 +290,6 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 200, "on show_edit"
         get :show_booking
         assert_response 200, "on show_booking"
-        flunk "test for get_list_entry not implemented yet!"
         get :get_list_entry, {:time_log_id => 1}
         assert_response 200, "on get_list_entry"
       end
@@ -379,7 +376,6 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 200, "on show_edit"
         get :show_booking
         assert_response 200, "on show_booking"
-        flunk "test for get_list_entry not implemented yet!"
         get :get_list_entry, {:time_log_id => 1}
         assert_response 200, "on get_list_entry"
       end
@@ -466,7 +462,6 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 200, "on show_edit"
         get :show_booking
         assert_response 200, "on show_booking"
-        flunk "test for get_list_entry not implemented yet!"
         get :get_list_entry, {:time_log_id => 1}
         assert_response 200, "on get_list_entry"
       end

@@ -1,10 +1,11 @@
-require File.dirname(__FILE__) + '../../test_helper'
+require_relative '../test_helper'
 
 class TimeBookingsControllerTest < ActionController::TestCase
   fixtures :projects, :users, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
            :enumerations, :time_entries, :time_bookings, :time_logs
 
   def setup
+    Timecop.travel(Time.local(2012, 10, 30, 12, 0, 0))
     @controller = TimeBookingsController.new
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
@@ -110,8 +111,8 @@ class TimeBookingsControllerTest < ActionController::TestCase
       end
 
       should "allow access" do
-        flunk "test for get_list_entry not implemented yet!"
-        get :get_list_entry
+        @request.accept = "text/javascript"
+        get :get_list_entry, {:time_booking_id => 1}
         assert_response 200, "on get_list_entry"
       end
     end
@@ -127,7 +128,6 @@ class TimeBookingsControllerTest < ActionController::TestCase
         @request.accept = "text/javascript"
         get :show_edit, {:time_booking_ids => [1]}
         assert_response 200, "on show_edit"
-        flunk "test for get_list_entry not implemented yet!"
         get :get_list_entry, {:time_booking_id => 1}
         assert_response 200, "on get_list_entry"
       end
@@ -195,7 +195,6 @@ class TimeBookingsControllerTest < ActionController::TestCase
         @request.accept = "text/javascript"
         get :show_edit, {:time_booking_ids => [1]}
         assert_response 200, "on show_edit"
-        flunk "test for get_list_entry not implemented yet!"
         get :get_list_entry, {:time_booking_id => 1}
         assert_response 200, "on get_list_entry"
       end
@@ -258,7 +257,6 @@ class TimeBookingsControllerTest < ActionController::TestCase
         @request.accept = "text/javascript"
         get :show_edit, {:time_booking_ids => [1]}
         assert_response 200, "on show_edit"
-        flunk "test for get_list_entry not implemented yet!"
         get :get_list_entry, {:time_booking_id => 1}
         assert_response 200, "on get_list_entry"
       end
