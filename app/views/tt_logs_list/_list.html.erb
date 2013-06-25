@@ -2,7 +2,7 @@
   <%= form_tag({:controller => :time_logs, :action => "actions"}, :remote => false) do -%>
       <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
       <div class="autoscroll">
-        <table class="list">
+        <table class="list tt_list">
           <thead>
           <tr>
             <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(this); return false;',

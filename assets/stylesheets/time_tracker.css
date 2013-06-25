@@ -22,7 +22,7 @@ fieldset#filters td.values input[type="button"] {
     color: #800;
 }
 
-tr.entry {
+.tt_list tr.entry {
     white-space: nowrap;
     text-align: center;
 }

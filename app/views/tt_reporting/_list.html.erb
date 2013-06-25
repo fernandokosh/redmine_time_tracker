@@ -2,7 +2,7 @@
   <%= form_tag({}) do -%>
       <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
       <div class="autoscroll">
-        <table class="list">
+        <table class="list tt_list">
           <thead>
           <tr>
             <% query.columns.each do |column| %>
