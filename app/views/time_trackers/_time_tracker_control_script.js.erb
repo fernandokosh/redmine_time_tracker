@@ -67,3 +67,11 @@ $(document).ready(function () {
   }
  });
 });
+$(document).ready(function () {
+    $('.time-tracker-form, .tt_list').on('keydown', 'input', function (event) {
+        if (event.keyCode == 13 && this.type != 'submit') {
+            $(this).parents('form').find('input[type=submit]').focus()
+            event.preventDefault()
+        }
+    });
+});
