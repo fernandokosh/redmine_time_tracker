@@ -12,7 +12,7 @@ module TimeTrackersHelper
   end
 
   def permission_checker(permission_list, context, global = false)
-    return true if admin?
+    return true if User.current.admin?
     flag = false
     permission_list.each do |permission|
       if global
