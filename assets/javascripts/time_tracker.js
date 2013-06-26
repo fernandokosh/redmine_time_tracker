@@ -195,3 +195,10 @@ function calcBookingHelper(ele1, ele2, calc) {
     while (calc == 2 && h > 23) h = h - 24;    //stop_time should be between 0-24 o clock
     return h + ":" + m + ":" + s;
 }
+$(document).ready(function(){
+    $(document).on('ajax:success','.tt_stop,.tt_start', function(xhr,html,status){
+        $('#content .flash').remove();
+        $('#content').prepend(html);
+    });
+});
+

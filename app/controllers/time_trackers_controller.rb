@@ -16,7 +16,7 @@ class TimeTrackersController < ApplicationController
       # TODO work out a nicer way to get the params from the form
       unless params[:time_tracker].nil?
         args[:issue_id]=params[:time_tracker][:issue_id] if args[:issue_id].nil?
-        args[:comments]=params[:time_tracker][:comments].strip if args[:comments].nil?
+        args[:comments]=params[:time_tracker][:comments].strip if args[:comments].nil? and not params[:time_tracker][:comments].nil?
       end
       # parse comments for issue-id
       if args[:issue_id].nil? && !args[:comments].nil? && args[:comments].match(/\A\#(\d+)/)
@@ -31,14 +31,18 @@ class TimeTrackersController < ApplicationController
 
       @time_tracker = TimeTracker.new(:issue_id => args[:issue_id], :comments => args[:comments])
       if @time_tracker.start
-        apply_status_transition(Issue.where(:id => args[:issue_id]).first) unless Setting.plugin_redmine_time_tracker[:status_transitions] == nil
+        flash[:notice] = l(:start_time_tracker_success)
       else
         flash[:error] = l(:start_time_tracker_error)
       end
     else
       flash[:error] = l(:time_tracker_already_running_error)
     end
-    redirect_to :controller => 'tt_overview'
+    unless request.xhr?
+      redirect_to :controller => 'tt_overview'
+    else
+      render :partial => 'flash_messages'
+    end
   end
 
   def stop
@@ -54,14 +58,27 @@ class TimeTrackersController < ApplicationController
       @time_tracker.stop
       flash[:error] = l(:stop_time_tracker_error) unless @time_tracker.destroyed?
       @time_tracker = get_current
-      redirect_to :controller => 'tt_overview'
+      flash[:notice] = l(:stop_time_tracker_success)
+      unless request.xhr?
+        redirect_to :controller => 'tt_overview'
+      else
+        render :partial => 'flash_messages'
+      end
     end
   rescue StandardError => e
     flash[:error] = e.message
-    redirect_to :back
+    unless request.xhr?
+      redirect_to :back
+    else
+      render :partial => 'flash_messages'
+    end
   rescue ActionController::RedirectBackError => e
     flash[:error] = e.message
-    redirect_to :controller => 'tt_overview'
+    unless request.xhr?
+      redirect_to :controller => 'tt_overview'
+    else
+      render :partial => 'flash_messages'
+    end
   end
 
   def delete
