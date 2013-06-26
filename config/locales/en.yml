@@ -108,6 +108,7 @@ en:
   time_tracker_label_other_time_trackers: "Other user's time trackers"
   time_tracker_chart_title: "Booked Hours by Day"
   time_tracker_list_title: "Time trackers"
+  time_tracker_overview_title: "Time Tracking"
   time_tracker_loglist_title: "Time Logs"
   time_tracker_bookinglist_title: "Time Bookings"
   time_tracker_not_running: "Not running"

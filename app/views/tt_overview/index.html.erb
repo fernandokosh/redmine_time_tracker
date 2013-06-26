@@ -1,4 +1,5 @@
 <% include_calendar_headers_tags %>
+<% html_title l(:time_tracker_overview_title) %>
 
 <% if help.permission_checker([:tt_log_time], {}, true) %>
 <%= render 'time_trackers/time_tracker_control' %>
