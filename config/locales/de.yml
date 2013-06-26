@@ -27,7 +27,7 @@ de:
   permission_tt_log_time: "Zeit erfassen (global)"
   permission_tt_edit_own_time_logs: "Eigene Zeiterfassung ändern (global)"
   permission_tt_edit_time_logs: "Alle Zeiterfassungen ändern (global)"
-  permission_tt_view_bookings: "Zeitbuchungen ändern"
+  permission_tt_view_bookings: "Zeitbuchungen ansehen"
   permission_tt_book_time: "Zeitbuchungen erstellen"
   permission_view_others_time_trackers: "Anzeigen der Zeiterfassung anderer Benutzer"
   permission_tt_edit_bookings: "Alle Zeitbuchungen ändern"
