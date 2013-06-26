@@ -27,6 +27,17 @@ fieldset#filters td.values input[type="button"] {
     text-align: center;
 }
 
+.tt_list .icon_column {
+    width: 1px;
+}
+
+.tt_list_button {
+    display: block;
+    float: left;
+    width: 16px;
+    height: 16px;
+}
+
 .task_form_top_fields, .task_form_btottom_fields {
     width: 100%;
     position: relative;

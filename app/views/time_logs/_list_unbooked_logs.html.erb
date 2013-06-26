@@ -16,6 +16,7 @@
                     <% query.columns.each do |column| %>
                         <%= tt_column_header(column, :sort_logs) %>
                     <% end %>
+                    <th class="icon_column"></th>
                   </tr>
                   </thead>
                   <% previous_group = false %>
@@ -40,7 +41,7 @@
                           <% if group != previous_group %>
                               <% reset_cycle %>
                               <tr class="group open">
-                                <td colspan="<%= query.columns.size + 1 %>">
+                                <td colspan="<%= query.columns.size + 2 %>">
                                   <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                                   <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
                                   <span class="count">(<%= group.nil? ? @log_count_by_group[nil] : (@log_count_by_group.keys[0].is_a?(Date) ? @log_count_by_group[group.to_date] : @log_count_by_group[group]) %>)
