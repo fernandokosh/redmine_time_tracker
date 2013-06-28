@@ -129,7 +129,9 @@ function updateBookingProject(api_key, name) {
         issue_id_field.removeClass('invalid');
         input_validator(name);
     } else {
-        $.ajax({url:'/issues/' + issue_id + '.json?key=' + api_key,
+        var src = $('script[src*="time_tracker.js"]')[0].src;
+        var base_url = src.substr(0, src.indexOf('plugin_assets'));
+        $.ajax({url: base_url + 'issues/' + issue_id + '.json?key=' + api_key,
             type:'GET',
             success:function (transport) {
                 issue_id_field.removeClass('invalid');
