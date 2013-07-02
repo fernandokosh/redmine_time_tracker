@@ -11,7 +11,7 @@
                   :data => {:type => 'html'}
       %>
     </li>
-<% elsif !@project.nil? and !@issue.nil? and User.current.allowed_to?(:log_time, @project) and help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], @project) %>
+<% elsif !@project.nil? and !@issue.nil? and User.current.allowed_to?(:tt_log_time, @project) and help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], @project) %>
     <%# No time tracker is running, but the user has the rights to track time on this issue %>
     <%# Display the start time tracker action %>
     <li>
