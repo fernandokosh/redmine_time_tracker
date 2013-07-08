@@ -1,4 +1,3 @@
-gem 'rails', '~> 3.2.13'
 group :test do
   gem "test-unit"
   if RUBY_PLATFORM =~ /(win32|w32)/
