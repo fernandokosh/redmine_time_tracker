@@ -101,6 +101,9 @@ class TimeTracker < ActiveRecord::Base
   end
 
   def start
+    unless self.project_id.nil?
+      raise StandardError, l(:tt_error_not_allowed_to_create_time_log_on_project) unless help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], help.project_from_id(self.project_id))
+    end
     if self.valid?
       self.started_on = Time.now.localtime.change(:sec => 0)
       self.save
@@ -135,6 +138,8 @@ class TimeTracker < ActiveRecord::Base
   def issue_text=(value)
     if !value.nil? and value.is_a?(String) and value.match(/\A\#(\d+)/)
       self.issue_id = value.match(/\A\#(\d+)/)[1].to_i
+    else
+      self.issue_id = nil
     end
   end
 

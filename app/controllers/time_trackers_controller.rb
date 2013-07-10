@@ -43,6 +43,20 @@ class TimeTrackersController < ApplicationController
     else
       render :partial => 'flash_messages'
     end
+  rescue StandardError => e
+    flash[:error] = e.message
+    unless request.xhr?
+      redirect_to :back
+    else
+      render :partial => 'flash_messages'
+    end
+  rescue ActionController::RedirectBackError => e
+    flash[:error] = e.message
+    unless request.xhr?
+      redirect_to :controller => 'tt_overview'
+    else
+      render :partial => 'flash_messages'
+    end
   end
 
   def stop

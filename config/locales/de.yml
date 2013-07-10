@@ -56,6 +56,7 @@ de:
   tt_error_not_allowed_to_change_foreign_logs: "Sie haben keine Berechtigung fremde Zeiterfassungen zu ändern!"
   tt_error_not_allowed_to_change_logs: "Sie haben keine Berechtigung Zeiterfassungen zu ändern!"
   tt_error_not_allowed_to_create_time_log: "Sie haben keine Berechtigung Zeit zu erfassen!"
+  tt_error_not_allowed_to_create_time_log_on_project: "Sie haben keine Berechtigung Zeit in diesem Projekt erfassen!"
   tt_error_not_allowed_to_delete_bookings: "Sie haben keine Berechtigung Zeitbuchungen zu löschen!"
   tt_error_not_allowed_to_delete_logs: "Sie haben keine Berechtigung Zeiterfassungen zu löschen!"
   tt_error_could_not_set_comments: "Kommentare konnten nicht gespeichert werden!"
