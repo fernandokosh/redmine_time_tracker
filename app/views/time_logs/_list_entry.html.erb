@@ -8,7 +8,7 @@
   <% if User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'show_booking'}, {}) %>
       <%= link_to '',
                   {:controller => 'time_logs', :action => 'show_booking', :time_log_ids => entry.id},
-                  :class => 'icon-time-add tt_list_button',
+                  :class => 'icon-time tt_list_button',
                   :remote => true
       %>
   <% end %>
