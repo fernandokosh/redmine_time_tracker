@@ -14,6 +14,7 @@ class TtOverviewController < ApplicationController
   include TimeTrackersHelper
 
   def index
+    @enumerations = Enumeration.where("type = ? AND active = ?", "TimeEntryActivity", "t").all
     @time_tracker = get_current_time_tracker
 
     @limit = 15 # limit for both lists

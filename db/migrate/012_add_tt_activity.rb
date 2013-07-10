@@ -8,6 +8,6 @@ class AddTtActivity < ActiveRecord::Migration
     tea = TimeEntryActivity.where(:name => :time_tracker_activity).first
     TimeEntryActivity.destroy(tea.id) unless tea.nil?
   rescue
-    Rails.logger.info "Can't delete the TimeEntryActivity. There are still redmine activities with this booked."
+    Rails.logger.info "Can't delete the TimeEntryActivity. There are still redmine activities booked with this."
   end
 end

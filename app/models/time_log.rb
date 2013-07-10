@@ -87,8 +87,7 @@ class TimeLog < ActiveRecord::Base
   # if issue is the only parameter we get, we will book the whole time to one issue
   # method returns the booking.id if transaction was successfully completed, raises an error otherwise
   def add_booking(args = {})
-    tea = TimeEntryActivity.find_or_create_by_name(:name => :time_tracker_activity, :active => false)
-    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => tea.id, :issue => nil, :spent_time => nil, :project_id => self.project_id}
+    default_args = {:started_on => self.started_on, :stopped_at => self.stopped_at, :comments => self.comments, :activity_id => args[:activity_id], :issue => nil, :spent_time => nil, :project_id => self.project_id}
     args = default_args.merge(args)
 
     # TODO check time boundaries

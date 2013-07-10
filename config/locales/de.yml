@@ -92,6 +92,7 @@ de:
   time_tracker_label_project: "Projekt"
   time_tracker_label_round: "gerundete Zeitwerte"
   time_tracker_label_running_time: "aktuell laufende Zeiterfassung"
+  time_tracker_label_activity: "Aktivität"
   time_tracker_label_show_all_my_logs: "zeige vollständig gebuchte Zeiterfassungen"
   time_tracker_label_start_date: "Startdatum"
   time_tracker_label_start_time: "Startzeit"

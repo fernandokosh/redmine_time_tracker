@@ -68,6 +68,7 @@ class TimeTrackersController < ApplicationController
       unless params[:time_tracker].nil?
         @time_tracker.issue_text = params[:time_tracker][:issue_text]
         @time_tracker.comments = params[:time_tracker][:comments]
+        @time_tracker.activity_id = params[:time_tracker][:activity_id]
       end
       @time_tracker.stop
       flash[:error] = l(:stop_time_tracker_error) unless @time_tracker.destroyed?
