@@ -5,6 +5,17 @@
       <%= fields_for prefix, time_booking do |f| %>
           <%= f.hidden_field(:id) %>
 
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:field_tt_date) %></div>
+            <div class="task_form_input">
+              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_valid_dates", [time_booking.time_log.started_on.to_date.to_s(:db), time_booking.time_log.stopped_at.to_date.to_s(:db)] %>
+              <%= f.text_field :tt_booking_date, :size => "10", :placeholder => "date", :readonly => time_booking.permission_level < 2, :onchange => "input_validator('time_booking_edit_#{time_booking.id}');" %>
+              <% unless time_booking.permission_level < 2 %>
+                  <%= calendar_for("time_booking_edit_#{time_booking.id.to_s}_tt_booking_date") %>
+              <% end %>
+            </div>
+          </div>
+
           <% projects = User.current.memberships.collect(&:project).compact.uniq %>
           <% time_booking.project_id.nil? ? select = nil : select = Project.find(time_booking.project_id) %>
           <% proj_list = "<option value=''>#{ l(:time_tracker_label_none) }</option>" %>
@@ -27,17 +38,16 @@
           </div>
 
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:field_tt_date) %></div>
-            <div class="task_form_input">
-              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_valid_dates", [time_booking.time_log.started_on.to_date.to_s(:db), time_booking.time_log.stopped_at.to_date.to_s(:db)] %>
-              <%= f.text_field :tt_booking_date, :size => "10", :placeholder => "date", :readonly => time_booking.permission_level < 2, :onchange => "input_validator('time_booking_edit_#{time_booking.id}');" %>
-              <% unless time_booking.permission_level < 2 %>
-                  <%= calendar_for("time_booking_edit_#{time_booking.id.to_s}_tt_booking_date") %>
-              <% end %>
-            </div>
+            <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
+            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('#{User.current.api_key}', 'time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 1 %></div>
           </div>
 
           <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
+            <div class="task_form_input"><%= f.text_field :comments, :size => 30, :maxlength => 255, :readonly => time_booking.permission_level < 1 %></div>
+          </div>
+
+         <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_start_time) + " (min: #{time_booking.time_log.get_formatted_start_time})" %></div>
             <div class="task_form_input">
               <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_min_time", time_booking.time_log.get_formatted_start_time %>
@@ -54,22 +64,13 @@
           </div>
 
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('#{User.current.api_key}', 'time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 1 %></div>
-          </div>
-
-          <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
-            <div class="task_form_input"><%= f.text_field :comments, :size => 30, :maxlength => 255, :readonly => time_booking.permission_level < 1 %></div>
-          </div>
-
-          <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_time_spent) + " (max: #{help.time_dist2string(((time_booking.time_log.bookable_hours + time_booking.hours_spent) * 3600).to_i)})" %></div>
             <div class="task_form_input">
               <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_max_spent_time", help.time_dist2string(((time_booking.time_log.bookable_hours + time_booking.hours_spent) * 3600).to_i) %>
               <%= f.text_field :spent_time, :value => time_booking.get_formatted_time, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 2 %>
             </div>
           </div>
+
           <%= f.submit l(:time_tracker_label_update), :class => "tb_edit_form_update_button" %>
           <%= link_to l(:button_cancel), {:controller => 'time_bookings', :action => 'get_list_entry', :time_booking_id => time_booking.id}, :remote => true %>
       <% end %>

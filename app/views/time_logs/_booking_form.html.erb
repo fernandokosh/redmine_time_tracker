@@ -6,14 +6,6 @@
       <%= fields_for prefix, time_log do |f| %>
           <%= f.hidden_field(:id) %>
 
-          <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
-            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('#{User.current.api_key}', 'time_log_add_booking_#{time_log.id}')" %></div>
-          </div>
-          <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
-            <div class="task_form_input"><%= f.text_field :comments, :size => 30, :maxlength => 255 %></div>
-          </div>
           <% projects = User.current.memberships.collect(&:project).compact.uniq %>
           <% time_log.project_id.nil? ? select = nil : select = Project.find(time_log.project_id) %>
           <% proj_list = "<option value=''>#{ l(:time_tracker_label_none) }</option>" %>
@@ -27,12 +19,24 @@
             </div>
             <%= f.hidden_field :project_id %>
           </div>
+
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_activity) %></div>
             <div class="task_form_input">
               <%= select_tag "time_log_add_booking_#{time_log.id}_activity_id_select",options_from_collection_for_select(@enumerations, :id, :name), :name=> "time_log_add_booking[#{time_log.id}][activity_id]"%>
             </div>
           </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
+            <div class="task_form_input"><%= f.text_field :issue_id, :size => "15", :placeholder => "issue", :onchange => "updateBookingProject('#{User.current.api_key}', 'time_log_add_booking_#{time_log.id}')" %></div>
+          </div>
+
+          <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
+            <div class="task_form_input"><%= f.text_field :comments, :size => 30, :maxlength => 255 %></div>
+          </div>
+
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_start_time) + " (min: #{time_log.get_formatted_start_time})" %></div>
             <div class="task_form_input">
@@ -40,6 +44,7 @@
               <%= f.text_field :start_time, :value => time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "updateBookingHours('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
+
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_stop_time) + " (max: #{time_log.get_formatted_stop_time})" %></div>
             <div class="task_form_input">
@@ -47,6 +52,7 @@
               <%= f.text_field :stop_time, :value => (time_log.started_on + time_log.bookable_hours.hours).localtime.strftime("%H:%M:%S"), :size => "10", :placeholder => "stop", :onchange => "updateBookingHours('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
+
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_time_spent) + " (max: #{time_log.get_formatted_bookable_hours})" %></div>
             <div class="task_form_input">
@@ -54,6 +60,7 @@
               <%= f.text_field :spent_time, :value => time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
+
           <%= f.submit l(:time_tracker_label_book), :class => "tl_book_form_button" %>
           <%= link_to l(:button_cancel), {:controller => 'time_logs', :action => 'get_list_entry', :time_log_id => time_log.id}, :remote => true %>
       <% end %>
