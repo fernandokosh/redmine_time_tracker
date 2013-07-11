@@ -58,6 +58,7 @@ class TimeLogsController < ApplicationController
 
   def show_booking
     @time_logs = TimeLog.where(:id => params[:time_log_ids]).all
+    @enumerations = Enumeration.where(:type => 'TimeEntryActivity', :active => 't').all
     respond_to do |format|
       format.js
     end
@@ -86,7 +87,7 @@ class TimeLogsController < ApplicationController
     time_log = TimeLog.where(:id => tl[:id]).first
     issue = issue_from_id(tl[:issue_id])
     last_added_booking_id = time_log.add_booking(:start_time => tl[:start_time], :stop_time => tl[:stop_time], :spent_time => tl[:spent_time],
-                                                 :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id])
+                                                 :comments => tl[:comments], :issue => issue, :project_id => tl[:project_id], :activity_id => tl[:activity_id])
     flash[:notice] = l(:success_add_booking)
     last_added_booking_id
   rescue StandardError => e

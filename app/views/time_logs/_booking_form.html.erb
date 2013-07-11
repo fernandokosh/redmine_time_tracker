@@ -28,6 +28,12 @@
             <%= f.hidden_field :project_id %>
           </div>
           <div class="task_form_sub_fields">
+            <div class="input_hint"><%= l(:time_tracker_label_activity) %></div>
+            <div class="task_form_input">
+              <%= select_tag "time_log_add_booking_#{time_log.id}_activity_id_select",options_from_collection_for_select(@enumerations, :id, :name), :name=> "time_log_add_booking[#{time_log.id}][activity_id]",:onchange => "$('#time_log_add_booking_#{time_log.id}_activity_id').val(this.value);"%>
+            </div>
+          </div>
+          <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_start_time) + " (min: #{time_log.get_formatted_start_time})" %></div>
             <div class="task_form_input">
               <%= hidden_field_tag "time_log_add_booking_#{time_log.id}_min_time", time_log.get_formatted_start_time %>
