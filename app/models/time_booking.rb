@@ -159,6 +159,16 @@ class TimeBooking < ActiveRecord::Base
     self.time_entry.update_attributes!(:spent_on => start, :hours => self.hours_spent) #also update TimeEntry
   end
 
+  def activity_id
+    self.time_entry.activity_id
+  end
+
+  def activity_id=(activity_id)
+    # workaround to get dirty-flag working even for associated fields!
+    @changed_attributes['activity_id'] = self.activity_id unless activity_id == self.activity_id
+    self.time_entry.update_attributes! :activity_id => activity_id
+  end
+
   # following methods are necessary to use the query_patch, so we can use the powerful filter options of redmine
   # to show our booking lists => which will be the base for our invoices
 

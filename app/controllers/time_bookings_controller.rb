@@ -20,6 +20,7 @@ class TimeBookingsController < ApplicationController
 
   def show_edit
     @time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
+    @enumerations = Enumeration.where(:type => 'TimeEntryActivity', :active => 't').all
     respond_to do |format|
       format.js
     end
@@ -75,7 +76,7 @@ class TimeBookingsController < ApplicationController
     time_booking.update_attributes!(:project => project) if issue.nil?
     # have to set issue separately due to mass-assignment-rules
     # TODO check if there is a security problem due to mass-assignment here!
-    time_booking.update_attributes!({:comments => tb[:comments], :issue => issue}, {:without_protection => true})
+    time_booking.update_attributes!({:comments => tb[:comments], :issue => issue, :activity_id => tb[:activity_id]}, {:without_protection => true})
 
     tl.check_bookable
     flash[:notice] = l(:tt_update_booking_success)
