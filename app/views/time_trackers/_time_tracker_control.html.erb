@@ -47,11 +47,7 @@
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_activity) %></div>
                   <div class="task_form_input">
-                    <select id="time_tracker_activity_id" name="time_tracker[activity_id]">
-                        <% @enumerations.each do |enumeration| %>
-                          <option value="<%= enumeration.id %>"><%= enumeration.name %></option>
-                        <% end %>
-                    </select>
+                    <%= f.collection_select :activity_id, @enumerations, :id,:name%>
                   </div>
                 </div>
                 <div class="task_form_sub_fields">
