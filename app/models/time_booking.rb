@@ -159,6 +159,10 @@ class TimeBooking < ActiveRecord::Base
     self.time_entry.update_attributes!(:spent_on => start, :hours => self.hours_spent) #also update TimeEntry
   end
 
+  def user_id
+    self.time_entry.user_id
+  end
+
   def activity_id
     self.time_entry.activity_id
   end

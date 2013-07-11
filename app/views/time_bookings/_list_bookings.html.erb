@@ -55,7 +55,7 @@
                       <% end %>
 
                       <tr id="booking-entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
-                        <%= render :partial => 'time_bookings/list_entry', :locals => {:entry => entry, :query => query, :show_resume => true} %>
+                        <%= render :partial => 'time_bookings/list_entry', :locals => {:entry => entry, :query => query} %>
                       </tr>
                   <% end -%>
                   </tbody>
