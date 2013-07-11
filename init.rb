@@ -63,7 +63,7 @@ Redmine::Plugin.register :redmine_time_tracker do
                                          :tt_date_shifter => [:get_next_time_span, :get_prev_time_span],
                                          :tt_reporting => [:index, :print_report]},
                      :require => :loggedin
-      # book time, view own timeBookings, partially edit own timeBookings (issue, comments, project)
+      # book time, view own timeBookings, partially edit own timeBookings (issue, comments, project, activity)
       map.permission :tt_book_time, {:time_bookings => [:actions, :get_list_entry, :show_edit, :update],
                                      :time_logs => [:show_booking],
                                      :tt_bookings_list => [:index],

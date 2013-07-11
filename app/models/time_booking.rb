@@ -27,7 +27,7 @@ class TimeBooking < ActiveRecord::Base
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
     # have to change for special permissions in detail before saving the changes or undo them
     if self.changed?
-      if (self.changed - ['comments', 'issue', 'project_id', 'time_entry_id']).empty?
+      if (self.changed - ['comments', 'issue', 'project_id', 'time_entry_id', 'activity_id']).empty?
         unless permission_level > 0
           raise StandardError, l(:tt_error_not_allowed_to_change_booking) if self.user == User.current
           raise StandardError, l(:tt_error_not_allowed_to_change_foreign_booking)

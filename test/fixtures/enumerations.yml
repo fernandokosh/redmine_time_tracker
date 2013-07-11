@@ -96,9 +96,3 @@ enumerations_016:
   type: DocumentCategory
   active: false
   position: 4
-enumerations_017:
-  name: time_tracker_activity
-  id: 17
-  type: TimeEntryActivity
-  position: 5
-  active: true

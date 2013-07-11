@@ -1,8 +1,7 @@
 class TimeTracker < ActiveRecord::Base
   unloadable
 
-  attr_accessible :comments, :issue_id, :project_id, :start_time, :date, :round, :activity_id
-  attr_accessible :comments, :issue_id, :issue_text, :project_id, :start_time, :date, :round
+  attr_accessible :comments, :issue_id, :issue_text, :project_id, :start_time, :date, :round, :activity_id
   attr_accessor :start_time, :date
 
   belongs_to :user

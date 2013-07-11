@@ -6,7 +6,7 @@ time_entries_001:
   project_id: 1
   comments: original comment
   updated_on: 2012-10-25 11:47:03 +2
-  activity_id: 17
+  activity_id: 9
   spent_on: 2012-10-25
   issue_id: 1
   id: 1
@@ -20,7 +20,7 @@ time_entries_002:
   project_id: 1
   comments: original comment
   updated_on: 2012-10-25 08:47:03 +2
-  activity_id: 17
+  activity_id: 9
   spent_on: 2012-10-25
   issue_id: 1
   id: 2

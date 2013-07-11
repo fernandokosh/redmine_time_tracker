@@ -137,21 +137,22 @@ class TimeBookingsControllerTest < ActionController::TestCase
         assert_response 403, "on delete TL"
       end
 
-      should "update TB -comments/issue and project on own bookings" do
+      should "update TB -comments/issue/activity and project on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "new comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "11:47:03", :stop_time => "11:53:03",
-                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2}}}
+                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_nil(flash[:error], "no error messages")
         tb = TimeBooking.where(:id => 1).first
         assert_equal("new comment", tb.comments, "updated TB-comment")
         assert_equal(2, tb.issue.id, "updated TB-issue")
+        assert_equal(10, tb.activity_id, "updated TB-activity")
       end
 
       should "not update time or date on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "original comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "11:48:03", :stop_time => "11:51:23",
-                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1}}}
+                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_booking), flash[:error], "show error-message")
         tb = TimeBooking.where(:id => 1).first
@@ -159,21 +160,22 @@ class TimeBookingsControllerTest < ActionController::TestCase
         assert_equal("2012-10-25", tb.started_on.to_date.to_s(:db), "not updated TB-date")
       end
 
-      should "not update TB -comments/issue or project on foreign bookings" do
+      should "not update TB -comments/issue/activity or project on foreign bookings" do
         get :actions, {:time_booking_edit => {2 => {:id => 2, :comments => "new comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "08:47:03", :stop_time => "08:53:03",
-                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2}}}
+                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_booking), flash[:error], "show error-message")
         tb = TimeBooking.where(:id => 2).first
         assert_equal("original comment", tb.comments, "updated TB-comment")
         assert_equal(1, tb.issue.id, "updated TB-issue")
+        assert_equal(9, tb.activity_id, "updated TB-activity")
       end
 
       should "not update time or date on foreign bookings" do
         get :actions, {:time_booking_edit => {2 => {:id => 2, :comments => "original comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "08:48:03", :stop_time => "08:51:23",
-                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1}}}
+                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_booking), flash[:error], "show error-message")
         tb = TimeBooking.where(:id => 2).first
@@ -199,21 +201,22 @@ class TimeBookingsControllerTest < ActionController::TestCase
         assert_response 200, "on get_list_entry"
       end
 
-      should "update TB -comments/issue and project on own bookings" do
+      should "update TB -comments/issue/activity and project on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "new comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "11:47:03", :stop_time => "11:53:03",
-                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2}}}
+                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_nil(flash[:error], "no error messages")
         tb = TimeBooking.where(:id => 1).first
         assert_equal("new comment", tb.comments, "updated TB-comment")
         assert_equal(2, tb.issue.id, "updated TB-issue")
+        assert_equal(10, tb.activity_id, "updated TB-activity")
       end
 
       should "update time and date on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "original comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "11:48:03", :stop_time => "11:51:23",
-                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1}}}
+                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_update_booking_success), flash[:notice], "show flash-message")
         tb = TimeBooking.where(:id => 1).first
@@ -221,21 +224,22 @@ class TimeBookingsControllerTest < ActionController::TestCase
         assert_equal("2012-10-25", tb.started_on.to_date.to_s(:db), "not updated TB-date")
       end
 
-      should "not update TB -comments/issue or project on foreign bookings" do
+      should "not update TB -comments/issue/activity or project on foreign bookings" do
         get :actions, {:time_booking_edit => {2 => {:id => 2, :comments => "new comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "08:47:03", :stop_time => "08:53:03",
-                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2}}}
+                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_booking), flash[:error], "show error-message")
         tb = TimeBooking.where(:id => 2).first
         assert_equal("original comment", tb.comments, "updated TB-comment")
         assert_equal(1, tb.issue.id, "updated TB-issue")
+        assert_equal(9, tb.activity_id, "updated TB-activity")
       end
 
       should "not update time or date on foreign bookings" do
         get :actions, {:time_booking_edit => {2 => {:id => 2, :comments => "original comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "08:48:03", :stop_time => "08:51:23",
-                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1}}}
+                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_booking), flash[:error], "show error-message")
         tb = TimeBooking.where(:id => 2).first
@@ -261,21 +265,22 @@ class TimeBookingsControllerTest < ActionController::TestCase
         assert_response 200, "on get_list_entry"
       end
 
-      should "update TB -comments/issue and project on own bookings" do
+      should "update TB -comments/issue/activity and project on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "new comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "11:47:03", :stop_time => "11:53:03",
-                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2}}}
+                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_nil(flash[:error], "no error messages")
         tb = TimeBooking.where(:id => 1).first
         assert_equal("new comment", tb.comments, "updated TB-comment")
         assert_equal(2, tb.issue.id, "updated TB-issue")
+        assert_equal(10, tb.activity_id, "updated TB-activity")
       end
 
       should "update time and date on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "original comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "11:48:03", :stop_time => "11:51:23",
-                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1}}}
+                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_update_booking_success), flash[:notice], "show flash-message")
         tb = TimeBooking.where(:id => 1).first
@@ -283,21 +288,22 @@ class TimeBookingsControllerTest < ActionController::TestCase
         assert_equal("2012-10-25", tb.started_on.to_date.to_s(:db), "not updated TB-date")
       end
 
-      should "update TB -comments/issue and project on foreign bookings" do
+      should "update TB -comments/issue/activity and project on foreign bookings" do
         get :actions, {:time_booking_edit => {2 => {:id => 2, :comments => "new comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "08:47:03", :stop_time => "08:53:03",
-                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2}}}
+                                                    :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_update_booking_success), flash[:notice], "show flash-message")
         tb = TimeBooking.where(:id => 2).first
         assert_equal("new comment", tb.comments, "updated TB-comment")
         assert_equal(2, tb.issue.id, "updated TB-issue")
+        assert_equal(10, tb.activity_id, "updated TB-activity")
       end
 
       should "update time and date on foreign bookings" do
         get :actions, {:time_booking_edit => {2 => {:id => 2, :comments => "original comment", :tt_booking_date => "2012-10-25",
                                                     :start_time => "08:48:03", :stop_time => "08:51:23",
-                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1}}}
+                                                    :spent_time => "3m 20s", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_update_booking_success), flash[:notice], "show flash-message")
         tb = TimeBooking.where(:id => 2).first
