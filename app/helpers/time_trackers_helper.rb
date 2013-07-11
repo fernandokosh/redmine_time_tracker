@@ -11,6 +11,10 @@ module TimeTrackersHelper
     Project.visible.where(:id => project_id).first
   end
 
+  def activity_from_id(activity_id)
+    Enumeration.find(activity_id)
+  end
+
   def permission_checker(permission_list, context, global = false)
     return true if User.current.admin?
     flag = false

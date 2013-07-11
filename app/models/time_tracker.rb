@@ -20,6 +20,7 @@ class TimeTracker < ActiveRecord::Base
   VALID_DATE_REGEX = /\A\d{4}-(0?\d?|1[012])-([012]?\d?|3[01])\z/ # year:month:day
   validates :comments, :length => {:maximum => 255}, :allow_blank => true
   validates :project_id, :numericality => true, :allow_blank => true
+  validates :activity_id, :numericality => true, :allow_blank => true
   validates :issue_id, :numericality => true, :allow_blank => true
   validates :started_on, :presence => true, :unless => Proc.new { |tt| tt.new_record? }
   validates :start_time, :format => {:with => VALID_TIME_REGEX}, :allow_blank => true

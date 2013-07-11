@@ -131,6 +131,7 @@ fieldset#filters td.values input[type="button"] {
 
 #time_tracker_list td.user,
 #time_tracker_list td.project,
+#time_tracker_list td.activity,
 #time_tracker_list td.start-date,
 #time_tracker_list td.start-time,
 #time_tracker_list td.spent-time,

@@ -17,6 +17,7 @@
                   <th class="zombie"></th>
                   <th class="user"><%= l(:label_user) %></th>
                   <th class="project"><%= l(:time_tracker_label_project) %></th>
+                  <th class="activity"><%= l(:time_tracker_label_activity) %></th>
                   <th class="start-date"><%= l(:time_tracker_label_start_date) %></th>
                   <th class="start-time"><%= l(:time_tracker_label_start_time) %></th>
                   <th class="issue"><%= l(:label_issue) %></th>
@@ -41,6 +42,12 @@
                       <% else %>
                           <% project = help.project_from_id(time_tracker.project_id) %>
                           <td class="project"><%= project.nil? ? "" : link_to_project(project) %></td>
+                      <% end %>
+                      <% if time_tracker.activity_id.nil? %>
+                          <td class="activity"></td>
+                      <% else %>
+                          <% activity = help.activity_from_id(time_tracker[:activity_id]) %>
+                          <td class="activity"><%= project.nil? ? "" : activity.to_s %></td>
                       <% end %>
                       <td class="start-date"><%= time_tracker.get_formatted_date %></td>
                       <td class="start-time"><%= time_tracker.get_formatted_time %></td>
