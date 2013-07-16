@@ -27,6 +27,7 @@ function updateTTControllerForm(obj) {
     day = dat.getDate();
     (day < 10) ? day = '0' + dat.getDate().toString() : day = dat.getDate().toString();
     form.time_tracker_date.value = year + '-' + month + '-' + day;
+    validate_time_tracker_form();
    }
   });
  } else {

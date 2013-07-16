@@ -4,8 +4,6 @@
     }
 }
 
-input:disabled,
-select:disabled,
 input[readonly="readonly"] {
     color: #545454;
     background-color: #EBEBE4;
