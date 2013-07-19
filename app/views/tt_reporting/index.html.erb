@@ -75,9 +75,11 @@
     <%= render_sidebar_queries %>
 
     <div id="tt_reporting-sidebar">
-      <h3>Reporting</h3>
+      <h3><%=l(:time_tracker_label_menu_tab_reports)%></h3>
       <!--TODO insert statistics here-->
-      <%= link_to l(:time_tracker_label_print_report), :controller => :tt_reporting, :action => :print_report %>
+      <p><%= l(:time_tracker_report_total_time) %>: <%= @total_booked_time %></p>
+      <hr/>
+      <p><%= link_to l(:time_tracker_label_print_report), :controller => :tt_reporting, :action => :print_report %></p>
     </div>
 <% end %>
 
