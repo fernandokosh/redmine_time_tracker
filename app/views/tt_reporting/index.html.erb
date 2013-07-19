@@ -6,14 +6,14 @@
 
 <div class="contextual">
   <% if !query.new_record? && query.editable_by?(User.current) %>
-      <%= link_to l(:button_edit), edit_query_path(query), :class => 'icon icon-edit' %>
-      <%= link_to l(:button_delete), query_path(query), :confirm => l(:text_are_you_sure),
+      <%= link_to l(:button_edit), edit_time_booking_query_path(query), :class => 'icon icon-edit' %>
+      <%= link_to l(:button_delete), time_booking_query_path(query), :confirm => l(:text_are_you_sure),
                   :method => :delete, :class => 'icon icon-del' %>
   <% end %>
 </div>
 
-<h2><%= query.new_record? ? l(:time_tracker_label_menu_tab_reports) : h(query.name) %></h2>
-<% html_title(query.new_record? ? l(:time_tracker_label_menu_tab_reports) : query.name) %>
+<h2><%= query.new_record? ? l(:time_tracker_label_menu_tab_bookings_list) : h(query.name) %></h2>
+<% html_title(query.new_record? ? l(:time_tracker_label_menu_tab_bookings_list) : query.name) %>
 
 <%= form_tag({:controller => 'tt_reporting', :action => 'index'},
              :method => :get, :id => 'query_form') do %>
@@ -51,7 +51,7 @@
       <%= link_to l(:button_clear), {:set_filter => 3, :project_id => @project}, :class => 'icon icon-reload' %>
       <% if query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %>
           <%= link_to_function l(:button_save),
-                               "$('#query_form').attr('action', '#{ @project ? new_project_query_path(@project) : new_query_path }'); submit_query_form('query_form')",
+                               "$('#query_form').attr('action', '#{ @project ? new_project_time_booking_query_path(@project) : new_time_booking_query_path }'); submit_query_form('query_form')",
                                :class => 'icon icon-save' %>
       <% end %>
     </p>

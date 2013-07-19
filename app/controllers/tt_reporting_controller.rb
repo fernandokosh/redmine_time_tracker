@@ -71,6 +71,7 @@ end
 private
 
 def fetch_query
+  query_from_id
   time_bookings_query
 
   unless help.permission_checker([:tt_view_bookings, :tt_edit_bookings], {}, true)
