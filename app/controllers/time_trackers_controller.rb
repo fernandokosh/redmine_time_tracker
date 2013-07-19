@@ -3,6 +3,7 @@ class TimeTrackersController < ApplicationController
 
   menu_item :time_tracker_menu_tab_overview
   before_filter :js_auth, :authorize_global
+  around_filter :error_handling, only: [:stop, :start]
   accept_api_auth :update
 
   # we could start an empty timeTracker to track time without any association.
@@ -43,27 +44,17 @@ class TimeTrackersController < ApplicationController
     else
       render :partial => 'flash_messages'
     end
-  rescue StandardError => e
-    flash[:error] = e.message
-    unless request.xhr?
-      redirect_to :back
-    else
-      render :partial => 'flash_messages'
-    end
-  rescue ActionController::RedirectBackError => e
-    flash[:error] = e.message
-    unless request.xhr?
-      redirect_to :controller => 'tt_overview'
-    else
-      render :partial => 'flash_messages'
-    end
   end
 
   def stop
     @time_tracker = get_current
     if @time_tracker.nil?
       flash[:error] = l(:no_time_tracker_running)
-      redirect_to :back
+      unless request.xhr?
+        redirect_to :back
+      else
+        render :partial => 'flash_messages'
+      end
     else
       unless params[:time_tracker].nil?
         @time_tracker.issue_text = params[:time_tracker][:issue_text]
@@ -79,20 +70,6 @@ class TimeTrackersController < ApplicationController
       else
         render :partial => 'flash_messages'
       end
-    end
-  rescue StandardError => e
-    flash[:error] = e.message
-    unless request.xhr?
-      redirect_to :back
-    else
-      render :partial => 'flash_messages'
-    end
-  rescue ActionController::RedirectBackError => e
-    flash[:error] = e.message
-    unless request.xhr?
-      redirect_to :controller => 'tt_overview'
-    else
-      render :partial => 'flash_messages'
     end
   end
 
@@ -138,6 +115,24 @@ class TimeTrackersController < ApplicationController
   end
 
   private
+
+  def error_handling
+    yield
+  rescue StandardError => e
+    flash[:error] = e.message
+    unless request.xhr?
+      redirect_to :back
+    else
+      render :partial => 'flash_messages'
+    end
+  rescue ActionController::RedirectBackError => e
+    flash[:error] = e.message
+    unless request.xhr?
+      redirect_to :controller => 'tt_overview'
+    else
+      render :partial => 'flash_messages'
+    end
+  end
 
   # following method is necessary to got ajax requests logged_in if REST-API is disabled
   def js_auth
