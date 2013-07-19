@@ -39,7 +39,7 @@ class TimeTrackersController < ApplicationController
       flash[:error] = l(:time_tracker_already_running_error)
     end
     unless request.xhr?
-      redirect_to :controller => 'tt_overview'
+      redirect_to :back
     else
       render :partial => 'flash_messages'
     end
@@ -75,7 +75,7 @@ class TimeTrackersController < ApplicationController
       @time_tracker = get_current
       flash[:notice] = l(:stop_time_tracker_success)
       unless request.xhr?
-        redirect_to :controller => 'tt_overview'
+        redirect_to :back
       else
         render :partial => 'flash_messages'
       end

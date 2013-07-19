@@ -211,5 +211,6 @@ $(document).ready(function(){
         $('#content .flash').remove();
         $('#content').prepend(html);
     });
+    validate_time_tracker_form()
 });
 
