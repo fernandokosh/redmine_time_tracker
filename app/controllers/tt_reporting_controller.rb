@@ -52,7 +52,8 @@ class TtReportingController < ApplicationController
 
     # prepare logo settings
     @logo_url = Setting.plugin_redmine_time_tracker[:report_logo_url]
-    Setting.plugin_redmine_time_tracker[:report_logo_url].starts_with?("http://") ? @logo_external = true : @logo_external = false
+    @logo_url = "http://#{@logo_url}" if Regexp.new(/^www/).match(@logo_url)
+    @logo_url.start_with?("http://") ? @logo_external = true : @logo_external = false
     Setting.plugin_redmine_time_tracker[:report_logo_width].blank? ? @logo_width = "150" : @logo_width = Setting.plugin_redmine_time_tracker[:report_logo_width]
 
     render "print_report", :layout => false, :locals => {:query => @query_bookings}

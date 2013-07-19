@@ -17,7 +17,7 @@
       <h2><%= Setting.plugin_redmine_time_tracker[:report_title] %></h2>
     </td>
     <td id="tt_report-logo">
-      <%= image_tag @logo_url, :border => 0, :width => @logo_width, :alt => "Insert Your logo via plugin-settings", :plugin => (@logo_external ? nil : 'redmine_time_tracker') %>
+      <%= image_tag @logo_url, :border => 0, :width => @logo_width, :alt => "Insert Your logo via plugin-settings", :plugin => (@logo_external ? nil : 'redmine_time_tracker') if @logo_url.present? %>
     </td>
   </tr>
 </table>
