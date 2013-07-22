@@ -6,6 +6,7 @@ class TimeBooking < ActiveRecord::Base
   belongs_to :time_log
   belongs_to :time_entry, :dependent =>  :delete
   has_one :issue, :through => :time_entry
+  has_one :activity, :through => :time_entry
 
   validates_presence_of :time_log_id
   validates :time_entry_id, :presence => true

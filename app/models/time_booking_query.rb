@@ -6,6 +6,7 @@ class TimeBookingQuery < Query
   self.available_columns = [
       QueryColumn.new(:id, :sortable => "#{Issue.table_name}.id", :default_order => 'desc', :caption => '#', :frozen => true),
       QueryColumn.new(:project, :sortable => "#{Project.table_name}.name", :groupable => true),
+      QueryColumn.new(:activity, :caption => :field_tt_booking_activity),
       QueryColumn.new(:comments, :caption => :field_tt_comments),
       QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user),
       QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeBooking.table_name}.started_on)"),
@@ -68,7 +69,7 @@ class TimeBookingQuery < Query
   end
 
   def default_columns_names
-    [:project, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
+    [:project, :activity, :tt_booking_date, :get_formatted_start_time, :get_formatted_stop_time, :issue, :comments, :get_formatted_time]
   end
 
   # Returns the bookings count
