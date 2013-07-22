@@ -29,7 +29,7 @@
                                group = nil
                              else
                                group = case gb_col.name
-                                         when :project then
+                                         when :project, :activity then
                                            query.group_by_column.value(entry).to_s
                                          when :tt_booking_date then
                                            entry.send('started_on').send('localtime').to_date.to_s

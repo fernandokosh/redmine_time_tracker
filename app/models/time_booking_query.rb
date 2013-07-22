@@ -6,7 +6,7 @@ class TimeBookingQuery < Query
   self.available_columns = [
       QueryColumn.new(:id, :sortable => "#{Issue.table_name}.id", :default_order => 'desc', :caption => '#', :frozen => true),
       QueryColumn.new(:project, :sortable => "#{Project.table_name}.name", :groupable => true),
-      QueryColumn.new(:activity, :caption => :field_tt_booking_activity),
+      QueryColumn.new(:activity, :caption => :field_tt_booking_activity, :sortable => "#{TimeEntryActivity.table_name}.name", :groupable => "#{TimeEntryActivity.table_name}.name"),
       QueryColumn.new(:comments, :caption => :field_tt_comments),
       QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user),
       QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeBooking.table_name}.started_on)"),
@@ -76,7 +76,7 @@ class TimeBookingQuery < Query
   def booking_count
     # TODO refactor includes
     TimeBooking.visible.
-        includes([:project, {:time_entry => :issue}, {:time_log => :user}]).
+        includes([:project, {:time_entry => :issue}, {:time_entry => :activity}, {:time_log => :user}]).
         where(statement).
         count(:id)
   rescue ::ActiveRecord::StatementInvalid => e
@@ -95,7 +95,7 @@ class TimeBookingQuery < Query
         gbs = group_by_statement
         gbs = "#{Project.table_name}.name" if gbs == "project"
         r = TimeBooking.visible.
-            includes([:project, {:time_entry => :issue}, {:time_log => :user}]).
+            includes([:project, {:time_entry => :issue}, {:time_entry => :activity}, {:time_log => :user}]).
             group(gbs).
             where(statement).
             count(:id)
@@ -119,7 +119,7 @@ class TimeBookingQuery < Query
     order_option = nil if order_option.blank?
 
     TimeBooking.visible.
-        includes([:project, {:time_entry => :issue}, {:time_log => :user}]).
+        includes([:project, {:time_entry => :issue}, {:time_entry => :activity}, {:time_log => :user}]).
         where(statement).
         order(order_option).
         limit(options[:limit]).
