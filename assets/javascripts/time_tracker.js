@@ -9,19 +9,22 @@ function hideMultiFormButtons(button_class) {
         }
     });
 }
-
+function base_url(){
+    var src = $('script[src*="time_tracker.js"]')[0].src;
+    return src.substr(0, src.indexOf('plugin_assets'));
+}
 // ================== validation helpers ============================
 
-function validate_time_tracker_form(){
- var proj_field = $("#time_tracker_project_id")
- var activity_select = $("#time_tracker_activity_id")
+function validate_time_tracker_form() {
+    var proj_field = $("#time_tracker_project_id")
+    var activity_select = $("#time_tracker_activity_id")
 
- var proj_id = proj_field.val()
- var activity_id = activity_select.val();
+    var proj_id = proj_field.val()
+    var activity_id = activity_select.val();
 
- activity_select.toggleClass('invalid', proj_id != '' && activity_id == '')
+    activity_select.toggleClass('invalid', proj_id != '' && activity_id == '')
 
- $('.time-tracker-form :submit').attr('disabled', $('.time-tracker-form :input').hasClass('invalid'));
+    $('.time-tracker-form :submit').attr('disabled', $('.time-tracker-form :input').hasClass('invalid'));
 
 }
 
@@ -55,7 +58,7 @@ function validate_list_inputs(name) {
     if (proj_id == "") {
         proj_select.addClass('invalid');
         proj_id_field.addClass('invalid');
-    }else{
+    } else {
         proj_select.removeClass('invalid');
         proj_id_field.removeClass('invalid');
     }
@@ -138,11 +141,9 @@ function updateBookingProject(api_key, name) {
         issue_id_field.removeClass('invalid');
         validate_list_inputs(name);
     } else {
-        var src = $('script[src*="time_tracker.js"]')[0].src;
-        var base_url = src.substr(0, src.indexOf('plugin_assets'));
-        $.ajax({url: base_url + 'issues/' + issue_id + '.json?key=' + api_key,
-            type:'GET',
-            success:function (transport) {
+        $.ajax({url: base_url() + 'issues/' + issue_id + '.json?key=' + api_key,
+            type: 'GET',
+            success: function (transport) {
                 issue_id_field.removeClass('invalid');
                 var issue = transport.issue;
                 if (issue == null) {
@@ -153,11 +154,11 @@ function updateBookingProject(api_key, name) {
                     $("#" + project_id_select.attr("id")).val(issue.project.id);
                 }
             },
-            error:function () {
+            error: function () {
                 project_id_select.attr('disabled', false);
                 issue_id_field.addClass('invalid');
             },
-            complete:function () {
+            complete: function () {
                 validate_list_inputs(name);
             }
         });
@@ -174,7 +175,7 @@ function timeString2sec(str) {
         return new Number(arr[0]) * 3600 + new Number(arr[1]) * 60;
     }
     // more flexible parsing for inputs like:  12d 23sec 5min
-    var time_factor = {"s":1, "sec":1, "m":60, "min":60, "h":3600, "d":86400};
+    var time_factor = {"s": 1, "sec": 1, "m": 60, "min": 60, "h": 3600, "d": 86400};
     var sec = 0;
     var time_arr = str.match(/\d+\s*\D+/g);
     jQuery.each(time_arr, function (index, item) {
@@ -206,8 +207,8 @@ function calcBookingHelper(ele1, ele2, calc) {
     while (calc == 2 && h > 23) h = h - 24;    //stop_time should be between 0-24 o clock
     return h + ":" + m + ":" + s;
 }
-$(document).ready(function(){
-    $(document).on('ajax:success','.tt_stop,.tt_start', function(xhr,html,status){
+$(document).ready(function () {
+    $(document).on('ajax:success', '.tt_stop,.tt_start, .tt_dialog_stop', function (xhr, html, status) {
         $('#content .flash').remove();
         $('#content').prepend(html);
     });

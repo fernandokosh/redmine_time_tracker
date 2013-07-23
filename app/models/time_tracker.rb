@@ -175,6 +175,10 @@ class TimeTracker < ActiveRecord::Base
     false
   end
 
+  def is_activity_id_correct_set?
+    self.project_id.nil? || !self.activity_id.nil?
+  end
+
   def running_time
     Time.now.localtime.to_i - started_on.to_i
   end

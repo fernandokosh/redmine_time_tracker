@@ -3,12 +3,13 @@
     <%# A time tracker exists, display the stop action %>
     <li>
       <% suffix = time_tracker.issue_id.nil? ? l(:time_tracker_label_timer) : '#' + time_tracker.issue_id.to_s %>
-      <%= link_to l(:stop_time_tracker).capitalize + ' ' + suffix,
-                  {:controller => 'time_trackers', :action => 'stop'},
-                  :class => 'icon icon-stop tt_stop',
-                  :onclick => "contextMenuHide();",
-                  :remote => true,
-                  :data => {:type => 'html'}
+      <% stop_title = l(:stop_time_tracker).capitalize + ' ' + suffix %>
+      <%= link_to stop_title,
+                 {:controller => 'time_trackers', :action => 'stop'},
+                 :class => 'icon icon-stop tt_stop',
+                 :onclick => "contextMenuHide();",
+                 :remote => time_tracker.is_activity_id_correct_set?,
+                 :data => {:type => 'html'}
       %>
     </li>
 <% elsif !@project.nil? and !@issue.nil? and User.current.allowed_to?(:tt_log_time, @project) and help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], @project) %>
@@ -24,3 +25,5 @@
       %>
     </li>
 <% end %>
+
+<%= render partial: 'time_trackers/activity_dialog', locals: {time_tracker: time_tracker, stop_title: stop_title, remote: true} if !time_tracker.nil? and !time_tracker.is_activity_id_correct_set? %>

@@ -1,0 +1,65 @@
+<%
+   activities = Enumeration.where(:type => 'TimeEntryActivity', :active => 't').all
+   options = options_from_collection_for_select(activities, :id, :name).split("\n").join("")
+   select = select_tag :tt_activity, options, {:include_blank => true, :onchange => 'updateActivity()'}
+%>
+<script type="text/javascript">
+    function updateActivity(val) {
+        if (typeof(val) === 'undefined') {
+            val = $('#tt_activity').val();
+        } else {
+            $('#tt_activity').val(val);
+        }
+        $.ajax({url: base_url() + '/time_trackers/update.json?key=<%= User.current.api_key %>&time_tracker[activity_id]=' + val,
+            type: 'PUT',
+            success: function (transport) {
+
+            }
+        });
+    }
+    function showDialog() {
+        var $dialog = $('#dialog')
+        if ($dialog.length == 0) {
+            $('<div/>', {id: 'dialog', title: 'Please choose an activity'})
+                    .appendTo('body')
+                    .append('<%=content_tag :div, select, :class => 'center'%>')
+                    .dialog({
+                        autoOpen: true,
+                        resizable: false,
+                        draggable: false,
+                        modal: true,
+                        height: 150,
+                        width: 250,
+                        buttons: [
+                            {
+                                id: "tt_activity_dialog_stop",
+                                click: function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            {
+                                text: "<%= l(:button_cancel)%>",
+                                click: function () {
+                                    $(this).dialog("close");
+                                    updateActivity('<%= time_tracker.activity_id%>');
+
+                                }
+                            }
+                        ],
+                        create: function () {
+                            $('#tt_activity_dialog_stop .ui-button-text').replaceWith('<%=link_to stop_title,{:controller => 'time_trackers', :action => 'stop'},:data => {:type => 'html'}, :class => 'ui-button-text tt_dialog_stop', :remote => remote%>');
+                        }
+                    })
+        } else {
+            $dialog.dialog('open')
+        }
+
+    }
+    $(document).ready(function () {
+        $(document).on('click', '.tt_stop', function (e) {
+            showDialog();
+            contextMenuHide();
+            e.preventDefault();
+        });
+    });
+</script>
