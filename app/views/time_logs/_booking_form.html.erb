@@ -49,7 +49,7 @@
             <div class="input_hint"><%= l(:time_tracker_label_stop_time) + " (max: #{time_log.get_formatted_stop_time})" %></div>
             <div class="task_form_input">
               <%= hidden_field_tag "time_log_add_booking_#{time_log.id}_max_time", time_log.get_formatted_stop_time %>
-              <%= f.text_field :stop_time, :value => (time_log.started_on + time_log.bookable_hours.hours).localtime.strftime("%H:%M:%S"), :size => "10", :placeholder => "stop", :onchange => "updateBookingHours('time_log_add_booking_#{time_log.id}')" %>
+              <%= f.text_field :stop_time, :value => time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "updateBookingHours('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
 

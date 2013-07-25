@@ -10,11 +10,8 @@
         } else {
             $('#tt_activity').val(val);
         }
-        $.ajax({url: base_url() + '/time_trackers/update.json?key=<%= User.current.api_key %>&time_tracker[activity_id]=' + val,
-            type: 'PUT',
-            success: function (transport) {
-
-            }
+        $.ajax({url: base_url() + '/time_trackers/update?key=<%= User.current.api_key %>&time_tracker[activity_id]=' + val,
+            type: 'PUT'
         });
     }
     function showDialog() {
@@ -28,8 +25,8 @@
                         resizable: false,
                         draggable: false,
                         modal: true,
-                        height: 150,
-                        width: 250,
+                        height: 200,
+                        width: 300,
                         buttons: [
                             {
                                 id: "tt_activity_dialog_stop",

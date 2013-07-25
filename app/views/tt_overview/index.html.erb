@@ -1,4 +1,6 @@
+<%= javascript_tag render :partial => 'tt_overview/time_tracker', :formats => [:js] %>
 <% include_calendar_headers_tags %>
+<%= patch_date_picker %>
 <% html_title l(:time_tracker_overview_title) %>
 
 <% if help.permission_checker([:tt_log_time], {}, true) %>

@@ -9,7 +9,7 @@ class TimeTrackersController < ApplicationController
   # we could start an empty timeTracker to track time without any association.
   # we also can give some more information, so the timeTracker could be automatically associated later.
   def start(args = {})
-    default_args= {:issue_id => nil, :comments => nil}
+    default_args= {issue_id: nil, comments: nil, activity_id: nil}
     args = default_args.merge(args)
 
     @time_tracker = get_current
@@ -18,6 +18,7 @@ class TimeTrackersController < ApplicationController
       unless params[:time_tracker].nil?
         args[:issue_id]=params[:time_tracker][:issue_id] if args[:issue_id].nil?
         args[:comments]=params[:time_tracker][:comments].strip if args[:comments].nil? and not params[:time_tracker][:comments].nil?
+        args[:activity_id]=params[:time_tracker][:activity_id].strip if args[:activity_id].nil? and not params[:time_tracker][:activity_id].nil?
       end
       # parse comments for issue-id
       if args[:issue_id].nil? && !args[:comments].nil? && args[:comments].match(/\A\#(\d+)/)
@@ -30,7 +31,7 @@ class TimeTrackersController < ApplicationController
       end
 
 
-      @time_tracker = TimeTracker.new(:issue_id => args[:issue_id], :comments => args[:comments])
+      @time_tracker = TimeTracker.new(:issue_id => args[:issue_id], :comments => args[:comments], :activity_id => args[:activity_id])
       if @time_tracker.start
         flash[:notice] = l(:start_time_tracker_success)
       else
@@ -89,22 +90,14 @@ class TimeTrackersController < ApplicationController
 
   def update
     @time_tracker = get_current
+    @enumerations = Enumeration.where(:type => 'TimeEntryActivity', :active => 't').all
     @time_tracker.update_attributes!(params[:time_tracker])
-    respond_to do |format|
-      format.html { render :nothing => true }
-      format.xml { render :xml => @time_tracker }
-      format.json { render :json => @time_tracker }
-    end
-      # if something went wrong, return the original object
+    flash[:notice] = l(:update_time_tracker_success)
+    render :partial => 'time_tracker_control_with_flash'
   rescue StandardError => e
     @time_tracker = get_current
-    # todo figure out a way to show errors, even on ajax requests!
     flash[:error] = e.message
-    respond_to do |format|
-      format.html { render :nothing => true }
-      format.xml { render :xml => @time_tracker }
-      format.json { render :json => @time_tracker }
-    end
+    render :partial => 'time_tracker_control_with_flash'
   end
 
   protected

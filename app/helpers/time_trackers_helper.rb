@@ -1,4 +1,6 @@
+require 'redmine/i18n'
 module TimeTrackersHelper
+  include Redmine::I18n
   def issue_from_id(issue_id)
     Issue.visible.where(:id => issue_id).first
   end
@@ -28,19 +30,31 @@ module TimeTrackersHelper
     flag
   end
 
-  def time_dist2string(dist)
-    h = dist / 3600
-    m = (dist - h*3600) / 60
-    s = dist - (h*3600 + m*60)
-    h<10 ? h="0#{h}" : h = h.to_s
-    m<10 ? m="0#{m}" : m = m.to_s
-    s<10 ? s="0#{s}" : s = s.to_s
-    h + ":" + m + ":" + s
+  def time_dist2string(dist_in_min)
+    h = dist_in_min / 60
+    m = dist_in_min % 60
+    "#{h.to_s.rjust(2,'0')}:#{m.to_s.rjust(2,'0')}"
   end
 
   def time_string4report(ts)
     parts = ts.split(":")
     parts[0] + "h " + parts[1] + "m"
+  end
+
+  def parse_localised_date_string(date_string)
+    1.upto(10) do |i|
+      matched = date_string.gsub!(l('date.month_names')[i], l('date.month_names', locale: :en)[i])
+      date_string.gsub!(l('date.abbr_month_names')[i], l('date.abbr_month_names', locale: :en)[i]) if matched.nil?
+    end
+    User.current.time_zone.parse(Date.strptime(date_string, Setting.date_format).to_s).to_date.to_s
+  end
+
+  def parse_localised_time_string(time_string)
+    User.current.time_zone.parse(time_string.gsub(l('time.pm'), 'pm').gsub(l('time.am'), 'am')).strftime("%H:%M")
+  end
+
+  def build_timeobj_from_strings(date_string, time_string)
+    User.current.time_zone.parse(date_string + " " + time_string).localtime
   end
 
   def get_current_time_tracker
@@ -97,26 +111,9 @@ module TimeTrackersHelper
   end
 
   def time_string2hour(str)
-    sec = 0
-    if str.match(/\d\d?:\d\d?:\d\d?/) #parse general input form hh:mm:ss
-      arr = str.strip.split(':')
-      sec = arr[0].to_i * 3600 + arr[1].to_i * 60 + arr[2].to_i
-    elsif str.match(/\d\d?:\d\d?/) #parse general input form hh:mm
-      arr = str.strip.split(':')
-      sec = arr[0].to_i * 3600 + arr[1].to_i * 60
-    else
-      # more flexible parsing for inputs like:  12d 23sec 5min
-      time_factor = {:s => 1, :sec => 1, :m => 60, :min => 60, :h => 3600, :d => 86400}
-      str.partition(/\A\d+\s*\D+/).each do |item|
-        item=item.strip
-        item.match(/\d+/).nil? ? num = nil : num = item.match(/\d+/)[0].to_i
-        item.match(/\D+/).nil? ? fac = nil : fac = item.match(/\D+/)[0].strip.downcase.to_sym
-        if time_factor.has_key?(fac)
-          sec += num * time_factor.fetch(fac)
-        end
-      end
-    end
-    sec.to_f / 3600
+    arr = str.strip.split(':')
+    min = arr[0].to_i * 60 + arr[1].to_i
+    min.to_f / 60
   end
 
 

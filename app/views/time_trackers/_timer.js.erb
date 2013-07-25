@@ -1,8 +1,9 @@
 $(document).ready(function () {
-    window.setInterval(function () {
-        var start = new Date($('#time_tracker_date').val().replace(/\-/ig, '/') + ' ' + $('#time_tracker_start_time').val());
+    var start = new Date();
+    function calcTime(){
+        var offset = parseInt($('#time_tracker_time_offset').val(),10);
         var now = new Date();
-        var diff = Math.floor((now - start) / 1000);
+        var diff = Math.floor((now - start) / 1000) + offset;
         var h = Math.floor(diff / 3600);
         var m = Math.floor((diff - h * 3600) / 60);
         var s = Math.floor(diff - (h * 3600 + m * 60));
@@ -12,5 +13,9 @@ $(document).ready(function () {
         if (!(h == "NaN" || m == "NaN" || s == "NaN")) {
             $('#tt_running_time').html(h + ":" + m + ":" + s);
         }
+    }
+    calcTime()
+    window.setInterval(function () {
+        calcTime()
     }, 1000);
 });

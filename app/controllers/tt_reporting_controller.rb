@@ -28,7 +28,7 @@ class TtReportingController < ApplicationController
                                            :offset => @offset,
                                            :limit => @limit)
       @booking_count_by_group = @query_bookings.booking_count_by_group
-      @total_booked_time = help.time_dist2string((total_booked*3600).to_i)
+      @total_booked_time = help.time_dist2string((total_booked*60).to_i)
     end
 
     fetch_chart_data
@@ -47,7 +47,7 @@ class TtReportingController < ApplicationController
       @booking_count_by_group = @query_bookings.booking_count_by_group
     end
 
-    @total_booked_time = help.time_dist2string((total_booked*3600).to_i)
+    @total_booked_time = help.time_dist2string((total_booked*60).to_i)
     fetch_chart_data
 
     # prepare logo settings

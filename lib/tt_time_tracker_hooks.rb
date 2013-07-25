@@ -4,8 +4,6 @@ class TimeTrackerHooks < Redmine::Hook::ViewListener
   render_on :view_issues_show_description_bottom, :partial => 'time_trackers/issue_action_menu'
 
   def view_layouts_base_html_head(context = {})
-    css = stylesheet_link_tag 'time_tracker', :plugin => 'redmine_time_tracker'
-    js = javascript_include_tag 'time_tracker.js', :plugin => 'redmine_time_tracker'
-    css + js
+    stylesheet_link_tag 'time_tracker', :plugin => 'redmine_time_tracker'
   end
 end

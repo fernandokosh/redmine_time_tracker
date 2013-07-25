@@ -1,4 +1,6 @@
+require 'redmine/i18n'
 class TimeTracker < ActiveRecord::Base
+  include Redmine::I18n
   unloadable
 
   attr_accessible :comments, :issue_id, :issue_text, :project_id, :start_time, :date, :round, :activity_id
@@ -36,7 +38,16 @@ class TimeTracker < ActiveRecord::Base
     # the following updates should only happen if the controller calls this method after an ui-input
     # in all other cases, the fields "start_time" and "date" might be empty
     unless self.start_time.nil? && self.date.nil?
-      self.started_on = Time.parse(self.date.to_s + " " + self.start_time.to_s)
+      self.started_on = help.build_timeobj_from_strings self.date, self.start_time
+    end
+  end
+
+  # to support different time formats, but only having one timeformat in the db,
+  # we need to parse the given string to an accepted one
+  before_validation do
+    unless self.start_time.nil? && self.date.nil?
+      self.date = help.parse_localised_date_string self.date
+      self.start_time = help.parse_localised_time_string self.start_time
     end
   end
 
@@ -117,14 +128,15 @@ class TimeTracker < ActiveRecord::Base
       # saving an TimeLog and destroying the TimeTracker have to be executed as a transaction, because we don't want to
       # track all time without any data loss.
       ActiveRecord::Base.transaction do
+        start_time = started_on.change(:sec => 0)
         stop_time = Time.now.localtime.change(:sec => 0) + 1.minute
         if self.round # round times to solid quarters of an hour
-          t_diff = (stop_time.to_i - started_on.to_i)
+          t_diff = (stop_time.to_i - start_time.to_i)
           unless (t_diff % 900) == 0
-            stop_time = started_on + (t_diff / 900 + 1) * 900
+            stop_time = start_time + (t_diff / 900 + 1) * 900
           end
         end
-        time_log = TimeLog.create(:user_id => user_id, :started_on => started_on, :stopped_at => stop_time, :comments => comments)
+        time_log = TimeLog.create(:user_id => user_id, :started_on => start_time, :stopped_at => stop_time, :comments => comments)
         # if there already is a ticket-nr then we automatically associate the timeLog and the issue using a timeBooking-entry
         # and creating a time_entry
         issue = help.issue_from_id(issue_id)
@@ -154,11 +166,11 @@ class TimeTracker < ActiveRecord::Base
   end
 
   def get_formatted_time
-    self.started_on.to_time.localtime.strftime("%H:%M:%S") unless self.started_on.nil?
+    format_time self.started_on, false unless self.started_on.nil?
   end
 
   def get_formatted_date
-    self.started_on.to_date.to_s(:db) unless self.started_on.nil?
+    format_date(format_time self.started_on) unless self.started_on.nil?
   end
 
   def zombie?

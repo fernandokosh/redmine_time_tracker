@@ -1,10 +1,12 @@
+require 'redmine/i18n'
 class TimeBooking < ActiveRecord::Base
+  include Redmine::I18n
   unloadable
 
   attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :project, :project_id
   belongs_to :project
   belongs_to :time_log
-  belongs_to :time_entry, :dependent =>  :delete
+  belongs_to :time_entry, :dependent => :delete
   has_one :issue, :through => :time_entry
   has_one :activity, :through => :time_entry
 
@@ -87,15 +89,15 @@ class TimeBooking < ActiveRecord::Base
   end
 
   def get_formatted_time(time1 = started_on, time2 = stopped_at)
-    help.time_dist2string(time2.to_i - time1.to_i)
+    help.time_dist2string(time2.min - time1.min)
   end
 
   def get_formatted_start_time
-    self.started_on.to_time.localtime.strftime("%H:%M:%S") unless self.started_on.nil?
+    format_time self.started_on, false unless self.started_on.nil?
   end
 
   def get_formatted_stop_time
-    self.stopped_at.to_time.localtime.strftime("%H:%M:%S") unless self.stopped_at.nil?
+    format_time self.stopped_at, false unless self.stopped_at.nil?
   end
 
   # we have to redefine some setters, to ensure a convenient way to update these attributes
@@ -188,7 +190,7 @@ class TimeBooking < ActiveRecord::Base
   end
 
   def tt_booking_date
-    self.started_on.localtime.to_date.to_s(:db)
+    format_date(format_time self.started_on) unless self.started_on.nil?
   end
 
   def user

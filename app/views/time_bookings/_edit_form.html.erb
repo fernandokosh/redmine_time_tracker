@@ -8,7 +8,7 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:field_tt_date) %></div>
             <div class="task_form_input">
-              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_valid_dates", [time_booking.time_log.started_on.to_date.to_s(:db), time_booking.time_log.stopped_at.to_date.to_s(:db)] %>
+              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_valid_dates", [time_booking.time_log.tt_log_date, time_booking.time_log.tt_log_stop_date].join('|') %>
               <%= f.text_field :tt_booking_date, :size => "10", :placeholder => "date", :readonly => time_booking.permission_level < 2, :onchange => "validate_list_inputs('time_booking_edit_#{time_booking.id}');" %>
               <% unless time_booking.permission_level < 2 %>
                   <%= calendar_for("time_booking_edit_#{time_booking.id.to_s}_tt_booking_date") %>
@@ -64,9 +64,9 @@
           </div>
 
           <div class="task_form_sub_fields">
-            <div class="input_hint"><%= l(:time_tracker_label_time_spent) + " (max: #{help.time_dist2string(((time_booking.time_log.bookable_hours + time_booking.hours_spent) * 3600).to_i)})" %></div>
+            <div class="input_hint"><%= l(:time_tracker_label_time_spent) + " (max: #{help.time_dist2string(((time_booking.time_log.bookable_hours + time_booking.hours_spent) * 60).to_i)})" %></div>
             <div class="task_form_input">
-              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_max_spent_time", help.time_dist2string(((time_booking.time_log.bookable_hours + time_booking.hours_spent) * 3600).to_i) %>
+              <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_max_spent_time", help.time_dist2string(((time_booking.time_log.bookable_hours + time_booking.hours_spent) * 60).to_i) %>
               <%= f.text_field :spent_time, :value => time_booking.get_formatted_time, :size => "12", :placeholder => "spent time", :onchange => "updateBookingStop('time_booking_edit_#{time_booking.id}')", :readonly => time_booking.permission_level < 2 %>
             </div>
           </div>

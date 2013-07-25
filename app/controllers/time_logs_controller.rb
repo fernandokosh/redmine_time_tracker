@@ -96,7 +96,7 @@ class TimeLogsController < ApplicationController
 
   def update(tl)
     time_log = TimeLog.where(:id => tl[:id]).first
-    start = Time.parse(tl[:tt_log_date] + " " + tl[:start_time])
+    start = build_timeobj_from_strings parse_localised_date_string(tl[:tt_log_date]), parse_localised_time_string(tl[:start_time])
     hours = time_string2hour(tl[:spent_time])
     stop = start + hours.hours
 

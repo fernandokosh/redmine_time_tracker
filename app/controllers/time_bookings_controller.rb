@@ -67,7 +67,7 @@ class TimeBookingsController < ApplicationController
     issue = Issue.where(:id => tb[:issue_id]).first
     issue.nil? ? project = Project.where(:id => tb[:project_id]).first : project = issue.project
 
-    start = Time.parse(tb[:tt_booking_date] + " " + tb[:start_time])
+    start = build_timeobj_from_strings parse_localised_date_string(tb[:tt_booking_date]), parse_localised_time_string(tb[:start_time])
     hours = time_string2hour(tb[:spent_time])
     stop = start + hours.hours
     time_booking.update_time(start, stop)

@@ -1,4 +1,6 @@
+require 'redmine/i18n'
 class TimeLog < ActiveRecord::Base
+  include Redmine::I18n
   unloadable
 
   attr_accessible :user_id, :started_on, :stopped_at, :project_id, :comments, :issue_id, :spent_time, :bookable
@@ -91,12 +93,12 @@ class TimeLog < ActiveRecord::Base
     args = default_args.merge(args)
 
     # TODO check time boundaries
-    args[:started_on] = Time.parse(tt_log_date + " " + args[:start_time]) if args[:start_time].is_a? String
-    args[:stopped_at] = Time.parse(tt_log_date + " " + args[:stop_time]) if args[:stop_time].is_a? String
+    args[:started_on] = help.build_timeobj_from_strings help.parse_localised_date_string(tt_log_date), help.parse_localised_time_string(args[:start_time]) if args[:start_time].is_a? String
+    args[:stopped_at] = help.build_timeobj_from_strings help.parse_localised_date_string(tt_log_date), help.parse_localised_time_string(args[:stop_time]) if args[:stop_time].is_a? String
 
     # basic calculations are always the same
     args[:spent_time].nil? ? args[:hours] = hours_spent(args[:started_on], args[:stopped_at]) : args[:hours] = help.time_string2hour(args[:spent_time])
-    args[:stopped_at] = Time.at(args[:started_on].to_i + (args[:hours] * 3600).to_i).getlocal
+    args[:stopped_at] = args[:started_on] + args[:hours].hours
 
     raise StandardError, l(:error_booking_negative_time) if args[:hours] <= 0
     raise StandardError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
@@ -128,27 +130,31 @@ class TimeLog < ActiveRecord::Base
   end
 
   def get_formatted_bookable_hours
-    help.time_dist2string((bookable_hours*3600).to_i)
+    help.time_dist2string((bookable_hours*60).to_i)
   end
 
   def get_formatted_time_span
-    help.time_dist2string((hours_spent*3600).to_i)
+    help.time_dist2string((hours_spent*60).to_i)
   end
 
   def get_formatted_booked_time
-    help.time_dist2string((hours_booked*3600).to_i)
+    help.time_dist2string((hours_booked*60).to_i)
   end
 
   def get_formatted_start_time
-    self.started_on.to_time.localtime.strftime("%H:%M:%S") unless self.started_on.nil?
+    format_time self.started_on, false unless self.started_on.nil?
   end
 
   def get_formatted_stop_time
-    self.stopped_at.to_time.localtime.strftime("%H:%M:%S") unless self.stopped_at.nil?
+    format_time self.stopped_at, false unless self.stopped_at.nil?
   end
 
   def tt_log_date
-    self.started_on.localtime.to_date.to_s(:db)
+    format_date(format_time self.started_on) unless self.started_on.nil?
+  end
+
+  def tt_log_stop_date
+    format_date(format_time self.stopped_at) unless self.stopped_at.nil?
   end
 
   # returns the sum of bookable time of an time entry
