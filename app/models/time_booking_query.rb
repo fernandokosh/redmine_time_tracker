@@ -110,7 +110,7 @@ class TimeBookingQuery < Query
   # Returns the bookings
   # Valid options are :order, :offset, :limit, :include, :conditions
   def bookings(options={})
-    group_by_order = group_by_sort_order.strip
+    group_by_order = (group_by_sort_order || '').strip
     options[:order].unshift group_by_order unless options[:order].map { |opt| opt.gsub('asc', '').gsub('desc', '').strip }.include? group_by_order.gsub('asc', '').gsub('desc', '').strip
     order_option = options[:order].reject { |s| s.blank? }.join(',')
     order_option = nil if order_option.blank?
