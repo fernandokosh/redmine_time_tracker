@@ -44,6 +44,6 @@ module ApplicationHelper
   # So we need to patch it, to have it localized again.
   # We dont use a redmine patch to keep the patch limited to all timetracker forms.
   def patch_date_picker
-    javascript_tag "$.extend(datepickerOptions, {dateFormat: '#{Setting.date_format.gsub('%m','mm').gsub('%d','dd').gsub('%Y','yy').gsub('%B','MM')}'})"
+    javascript_tag "$.extend(datepickerOptions, {dateFormat: '#{(Setting.date_format.presence || l('date.formats.default')).gsub('%m','mm').gsub('%d','dd').gsub('%Y','yy').gsub('%B','MM')}'})"
   end
 end

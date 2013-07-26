@@ -46,7 +46,7 @@ module TimeTrackersHelper
       matched = date_string.gsub!(l('date.month_names')[i], l('date.month_names', locale: :en)[i])
       date_string.gsub!(l('date.abbr_month_names')[i], l('date.abbr_month_names', locale: :en)[i]) if matched.nil?
     end
-    User.current.time_zone.parse(Date.strptime(date_string, Setting.date_format).to_s).to_date.to_s
+    User.current.time_zone.parse(Date.strptime(date_string, Setting.date_format.presence || l('date.formats.default')).to_s).to_date.to_s
   end
 
   def parse_localised_time_string(time_string)
