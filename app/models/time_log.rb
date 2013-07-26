@@ -150,11 +150,11 @@ class TimeLog < ActiveRecord::Base
   end
 
   def tt_log_date
-    format_date(format_time self.started_on) unless self.started_on.nil?
+    format_date(self.started_on.in_time_zone User.current.time_zone) unless self.started_on.nil?
   end
 
   def tt_log_stop_date
-    format_date(format_time self.stopped_at) unless self.stopped_at.nil?
+    format_date(self.stopped_at.in_time_zone User.current.time_zone) unless self.stopped_at.nil?
   end
 
   # returns the sum of bookable time of an time entry
