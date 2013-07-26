@@ -25,6 +25,10 @@ fieldset#filters td.values input[type="button"] {
     text-align: center;
 }
 
+.tt_list .comments{
+    white-space: normal;
+}
+
 .tt_list .icon_column {
     width: 1px;
 }
