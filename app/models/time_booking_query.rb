@@ -4,19 +4,18 @@ class TimeBookingQuery < Query
   self.queried_class = TimeBooking
 
   self.available_columns = [
-      QueryColumn.new(:id, :sortable => "#{Issue.table_name}.id", :default_order => 'desc', :caption => '#', :frozen => true),
       QueryColumn.new(:project, :sortable => "#{Project.table_name}.name", :groupable => true),
       QueryColumn.new(:activity, :caption => :field_tt_booking_activity, :sortable => "#{TimeEntryActivity.table_name}.name", :groupable => "#{TimeEntryActivity.table_name}.name"),
       QueryColumn.new(:comments, :caption => :field_tt_comments),
       QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user),
-      QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :caption => :field_tt_date, :groupable => "DATE(#{TimeBooking.table_name}.started_on)"),
+      QueryColumn.new(:tt_booking_date, :sortable => "#{TimeBooking.table_name}.started_on", :default_order => 'desc', :caption => :field_tt_date, :groupable => "DATE(#{TimeBooking.table_name}.started_on)"),
       QueryColumn.new(:get_formatted_start_time, :caption => :field_tt_start),
       QueryColumn.new(:get_formatted_stop_time, :caption => :field_tt_stop),
       QueryColumn.new(:get_formatted_time, :caption => :field_tt_time),
       QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_booking_issue, :groupable => "#{Issue.table_name}.subject"),
   ]
 
-  scope :visible, lambda {|*args|
+  scope :visible, lambda { |*args|
     user = args.shift || User.current
     base = Project.allowed_to_condition(user, :index_tt_bookings_list, *args)
     user_id = user.logged? ? user.id : 0
@@ -44,7 +43,7 @@ class TimeBookingQuery < Query
     end
     principals.uniq!
     principals.sort!
-    users = principals.select {|p| p.is_a?(User)}
+    users = principals.select { |p| p.is_a?(User) }
 
     add_available_filter 'tt_booking_start_date', :type => :date, :order => 2
     add_available_filter 'tt_booking_issue', :type => :list, :order => 4, :values => Issue.visible.all.collect { |s| [s.subject, s.id.to_s] }
@@ -60,12 +59,8 @@ class TimeBookingQuery < Query
 
     author_values = []
     author_values << ["<< #{l(:label_me)} >>", "me"] if User.current.logged?
-    author_values += users.collect{|s| [s.name, s.id.to_s] }
+    author_values += users.collect { |s| [s.name, s.id.to_s] }
     add_available_filter('tt_user', :type => :list, :values => author_values) unless author_values.empty?
-  end
-
-  def sortable_columns
-    super.merge! 'tt_booking_id' => "#{TimeBooking.table_name}.id"
   end
 
   def default_columns_names
@@ -115,7 +110,9 @@ class TimeBookingQuery < Query
   # Returns the bookings
   # Valid options are :order, :offset, :limit, :include, :conditions
   def bookings(options={})
-    order_option = [group_by_sort_order, options[:order]].reject { |s| s.blank? }.join(',')
+    group_by_order = group_by_sort_order.strip
+    options[:order].unshift group_by_order unless options[:order].map { |opt| opt.gsub('asc', '').gsub('desc', '').strip }.include? group_by_order.gsub('asc', '').gsub('desc', '').strip
+    order_option = options[:order].reject { |s| s.blank? }.join(',')
     order_option = nil if order_option.blank?
 
     TimeBooking.visible.
