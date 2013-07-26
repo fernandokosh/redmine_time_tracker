@@ -33,7 +33,8 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_activity) %></div>
             <div class="task_form_input">
-              <%= select_tag "time_booking_edit_#{time_booking.id}_activity_id_select", options_from_collection_for_select(@enumerations, :id, :name, time_booking.activity_id),:onchange => "validate_list_inputs('time_booking_edit_#{time_booking.id}');", :name=> "time_booking_edit[#{time_booking.id}][activity_id]", :include_blank => true%>
+              <% activities = get_activities time_booking.project_id %>
+              <%= select_tag "time_booking_edit_#{time_booking.id}_activity_id_select", options_from_collection_for_select(activities, :id, :name, time_booking.activity_id),:onchange => "validate_list_inputs('time_booking_edit_#{time_booking.id}');", :name=> "time_booking_edit[#{time_booking.id}][activity_id]", :include_blank => true%>
             </div>
           </div>
 

@@ -6,6 +6,8 @@ class TimeTrackersController < ApplicationController
   around_filter :error_handling, only: [:stop, :start]
   accept_api_auth :update
 
+  helper :time_trackers
+
   # we could start an empty timeTracker to track time without any association.
   # we also can give some more information, so the timeTracker could be automatically associated later.
   def start(args = {})
@@ -90,7 +92,6 @@ class TimeTrackersController < ApplicationController
 
   def update
     @time_tracker = get_current
-    @enumerations = Enumeration.where(:type => 'TimeEntryActivity', :active => 't').all
     @time_tracker.update_attributes!(params[:time_tracker])
     flash[:notice] = l(:update_time_tracker_success)
     render :partial => 'time_tracker_control_with_flash'

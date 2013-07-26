@@ -17,6 +17,14 @@ module TimeTrackersHelper
     Enumeration.find(activity_id)
   end
 
+  def get_activities(project_id)
+    if project_id.nil?
+      TimeEntryActivity.shared.active.all
+    else
+      project_from_id(project_id).activities
+    end
+  end
+
   def permission_checker(permission_list, context, global = false)
     return true if User.current.admin?
     flag = false

@@ -6,6 +6,7 @@ class TimeLogsController < ApplicationController
 
   helper :queries
   include QueriesHelper
+  helper_method :get_activities
   include TimeTrackersHelper
 
   def actions
@@ -58,7 +59,6 @@ class TimeLogsController < ApplicationController
 
   def show_booking
     @time_logs = TimeLog.where(:id => params[:time_log_ids]).all
-    @enumerations = Enumeration.where(:type => 'TimeEntryActivity', :active => 't').all
     respond_to do |format|
       format.js
     end

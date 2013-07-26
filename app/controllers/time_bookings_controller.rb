@@ -5,6 +5,7 @@ class TimeBookingsController < ApplicationController
 
   helper :queries
   include QueriesHelper
+  helper_method :get_activities
   include TimeTrackersHelper
 
   def actions
@@ -20,7 +21,6 @@ class TimeBookingsController < ApplicationController
 
   def show_edit
     @time_bookings = TimeBooking.where(:id => params[:time_booking_ids]).all
-    @enumerations = Enumeration.where(:type => 'TimeEntryActivity', :active => 't').all
     respond_to do |format|
       format.js
     end

@@ -47,7 +47,8 @@
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_activity) %></div>
                   <div class="task_form_input">
-                    <%= f.collection_select :activity_id, @enumerations, :id, :name, {:include_blank => true}, :onchange => "updateTTControllerForm(this.form)" %>
+                    <% activities = get_activities @time_tracker.project_id %>
+                    <%= f.collection_select :activity_id, activities, :id, :name, {:include_blank => true}, :onchange => "updateTTControllerForm(this.form)" %>
                   </div>
                 </div>
                 <div class="task_form_sub_fields">

@@ -1,5 +1,5 @@
 <%
-   activities = Enumeration.where(:type => 'TimeEntryActivity', :active => 't').all
+   activities = time_tracker.project_id.nil? ? TimeEntryActivity.shared.active.all : Project.visible.where(:id => time_tracker.project_id).first().activities
    options = options_from_collection_for_select(activities, :id, :name).split("\n").join("")
    select = select_tag :tt_activity, options, {:include_blank => true, :onchange => 'updateActivity()'}
 %>
