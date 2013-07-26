@@ -2,7 +2,7 @@
 one:
   id: 1
   user_id: 2
-  started_on: 2012-10-25 11:47:03
+  started_on: 2012-10-25 11:47:00 +2
   comments: original comment
   project_id: 1
   issue_id: 1
@@ -11,7 +11,7 @@ one:
 two:
   id: 2
   user_id: 1
-  started_on: 2012-10-25 11:47:03 +0
+  started_on: 2012-10-25 11:47:00 +2
   comments: original comment
   project_id: 1
   issue_id: 1

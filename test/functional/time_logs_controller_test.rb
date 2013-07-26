@@ -1,7 +1,7 @@
 require_relative '../test_helper'
 
 class TimeLogsControllerTest < ActionController::TestCase
-  fixtures :projects, :users, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
+  fixtures :projects, :users, :user_preferences, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
            :enumerations, :time_entries, :time_logs
 
   def setup
@@ -11,6 +11,7 @@ class TimeLogsControllerTest < ActionController::TestCase
     @response = ActionController::TestResponse.new
     @request.session[:user_id] = nil
     Setting.default_language = 'en'
+    Setting.date_format = '%Y-%m-%d'
   end
 
   # test_permissions
@@ -67,7 +68,7 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "update only TL -comments on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "11:47:03", :stop_time => "11:53:03",
+                                                :start_time => "11:47", :stop_time => "11:53",
                                                 :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         tl = TimeLog.where(:id => 1).first
@@ -76,19 +77,19 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("11:47:03", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("11:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "not update TL -comments on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "08:47:23", :stop_time => "08:53:42",
-                                                :spent_time => "6m 19s"}}}
+                                                :start_time => "08:47", :stop_time => "08:53",
+                                                :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
@@ -97,12 +98,12 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47:23", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
@@ -131,8 +132,8 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "update TL -comments on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "11:47:03", :stop_time => "11:53:03",
-                                                :spent_time => "6m 19s"}}}
+                                                :start_time => "11:47", :stop_time => "11:53",
+                                                :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         tl = TimeLog.where(:id => 1).first
         assert_equal("new comment", tl.comments, "updated TL-comment")
@@ -140,19 +141,19 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "also update time and date on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice], "show flash-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("12:42:22", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("12:42", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-23", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "not update TL -comments on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "08:47:23", :stop_time => "08:53:42",
-                                                :spent_time => "6m 19s"}}}
+                                                :start_time => "08:47", :stop_time => "08:53",
+                                                :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
@@ -161,12 +162,12 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47:23", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
@@ -195,8 +196,8 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "update TL -comments on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "11:47:03", :stop_time => "11:53:03",
-                                                :spent_time => "6m 19s"}}}
+                                                :start_time => "11:47", :stop_time => "11:53",
+                                                :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         tl = TimeLog.where(:id => 1).first
         assert_equal("new comment", tl.comments, "updated TL-comment")
@@ -204,19 +205,19 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "also update time and date on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice], "show flash-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("12:42:22", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("12:42", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-23", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "update TL -comments on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "08:47:23", :stop_time => "08:53:42",
-                                                :spent_time => "6m 19s"}}}
+                                                :start_time => "08:47", :stop_time => "08:53",
+                                                :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice], "show flash-message")
         tl = TimeLog.where(:id => 2).first
@@ -225,12 +226,12 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "update time or date on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice], "show flash-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("12:42:22", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("12:42", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-23", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
@@ -301,7 +302,7 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "update only TL -comments on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "11:47:03", :stop_time => "11:53:03",
+                                                :start_time => "11:47", :stop_time => "11:53",
                                                 :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         tl = TimeLog.where(:id => 1).first
@@ -310,19 +311,19 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("11:47:03", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("11:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "not update TL -comments on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "08:47:23", :stop_time => "08:53:42",
-                                                :spent_time => "6m 19s"}}}
+                                                :start_time => "08:47", :stop_time => "08:53",
+                                                :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
@@ -331,12 +332,12 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47:23", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
@@ -387,7 +388,7 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "update only TL -comments on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "11:47:03", :stop_time => "11:53:03",
+                                                :start_time => "11:47", :stop_time => "11:53",
                                                 :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         tl = TimeLog.where(:id => 1).first
@@ -396,19 +397,19 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("11:47:03", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("11:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "not update TL -comments on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "08:47:23", :stop_time => "08:53:42",
-                                                :spent_time => "6m 19s"}}}
+                                                :start_time => "08:47", :stop_time => "08:53",
+                                                :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
@@ -417,12 +418,12 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47:23", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
@@ -473,7 +474,7 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "update only TL -comments on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "11:47:03", :stop_time => "11:53:03",
+                                                :start_time => "11:47", :stop_time => "11:53",
                                                 :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         tl = TimeLog.where(:id => 1).first
@@ -482,19 +483,19 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on own logs" do
         get :actions, {:time_log_edit => {1 => {:id => 1, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("11:47:03", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("11:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "update TL -comments on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-25",
-                                                :start_time => "08:47:23", :stop_time => "08:53:42",
-                                                :spent_time => "6m 19s"}}}
+                                                :start_time => "08:47", :stop_time => "08:53",
+                                                :spent_time => "6m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice], "show flash-message")
         tl = TimeLog.where(:id => 2).first
@@ -503,12 +504,12 @@ class TimeLogsControllerTest < ActionController::TestCase
 
       should "not update time or date on foreign logs" do
         get :actions, {:time_log_edit => {2 => {:id => 2, :comments => "new comment", :tt_log_date => "2012-10-23",
-                                                :start_time => "12:42:22", :stop_time => "12:52:42",
-                                                :spent_time => "10m 19s"}}}
+                                                :start_time => "12:42", :stop_time => "12:52",
+                                                :spent_time => "10m"}}}
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47:23", tl.started_on.to_time.localtime.strftime("%H:%M:%S"), "not updated TL-time")
+        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
         assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
