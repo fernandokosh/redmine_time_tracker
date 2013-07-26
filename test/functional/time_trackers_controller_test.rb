@@ -119,11 +119,11 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update time or date on own trackers" do
-        put :update, {:time_tracker => {:start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "illegally updated TT-start_time")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "illegally updated TT-start_time")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "illegally updated TT-date")
       end
     end
@@ -198,10 +198,10 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "update date and time on own trackers" do
-        put :update, {:time_tracker => {:start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         tt = TimeTracker.where(:id => 1).first
-        assert_equal("10:23:00", tt.started_on.localtime.to_time.strftime("%H:%M:%S"), "updated TT-start_time")
+        assert_equal("10:23", tt.started_on.localtime.to_time.strftime("%H:%M"), "updated TT-start_time")
         assert_equal("2012-10-23", tt.started_on.to_date.to_s(:db), "updated TT-date")
       end
       #=============================
@@ -238,10 +238,10 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update date or time on foreign trackers" do
-        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         tt = TimeTracker.where(:id => 2).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
       end
       #=============================
@@ -317,10 +317,10 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "update date and time on own trackers" do
-        put :update, {:time_tracker => {:start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         tt = TimeTracker.where(:id => 1).first
-        assert_equal("10:23:00", tt.started_on.localtime.to_time.strftime("%H:%M:%S"), "updated TT-start_time")
+        assert_equal("10:23", tt.started_on.localtime.to_time.strftime("%H:%M"), "updated TT-start_time")
         assert_equal("2012-10-23", tt.started_on.to_date.to_s(:db), "updated TT-date")
       end
       #=============================
@@ -357,10 +357,10 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update date or time on foreign trackers" do
-        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         tt = TimeTracker.where(:id => 2).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
       end
       #=============================
@@ -466,11 +466,11 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update date or time on own trackers" do
-        put :update, {:time_tracker => {:start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "not updated TT-start_time illegally")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "not updated TT-start_time illegally")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
       end
       # ============================
@@ -507,10 +507,10 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update date or time on foreign trackers" do
-        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         tt = TimeTracker.where(:id => 2).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
       end
       #=============================
@@ -599,11 +599,11 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update date or time on own trackers" do
-        put :update, {:time_tracker => {:start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "not updated TT-start_time illegally")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "not updated TT-start_time illegally")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
       end
       # ============================
@@ -640,10 +640,10 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update date or time on foreign trackers" do
-        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         tt = TimeTracker.where(:id => 2).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
       end
       #=============================
@@ -732,11 +732,11 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update date or time on own trackers" do
-        put :update, {:time_tracker => {:start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "not updated TT-start_time illegally")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "not updated TT-start_time illegally")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
       end
       # ============================
@@ -773,13 +773,35 @@ class TimeTrackersControllerTest < ActionController::TestCase
       end
 
       should "not update date or time on foreign trackers" do
-        put :update, {:time_tracker => {:id => 2, :start_time => "10:23:00", :date => "2012-10-23"}}
+        put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response :success
         tt = TimeTracker.where(:id => 2).first
-        assert_equal("11:47:00", tt.started_on.localtime.strftime("%H:%M:%S"), "not updated foreign TT-start_time")
+        assert_equal("11:47", tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
         assert_equal("2012-10-25", tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
       end
       #=============================
+    end
+
+    context "with all permissions and foreign user" do
+      setup do
+        Role.find(2).add_permission! :tt_log_time
+        Role.find(2).add_permission! :tt_edit_own_time_logs
+        Role.find(2).add_permission! :tt_edit_time_logs
+        Role.find(2).add_permission! :tt_view_bookings
+        Role.find(2).add_permission! :tt_book_time
+        Role.find(2).add_permission! :tt_edit_own_bookings
+        Role.find(2).add_permission! :tt_edit_bookings
+        @request.session[:user_id] = 1 #user 1 has the timezone UTC
+      end
+
+      should "update date and time on trackers when passing params in different time and date format" do
+        Setting.date_format = '%d.%m.%Y'
+        put :update, {:time_tracker => {:start_time => "1:23 pm", :date => "23.10.2012"}}
+        assert_response :success
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("15:23", tt.started_on.localtime.to_time.strftime("%H:%M"), "updated TT-start_time")
+        assert_equal("2012-10-23", tt.started_on.to_date.to_s(:db), "updated TT-date")
+      end
     end
   end
 end

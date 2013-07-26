@@ -140,7 +140,7 @@ class TimeBookingsControllerTest < ActionController::TestCase
 
       should "update TB -comments/issue/activity and project on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "new comment", :tt_booking_date => "2012-10-25",
-                                                    :start_time => "11:47", :stop_time => "11:53",
+                                                    :start_time => "23:47", :stop_time => "23:53",
                                                     :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_nil(flash[:error], "no error messages")
@@ -152,12 +152,12 @@ class TimeBookingsControllerTest < ActionController::TestCase
 
       should "not update time or date on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "original comment", :tt_booking_date => "2012-10-25",
-                                                    :start_time => "11:48", :stop_time => "11:51",
+                                                    :start_time => "23:48", :stop_time => "23:51",
                                                     :spent_time => "3m", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_booking), flash[:error], "show error-message")
         tb = TimeBooking.where(:id => 1).first
-        assert_equal("11:47", tb.started_on.to_time.localtime.strftime("%H:%M"), "not updated TB-time")
+        assert_equal("23:47", tb.started_on.to_time.localtime.strftime("%H:%M"), "not updated TB-time")
         assert_equal("2012-10-25", tb.started_on.to_date.to_s(:db), "not updated TB-date")
       end
 
@@ -204,7 +204,7 @@ class TimeBookingsControllerTest < ActionController::TestCase
 
       should "update TB -comments/issue/activity and project on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "new comment", :tt_booking_date => "2012-10-25",
-                                                    :start_time => "11:47", :stop_time => "11:53",
+                                                    :start_time => "23:47", :stop_time => "23:53",
                                                     :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_nil(flash[:error], "no error messages")
@@ -216,12 +216,12 @@ class TimeBookingsControllerTest < ActionController::TestCase
 
       should "update time and date on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "original comment", :tt_booking_date => "2012-10-25",
-                                                    :start_time => "11:48", :stop_time => "11:51",
+                                                    :start_time => "23:48", :stop_time => "23:51",
                                                     :spent_time => "3m", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
-        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice], "show flash-message")
+        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice] || flash[:error], "show flash-message")
         tb = TimeBooking.where(:id => 1).first
-        assert_equal("11:48", tb.started_on.to_time.localtime.strftime("%H:%M"), "not updated TB-time")
+        assert_equal("23:48", tb.started_on.to_time.localtime.strftime("%H:%M"), "not updated TB-time")
         assert_equal("2012-10-25", tb.started_on.to_date.to_s(:db), "not updated TB-date")
       end
 
@@ -268,7 +268,7 @@ class TimeBookingsControllerTest < ActionController::TestCase
 
       should "update TB -comments/issue/activity and project on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "new comment", :tt_booking_date => "2012-10-25",
-                                                    :start_time => "11:47", :stop_time => "11:53",
+                                                    :start_time => "23:47", :stop_time => "23:53",
                                                     :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
         assert_nil(flash[:error], "no error messages")
@@ -280,12 +280,12 @@ class TimeBookingsControllerTest < ActionController::TestCase
 
       should "update time and date on own bookings" do
         get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "original comment", :tt_booking_date => "2012-10-25",
-                                                    :start_time => "11:48", :stop_time => "11:51",
+                                                    :start_time => "23:48", :stop_time => "23:51",
                                                     :spent_time => "3m", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
-        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice], "show flash-message")
+        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice] || flash[:error], "show flash-message")
         tb = TimeBooking.where(:id => 1).first
-        assert_equal("11:48", tb.started_on.to_time.localtime.strftime("%H:%M"), "not updated TB-time")
+        assert_equal("23:48", tb.started_on.to_time.localtime.strftime("%H:%M"), "not updated TB-time")
         assert_equal("2012-10-25", tb.started_on.to_date.to_s(:db), "not updated TB-date")
       end
 
@@ -294,7 +294,7 @@ class TimeBookingsControllerTest < ActionController::TestCase
                                                     :start_time => "08:47", :stop_time => "08:53",
                                                     :spent_time => "6m", :project_id => 1, :issue_id => 2, :activity_id => 10}}}
         assert_response 302, "on update TB"
-        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice], "show flash-message")
+        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice] || flash[:error], "show flash-message")
         tb = TimeBooking.where(:id => 2).first
         assert_equal("new comment", tb.comments, "updated TB-comment")
         assert_equal(2, tb.issue.id, "updated TB-issue")
@@ -306,9 +306,34 @@ class TimeBookingsControllerTest < ActionController::TestCase
                                                     :start_time => "08:48", :stop_time => "08:51",
                                                     :spent_time => "3m", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
         assert_response 302, "on update TB"
-        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice], "show flash-message")
+        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice] || flash[:error], "show flash-message")
         tb = TimeBooking.where(:id => 2).first
         assert_equal("08:48", tb.started_on.to_time.localtime.strftime("%H:%M"), "not updated TB-time")
+        assert_equal("2012-10-25", tb.started_on.to_date.to_s(:db), "not updated TB-date")
+      end
+    end
+
+    context "with all permissions and foreign user" do
+      setup do
+        Role.find(2).add_permission! :tt_log_time
+        Role.find(2).add_permission! :tt_edit_own_time_logs
+        Role.find(2).add_permission! :tt_edit_time_logs
+        Role.find(2).add_permission! :tt_view_bookings
+        Role.find(2).add_permission! :tt_book_time
+        Role.find(2).add_permission! :tt_edit_own_bookings
+        Role.find(2).add_permission! :tt_edit_bookings
+        @request.session[:user_id] = 1 #user 1 has the timezone UTC
+      end
+
+      should "update date and time on bookings when passing params in different time and date format" do
+        Setting.date_format = '%d.%m.%Y'
+        get :actions, {:time_booking_edit => {1 => {:id => 1, :comments => "original comment", :tt_booking_date => "25.10.2012",
+                                                    :start_time => "9:48 pm", :stop_time => "9:51 pm",
+                                                    :spent_time => "3m", :project_id => 1, :issue_id => 1, :activity_id => 9}}}
+        assert_response 302, "on update TB"
+        assert_equal(I18n.t(:tt_update_booking_success), flash[:notice] || flash[:error], "show flash-message")
+        tb = TimeBooking.where(:id => 1).first
+        assert_equal("23:48", tb.started_on.to_time.localtime.strftime("%H:%M"), "not updated TB-time")
         assert_equal("2012-10-25", tb.started_on.to_date.to_s(:db), "not updated TB-date")
       end
     end
