@@ -88,8 +88,8 @@ class TimeBooking < ActiveRecord::Base
     ((time2.to_i - time1.to_i) / 3600.0).to_f
   end
 
-  def get_formatted_time(time1 = started_on, time2 = stopped_at)
-    help.time_dist2string(time2.min - time1.min)
+  def get_formatted_time
+    help.time_dist2string((hours_spent*60).to_i)
   end
 
   def get_formatted_start_time
