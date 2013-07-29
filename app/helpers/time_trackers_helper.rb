@@ -18,7 +18,7 @@ module TimeTrackersHelper
   end
 
   def get_activities(project_id)
-    if project_id.nil?
+    if project_id.blank?
       TimeEntryActivity.shared.active.all
     else
       project_from_id(project_id).activities

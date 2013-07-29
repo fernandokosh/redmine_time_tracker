@@ -34,6 +34,7 @@ match '/tt_reporting', :to => 'tt_reporting#index', :via => [:get, :post]
 match '/tt_completer/get_issue', :to => 'tt_completer#get_issue', :via => [:get]
 match '/tt_completer/get_issue_id', :to => 'tt_completer#get_issue_id', :via => [:get]
 match '/tt_completer/get_issue_subject', :to => 'tt_completer#get_issue_subject', :via => [:get]
+match '/tt_completer/get_activity', :to => 'tt_completer#get_activity', :via => [:get]
 
 match '/tt_date_shifter/get_prev_time_span', :to => 'tt_date_shifter#get_prev_time_span', :via => [:get]
 match '/tt_date_shifter/get_next_time_span', :to => 'tt_date_shifter#get_next_time_span', :via => [:get]

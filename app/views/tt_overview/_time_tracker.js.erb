@@ -112,6 +112,7 @@ function updateBookingProject(api_key, name) {
                     project_id_field.val(issue.project.id);
                     $("#" + project_id_select.attr("id")).val(issue.project.id);
                 }
+                updateBookingActivity(api_key, name);
             },
             error: function () {
                 project_id_select.attr('disabled', false);
@@ -122,6 +123,20 @@ function updateBookingProject(api_key, name) {
             }
         });
     }
+}
+
+function updateBookingActivity(api_key, name) {
+    $.ajax({url: base_url() + 'tt_completer/get_activity.json?key=' + api_key + '&project_id=' + $("#" + name + "_project_id").val(),
+        type: 'GET',
+        success: function (activites) {
+            var activity_field = $("#" + name + "_activity_id_select");
+            activity_field.find('option[value!=""]').remove();
+            $.each(activites, function (i, activity) {
+                activity_field.append('<option value="' + activity.id + '">' + activity.name + '</option>')
+            });
+            validate_list_inputs(name);
+        }
+    });
 }
 
 function timeString2min(str) {
