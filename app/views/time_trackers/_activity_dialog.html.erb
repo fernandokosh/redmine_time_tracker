@@ -1,3 +1,4 @@
+<%= javascript_tag render :partial => 'tt_overview/time_tracker', :formats => [:js] %>
 <%
    activities = time_tracker.project_id.nil? ? TimeEntryActivity.shared.active.all : Project.visible.where(:id => time_tracker.project_id).first().activities
    options = options_from_collection_for_select(activities, :id, :name).split("\n").join("")
