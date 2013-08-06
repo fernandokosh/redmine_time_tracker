@@ -170,7 +170,7 @@ class TimeTracker < ActiveRecord::Base
   end
 
   def get_formatted_date
-    format_date(self.started_on.in_time_zone User.current.time_zone) unless self.started_on.nil?
+    format_date(help.in_user_time_zone self.started_on) unless self.started_on.nil?
   end
 
   def zombie?

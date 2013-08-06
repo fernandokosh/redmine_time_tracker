@@ -49,20 +49,32 @@ module TimeTrackersHelper
     parts[0] + "h " + parts[1] + "m"
   end
 
+  def user_time_zone
+    User.current.time_zone || Time
+  end
+
+  def in_user_time_zone(time)
+     unless User.current.time_zone.nil?
+       time.in_time_zone User.current.time_zone
+     else
+       time.localtime
+     end
+  end
+
   def parse_localised_date_string(date_string)
     1.upto(10) do |i|
       matched = date_string.gsub!(l('date.month_names')[i], l('date.month_names', locale: :en)[i])
       date_string.gsub!(l('date.abbr_month_names')[i], l('date.abbr_month_names', locale: :en)[i]) if matched.nil?
     end
-    User.current.time_zone.parse(Date.strptime(date_string, Setting.date_format.presence || l('date.formats.default')).to_s).to_date.to_s
+    user_time_zone.parse(Date.strptime(date_string, Setting.date_format.presence || l('date.formats.default')).to_s).to_date.to_s
   end
 
   def parse_localised_time_string(time_string)
-    User.current.time_zone.parse(time_string.gsub(l('time.pm'), 'pm').gsub(l('time.am'), 'am')).strftime("%H:%M")
+    user_time_zone.parse(time_string.gsub(l('time.pm'), 'pm').gsub(l('time.am'), 'am')).strftime("%H:%M")
   end
 
   def build_timeobj_from_strings(date_string, time_string)
-    User.current.time_zone.parse(date_string + " " + time_string).localtime
+    user_time_zone.parse(date_string + " " + time_string).localtime
   end
 
   def get_current_time_tracker
