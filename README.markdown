@@ -56,15 +56,16 @@ the issue list to start or stop the timer.
 ## What's what?
 
 The Plugin is intended to help us create invoices for customers. This requires the separation of time that was spent and time that is booked. Only booked times can be billed.
+More informations are available in the [wiki](http://github.com/hicknhack-software/redmine_time_tracker/wiki "Wiki").
 
 ###Time Tracker
 
-The stop watch. Time you spent get's "generated" by the tracker 
+The stop watch. Time you spent get's "generated" by the tracker
 
 ###Time Log
 
 A time log is a spent amount of time. If you stop the tracker, a time log is created. A time log has nothing attached to it. To add this time to issues or projects, you **book** time.
-If you enable Redmine's own time management you are able to access these logs. Be aware that you should not edit time logs outside the interface provided by the plugin. Role permissions can be edited to disable logging. This might be useful for reviewers, that do not generate time own their own but want to look up statistics on a project or user.
+Role permissions can be edited to disable logging. This might be useful for reviewers, that do not generate time own their own but want to look up statistics on a project or user.
 
 ###Time Booking
 
