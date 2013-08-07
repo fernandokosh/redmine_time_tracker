@@ -20,10 +20,7 @@
                   {:controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => @issue.id}},
                   :class => 'icon icon-start tt_start',
                   :onclick => "contextMenuHide();",
-                  :remote => true,
                   :data => {:type => 'html'}
       %>
     </li>
 <% end %>
-
-<%= render partial: 'time_trackers/activity_dialog', locals: {time_tracker: time_tracker, stop_title: stop_title, remote: true} if !time_tracker.nil? and !time_tracker.is_activity_id_correct_set? %>

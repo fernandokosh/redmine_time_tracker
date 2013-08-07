@@ -50,6 +50,8 @@ de:
   time_tracker_already_running_error: "Es läuft bereits eine Zeiterfassung."
   time_tracker_delete_success: "Zeiter-Tracker gelöscht."
   time_tracker_delete_booking_success: "Die Zeitbuchung wurde gelöscht."
+  tt_activity_dialog_title: "Keine Aktivität gewählt"
+  tt_activity_dialog_description: "Sie haben für den aktiven Zeitmesser ein Projekt, aber keine Aktivität gesetzt. Bitte wählen sie eine aus der untenstehenden Liste."
   tt_error_not_allowed_to_book_on_project: "Sie haben keine Berechtigung zur Zeitbuchung in diesem Projekt!"
   tt_error_not_allowed_to_book_without_project: "Sie haben keine Berechtigung zur Zeitbuchung ohne ein Projekt auszuwählen!"
   tt_error_not_allowed_to_change_foreign_booking: "Sie haben keine Berechtigung fremde Zeitbuchungen zu ändern!"

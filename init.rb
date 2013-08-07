@@ -115,6 +115,8 @@ Redmine::Plugin.register :redmine_time_tracker do
        # if the user has one or more of the permissions declared within this Plug-In, he should see the "TimeTracker"-Menu
        :if => permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_edit_time_logs, :tt_view_bookings, :tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings])
 
+  menu :account_menu, :time_tracker_quick_menu, "", :caption => "", :if => permission_checker([:tt_log_time]), :before => :my_account
+
   Redmine::MenuManager.map :timetracker_menu do |menu|
     menu.push :time_tracker_menu_tab_overview, {:controller => 'tt_overview', :action => 'index'}, :caption => :time_tracker_label_menu_tab_overview,
               :if => permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_edit_time_logs, :tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings])

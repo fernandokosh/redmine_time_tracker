@@ -3,6 +3,8 @@
    activities = time_tracker.project_id.nil? ? TimeEntryActivity.shared.active.all : Project.visible.where(:id => time_tracker.project_id).first().activities
    options = options_from_collection_for_select(activities, :id, :name).split("\n").join("")
    select = select_tag :tt_activity, options, {:include_blank => true, :onchange => 'updateActivity()'}
+   centered = content_tag :div, select, :class => 'center'
+   desc = content_tag :p, l(:tt_activity_dialog_description)
 %>
 <script type="text/javascript">
     function updateActivity(val) {
@@ -18,15 +20,14 @@
     function showDialog() {
         var $dialog = $('#dialog')
         if ($dialog.length == 0) {
-            $('<div/>', {id: 'dialog', title: 'Please choose an activity'})
+            $('<div/>', {id: 'dialog', title: '<%= l(:tt_activity_dialog_title)%>'})
                     .appendTo('body')
-                    .append('<%=content_tag :div, select, :class => 'center'%>')
+                    .append('<%=content_tag :div, desc + centered%>')
                     .dialog({
                         autoOpen: true,
                         resizable: false,
                         draggable: false,
                         modal: true,
-                        height: 200,
                         width: 300,
                         buttons: [
                             {
@@ -56,7 +57,9 @@
     $(document).ready(function () {
         $(document).on('click', '.tt_stop', function (e) {
             showDialog();
-            contextMenuHide();
+            if (typeof(contextMenuHide) === typeof(Function)) {
+                contextMenuHide();
+            }
             e.preventDefault();
         });
     });
