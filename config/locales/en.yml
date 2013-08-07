@@ -61,6 +61,7 @@ en:
   tt_error_not_allowed_to_create_time_log_on_project: "You are not allowed to create a TimeLog on the this project!"
   tt_error_not_allowed_to_delete_bookings: "You are not allowed to delete TimeBooking!"
   tt_error_not_allowed_to_delete_logs: "You are not allowed to delete TimeLog!"
+  tt_error_not_allowed_to_start_tracker_on_issue: "You are not allowed to track time for this issue or the issue is closed!"
   tt_error_could_not_set_comments: "Could not set Comments!"
   tt_error_could_not_set_issue: "Could not set Issue!"
   tt_error_could_not_set_project: "Could not set Project!"
