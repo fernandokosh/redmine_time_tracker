@@ -121,6 +121,8 @@ de:
   time_tracker_report_logo_url: "Berichtslogo URL"
   time_tracker_report_logo_width: "Berichtslogobreite"
   time_tracker_report_total_time: "Zeitsumme"
+  time_tracker_round_steps: "Rundungsschritt"
+  time_tracker_round_limit: "Runde ab wenn unter"
   time_tracker_seconds: "Sekunden"
   time_tracker_settings_from_status: "von Status"
   time_tracker_settings_general_title: "Allgemein"

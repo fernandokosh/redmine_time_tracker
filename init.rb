@@ -30,7 +30,7 @@ Redmine::Plugin.register :redmine_time_tracker do
   requires_redmine :version_or_higher => '2.3.1'
 
   #settings :default => {:refresh_rate => '60', :status_transitions => {}}, :partial => 'settings/time_tracker'
-  settings :default => {:report_title => 'Report', :report_logo_url => '', :report_logo_width => '150'}, :partial => 'settings/time_tracker'
+  settings :default => {:report_title => 'Report', :report_logo_url => '', :report_logo_width => '150', :round_steps => '0.25', :round_limit => '50'}, :partial => 'settings/time_tracker'
 
   Redmine::AccessControl.map do |map|
     map.project_module :redmine_timetracker_plugin do

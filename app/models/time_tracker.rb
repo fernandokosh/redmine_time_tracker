@@ -130,10 +130,12 @@ class TimeTracker < ActiveRecord::Base
       ActiveRecord::Base.transaction do
         start_time = started_on.change(:sec => 0)
         stop_time = Time.now.localtime.change(:sec => 0) + 1.minute
-        if self.round # round times to solid quarters of an hour
+        if self.round # round times to the steps from the settings
+          step = (Setting.plugin_redmine_time_tracker[:round_steps].to_f * 3600).to_i
           t_diff = (stop_time.to_i - start_time.to_i)
-          unless (t_diff % 900) == 0
-            stop_time = start_time + (t_diff / 900 + 1) * 900
+          unless (t_diff % step) == 0
+            offset = (t_diff / step + (t_diff % step < step * (Setting.plugin_redmine_time_tracker[:round_limit].to_f / 100) ? 0 : 1)) * step
+            stop_time = start_time + offset if offset != 0
           end
         end
         time_log = TimeLog.create(:user_id => user_id, :started_on => start_time, :stopped_at => stop_time, :comments => comments)
