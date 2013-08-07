@@ -47,6 +47,7 @@ class TimeBookingQuery < Query
 
     add_available_filter 'tt_booking_start_date', :type => :date, :order => 2
     add_available_filter 'tt_booking_issue', :type => :list, :order => 4, :values => Issue.visible.all.collect { |s| [s.subject, s.id.to_s] }
+    add_available_filter 'tt_booking_activity', :type => :list, :order => 4, :values => help.get_activities('').map { |s| [s.name, s.name] }
 
     if project.nil?
       project_values = []
@@ -161,9 +162,11 @@ class TimeBookingQuery < Query
   end
 
   def sql_for_tt_booking_issue_field(field, operator, value)
-    sql = "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
-    unless operator == "="
-      sql << " OR #{Issue.table_name}.id IS NULL"
+    sql = "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") "
+    if operator == "!"
+      sql << " OR #{Issue.table_name}.id IS NULL)"
+    else
+      sql << ")"
     end
   end
 
@@ -174,4 +177,7 @@ class TimeBookingQuery < Query
     "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
   end
 
+  def sql_for_tt_booking_activity_field(field, operator, value)
+    "( #{TimeEntryActivity.table_name}.name #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+  end
 end
