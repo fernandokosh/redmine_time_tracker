@@ -9,21 +9,24 @@ function updateTTControllerForm(form) {
             $('#time-tracker-control').replaceWith($(html).filter('#time-tracker-control'))
             $('#time_tracker_date').datepicker(datepickerOptions);
             validate_time_tracker_form();
+            enableIssueAutoCompletion();
+        }
+    });
+}
+
+function enableIssueAutoCompletion(){
+    $('#time_tracker_issue_text').autocomplete({
+        source: 'tt_completer/get_issue.json?key=<%= key %>',
+        minLength: 0,
+        select: function (event, ui) {
+            $('#time_tracker_issue_text').val(ui.item.label);
+            $('#time_tracker_issue_text').change();
         }
     });
 }
 
 $(document).ready(function () {
-    $(function () {
-        $('#time_tracker_issue_text').autocomplete({
-            source: 'tt_completer/get_issue.json?key=<%= key %>',
-            minLength: 0,
-            select: function (event, ui) {
-                $('#time_tracker_issue_text').val(ui.item.label);
-                $('#time_tracker_issue_text').change();
-            }
-        });
-    });
+    enableIssueAutoCompletion();
 });
 
 $(document).ready(function () {
@@ -33,7 +36,6 @@ $(document).ready(function () {
                 source: 'tt_completer/get_issue.json?key=<%= key %>',
                 minLength: 0,
                 select: function (event, ui) {
-
                     event.preventDefault();
                     $(this).val(ui.item.label);
                 }
