@@ -1,0 +1,80 @@
+<%= javascript_tag render :partial => 'tt_overview/time_tracker', :formats => [:js] %>
+<%
+   str_takeover = 'takeover'
+   str_discard = 'discard'
+   str_log = 'log'
+   takeover_radio = radio_button_tag 'running_timer', str_takeover, false, :onchange => "updateOkButton('#{str_takeover}')"
+   takeover_label = content_tag :span, l(:tt_start_dialog_take_over_option)
+   takeover_opt = takeover_radio + takeover_label + tag('br')
+   discard_radio = radio_button_tag 'running_timer', str_discard, false, :onchange => "updateOkButton('#{str_discard}')"
+   discard_label = content_tag :span, l(:tt_start_dialog_discard_option)
+   discard_opt = discard_radio + discard_label + tag('br')
+   log_radio = radio_button_tag 'running_timer', str_log, true, :onchange => "updateOkButton('#{str_log}')"
+   log_label = content_tag :span, l(:tt_start_dialog_log_option)
+   log_opt = log_radio + log_label + tag('br')
+   suffix = time_tracker.issue_id.nil? ? l(:tt_start_dialog_no_issue) : "#{l(:field_issue)} ##{time_tracker.issue_id.to_s}"
+   desc = content_tag :p, l(:tt_start_dialog_description, time_tracker: suffix)
+%>
+<script type="text/javascript">
+    function updateOkButton(key, initial) {
+        var $button_text = $('#tt_start_dialog_ok .ui-button-text')
+        if (initial !== true) {
+            $button_text.unwrap();
+        }
+        switch (key) {
+            case '<%=str_takeover%>':
+                $button_text.wrap('<%=link_to '',{:controller => 'time_trackers', :action => 'update', :time_tracker => {:issue_id => @issue.id}},:data => {:type => 'html'} %>');
+                break;
+            case '<%=str_discard%>':
+                $button_text.wrap('<%=link_to '',{:controller => 'time_trackers', :action => 'delete', :id => time_tracker.id, :start_new_time_tracker => @issue.id},:data => {:type => 'html'} %>');
+                break;
+            case '<%=str_log%>':
+                $button_text.wrap('<%=link_to '',{:controller => 'time_trackers', :action => 'stop', :start_new_time_tracker => @issue.id},:data => {:type => 'html'}, :class => 'tt_start_dialog_stop' %>');
+                break;
+        }
+    }
+    function showStartDialog() {
+        var $dialog = $('#start_dialog')
+        if ($dialog.length == 0) {
+            $('<div/>', {id: 'start_dialog', title: '<%= l(:tt_start_dialog_title)%>'})
+                    .appendTo('body')
+                    .append('<%=content_tag :div, desc + log_opt + takeover_opt + discard_opt %>')
+                    .dialog({
+                        autoOpen: true,
+                        resizable: false,
+                        draggable: false,
+                        modal: true,
+                        width: 300,
+                        buttons: [
+                            {
+                                id: "tt_start_dialog_ok",
+                                text: "Ok",
+                                click: function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            {
+                                text: "<%= l(:button_cancel)%>",
+                                click: function () {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        ],
+                        create: function () {
+                            updateOkButton('<%=str_log%>', true);
+                        }
+                    })
+        } else {
+            $dialog.dialog('open')
+        }
+    }
+    $(document).ready(function () {
+        $(document).on('click', '.tt_start', function (e) {
+            showStartDialog();
+            if (typeof(contextMenuHide) === typeof(Function)) {
+                contextMenuHide();
+            }
+            e.preventDefault();
+        });
+    });
+</script>

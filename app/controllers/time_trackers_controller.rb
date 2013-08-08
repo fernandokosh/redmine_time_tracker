@@ -28,7 +28,7 @@ class TimeTrackersController < ApplicationController
         issue = help.issue_from_id(issue_id)
         unless issue.nil?
           args[:issue_id] = issue_id
-          args[:comments].sub!( /\A\##{issue_id}(\s+#{issue.subject})?\s*/, '' )
+          args[:comments].sub!(/\A\##{issue_id}(\s+#{issue.subject})?\s*/, '')
         end
       end
 
@@ -68,10 +68,14 @@ class TimeTrackersController < ApplicationController
       flash[:error] = l(:stop_time_tracker_error) unless @time_tracker.destroyed?
       @time_tracker = get_current
       flash[:notice] = l(:stop_time_tracker_success)
-      unless request.xhr?
-        redirect_to :back
+      if !params[:start_new_time_tracker].nil?
+        start({:issue_id => params[:start_new_time_tracker]})
       else
-        render :partial => 'flash_messages'
+        unless request.xhr?
+          redirect_to :back
+        else
+          render :partial => 'flash_messages'
+        end
       end
     end
   end
@@ -84,7 +88,11 @@ class TimeTrackersController < ApplicationController
       flash[:error] = l(:time_tracker_delete_fail)
     end
     flash[:notice] = l(:time_tracker_delete_success)
-    redirect_to :back
+    if !params[:start_new_time_tracker].nil?
+      start({:issue_id => params[:start_new_time_tracker]})
+    else
+      redirect_to :back
+    end
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to :back
@@ -94,11 +102,19 @@ class TimeTrackersController < ApplicationController
     @time_tracker = get_current
     @time_tracker.update_attributes!(params[:time_tracker])
     flash[:notice] = l(:update_time_tracker_success)
-    render :partial => 'time_tracker_control_with_flash'
+    unless request.xhr?
+      redirect_to :back
+    else
+      render :partial => 'time_tracker_control_with_flash'
+    end
   rescue StandardError => e
     @time_tracker = get_current
     flash[:error] = e.message
-    render :partial => 'time_tracker_control_with_flash'
+    unless request.xhr?
+      redirect_to :back
+    else
+      render :partial => 'time_tracker_control_with_flash'
+    end
   end
 
   protected

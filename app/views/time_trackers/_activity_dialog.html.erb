@@ -16,11 +16,12 @@
         $.ajax({url: base_url() + '/time_trackers/update?key=<%= User.current.api_key %>&time_tracker[activity_id]=' + val,
             type: 'PUT'
         });
+        $('#tt_activity_dialog_stop').button("option", "disabled", val == '');
     }
-    function showDialog() {
-        var $dialog = $('#dialog')
+    function showActivityDialog(start_new) {
+        var $dialog = $('#activity_dialog')
         if ($dialog.length == 0) {
-            $('<div/>', {id: 'dialog', title: '<%= l(:tt_activity_dialog_title)%>'})
+            $('<div/>', {id: 'activity_dialog', title: '<%= l(:tt_activity_dialog_title)%>'})
                     .appendTo('body')
                     .append('<%=content_tag :div, desc + centered%>')
                     .dialog({
@@ -28,10 +29,11 @@
                         resizable: false,
                         draggable: false,
                         modal: true,
-                        width: 300,
                         buttons: [
                             {
                                 id: "tt_activity_dialog_stop",
+                                text: '<%=stop_title%>',
+                                disabled: true,
                                 click: function () {
                                     $(this).dialog("close");
                                 }
@@ -41,12 +43,15 @@
                                 click: function () {
                                     $(this).dialog("close");
                                     updateActivity('<%= time_tracker.activity_id%>');
-
                                 }
                             }
                         ],
                         create: function () {
-                            $('#tt_activity_dialog_stop .ui-button-text').replaceWith('<%=link_to stop_title,{:controller => 'time_trackers', :action => 'stop'},:data => {:type => 'html'}, :class => 'ui-button-text tt_dialog_stop', :remote => remote%>');
+                            if (start_new) {
+                                $('#tt_activity_dialog_stop').wrap('<%=link_to '',{:controller => 'time_trackers', :action => 'stop', :start_new_time_tracker => (@issue.nil? ? '' : @issue.id)},:data => {:type => 'html'}, :class => 'tt_activity_dialog_stop_link', :remote => remote%>');
+                            } else {
+                                $('#tt_activity_dialog_stop').wrap('<%=link_to '',{:controller => 'time_trackers', :action => 'stop'},:data => {:type => 'html'}, :class => 'tt_activity_dialog_stop_link', :remote => remote%>');
+                            }
                         }
                     })
         } else {
@@ -56,11 +61,23 @@
     }
     $(document).ready(function () {
         $(document).on('click', '.tt_stop', function (e) {
-            showDialog();
+            showActivityDialog(false);
             if (typeof(contextMenuHide) === typeof(Function)) {
                 contextMenuHide();
             }
             e.preventDefault();
+        });
+        $(document).on('click', '.tt_start_dialog_stop', function (e) {
+            showActivityDialog(true);
+            if (typeof(contextMenuHide) === typeof(Function)) {
+                contextMenuHide();
+            }
+            e.preventDefault();
+        });
+        $(document).on('click', '.tt_activity_dialog_stop_link', function (e) {
+            if ($('#tt_activity_dialog_stop').button("option", "disabled") == true) {
+                e.preventDefault();
+            }
         });
     });
 </script>

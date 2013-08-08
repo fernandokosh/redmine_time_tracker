@@ -162,6 +162,6 @@ tr:hover .tt_list_button{
 #status-transition-list td.msg {
     text-align: center;
 }
-#dialog .center{
+.ui-dialog .center{
     text-align: center;
 }

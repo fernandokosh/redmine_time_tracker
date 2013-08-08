@@ -143,7 +143,7 @@ class TimeTracker < ActiveRecord::Base
         # if there already is a ticket-nr then we automatically associate the timeLog and the issue using a timeBooking-entry
         # and creating a time_entry
         issue = help.issue_from_id(issue_id)
-        time_log.add_booking({:project_id => project_id, :issue => issue, :activity_id => activity_id}) unless issue.nil? || project_id.nil? || activity_id.nil?
+        time_log.add_booking({:project_id => project_id, :issue => issue, :activity_id => activity_id}) unless issue.nil? && project_id.nil?
         # after creating the TimeLog we can remove the TimeTracker, so the user can start a new one
         # print an error-message otherwise
         self.destroy if time_log.save
