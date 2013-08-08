@@ -57,7 +57,7 @@ function validate_list_inputs(name) {
         var valid_dates = $("#" + name + "_valid_dates").val().split("|");
         date_field.toggleClass('invalid', $.inArray(date_field.val(), valid_dates) == -1);
     }
-    if (max_time !== null && min_time !== null) {
+    if (max_time !== null && min_time !== null && max_spent_time < 1440) {
         // if the stop-time looks smaller than the start-time, we assume a booking over midnight
         var om = false;
         if (min_time > max_time) {
@@ -66,6 +66,9 @@ function validate_list_inputs(name) {
         // first statement checks for over-midnight booking | second one checks normal boundaries
         start_field.toggleClass('invalid', om && start < min_time && start > max_time || !om && (start < min_time || start > max_time));
         stop_field.toggleClass('invalid', om && stop < min_time && stop > max_time || !om && (stop < min_time || stop > max_time));
+    }
+    if (max_spent_time !== null) {
+        max_spent_time_field.toggleClass('invalid', spent_time > max_spent_time);
     }
 
     start_field.parents('form:first').find(':submit').attr('disabled', start_field.parents('form:first').find(':input').hasClass('invalid'));
