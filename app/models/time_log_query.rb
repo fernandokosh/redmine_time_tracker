@@ -107,7 +107,7 @@ class TimeLogQuery < Query
     raise Query::StatementInvalid.new(e.message)
   end
 
-  def sql_for_tt_booking_start_date_field(field, operator, value)
+  def sql_for_tt_log_start_date_field(field, operator, value)
     case operator
       when "="
         "DATE(#{TimeLog.table_name}.started_on) = '#{Time.parse(value[0]).to_date}'"
