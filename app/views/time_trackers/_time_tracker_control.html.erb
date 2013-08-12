@@ -62,7 +62,7 @@
                   <div class="task_form_input">
                     <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => l(:time_tracker_label_date), :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 3 %>
                     <% unless @time_tracker.permission_level < 3 %>
-                        <%= calendar_for('time_tracker_date') %>
+                        <%= javascript_tag("$(function() { $('#time_tracker_date}').datepicker(locDatepickerOptions); });") %>
                     <% end %>
                   </div>
                 </div>

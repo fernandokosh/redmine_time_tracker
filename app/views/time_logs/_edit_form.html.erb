@@ -10,7 +10,7 @@
             <div class="task_form_input">
               <%= f.text_field :tt_log_date, :size => "10", :placeholder => l(:time_tracker_label_start_date), :readonly => time_log.permission_level < 3 %>
               <% unless time_log.permission_level < 3 %>
-                  <%= calendar_for("time_log_edit_#{time_log.id.to_s}_tt_log_date") %>
+                  <%= javascript_tag("$(function() { $('#time_log_edit_#{time_log.id.to_s}_tt_log_date').datepicker(locDatepickerOptions); });") %>
               <% end %>
             </div>
           </div>

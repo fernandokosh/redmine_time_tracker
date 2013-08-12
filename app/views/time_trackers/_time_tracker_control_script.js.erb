@@ -7,7 +7,7 @@ function updateTTControllerForm(form) {
             $('#content .flash').remove();
             $('#content').prepend($(html).filter('.flash'));
             $('#time-tracker-control').replaceWith($(html).filter('#time-tracker-control'))
-            $('#time_tracker_date').datepicker(datepickerOptions);
+            $('#time_tracker_date').datepicker(locDatepickerOptions);
             validate_time_tracker_form();
             enableIssueAutoCompletion();
         }

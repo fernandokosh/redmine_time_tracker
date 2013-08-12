@@ -11,7 +11,7 @@
               <%= hidden_field_tag "time_booking_edit_#{time_booking.id}_valid_dates", [time_booking.time_log.tt_log_date, time_booking.time_log.tt_log_stop_date].join('|') %>
               <%= f.text_field :tt_booking_date, :size => "10", :placeholder => "date", :readonly => time_booking.permission_level < 2, :onchange => "validate_list_inputs('time_booking_edit_#{time_booking.id}');" %>
               <% unless time_booking.permission_level < 2 %>
-                  <%= calendar_for("time_booking_edit_#{time_booking.id.to_s}_tt_booking_date") %>
+                  <%= javascript_tag("$(function() { $('#time_booking_edit_#{time_booking.id.to_s}_tt_booking_date').datepicker(locDatepickerOptions); });") %>
               <% end %>
             </div>
           </div>
