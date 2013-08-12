@@ -26,7 +26,7 @@ It will be individual adjustable for every user and seperate includable for any 
 Most current version is available at: [GitHub](https://github.com/hicknhack-software/redmine_time_tracker).
 
 ## Requirements
-* Redmine 2.3.1
+* Redmine 2.3.1 or Redmine 2.3.2
 
 ## Install
 
@@ -81,6 +81,7 @@ Reports are the method of generating invoices for customers. The layout is set u
 
 ## Version History
 
+* 0.8.0 many bugfixes, localized time, new menu buttons, improved workflow
 * 0.7.0 compatible with Redmine 2.3.1
 * 0.6.2 enhanced error checking of correct settings in Redmine
 * 0.6.1 fixed error that resulted in authentication loop using the REST API 
