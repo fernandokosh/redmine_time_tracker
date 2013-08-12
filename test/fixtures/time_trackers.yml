@@ -17,3 +17,10 @@ two:
   issue_id: 1
   activity_id: 9
   round: false
+three:
+  id: 3
+  user_id: 2
+  started_on: 2012-10-25 11:47:00 +2
+  comments: original comment
+  activity_id: 9
+  round: false

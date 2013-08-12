@@ -56,7 +56,7 @@ class TimeTracker < ActiveRecord::Base
     if issue.nil?
       self.issue_id = self.issue_id_was if self.issue_id.present?
     else
-      raise StandardError, l(:tt_error_not_allowed_to_start_tracker_on_issue) if !User.current.allowed_to?(:tt_book_time, issue.project) || issue.closed?
+      raise StandardError, l(:tt_error_not_allowed_to_start_tracker_on_issue) if !help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], issue.project) || issue.closed?
       self.project_id = issue.project_id unless issue.nil? || self.project_id == issue.project_id
     end
   end
