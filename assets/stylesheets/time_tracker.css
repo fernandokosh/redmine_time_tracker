@@ -25,7 +25,7 @@ fieldset#filters td.values input[type="button"] {
     text-align: center;
 }
 
-.tt_list .comments{
+.tt_list .comments {
     white-space: normal;
 }
 
@@ -33,17 +33,13 @@ fieldset#filters td.values input[type="button"] {
     width: 1px;
 }
 
-tr:hover .tt_list_button{
+tr:hover .tt_list_button {
     visibility: visible;
 }
 
 .tt_list_button {
-    display: block;
-    float: left;
-    width: 16px;
-    height: 16px;
+    padding: 2px 16px;
     background-repeat: no-repeat;
-    padding-left: 10px;
     background-position: 10px 0;
     visibility: hidden;
 }
@@ -162,6 +158,7 @@ tr:hover .tt_list_button{
 #status-transition-list td.msg {
     text-align: center;
 }
-.ui-dialog .center{
+
+.ui-dialog .center {
     text-align: center;
 }
