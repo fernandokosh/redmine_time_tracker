@@ -65,7 +65,7 @@ The stop watch. Time you spent get's "generated" by the tracker
 ###Time Log
 
 A time log is a spent amount of time. If you stop the tracker, a time log is created. A time log has nothing attached to it. To add this time to issues or projects, you **book** time.
-Role permissions can be edited to disable logging. This might be useful for reviewers, that do not generate time own their own but want to look up statistics on a project or user.
+Role permissions can be edited to disable logging. This might be useful for reviewers, that do not generate time on their own but want to look up statistics on a project or user.
 
 ###Time Booking
 
