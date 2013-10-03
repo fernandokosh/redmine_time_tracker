@@ -1,6 +1,6 @@
 class TtCompleterController < ApplicationController
   before_filter :js_auth, :authorize_global
-  accept_api_auth :get_issue, :get_issue_id, :get_issue_subject
+  accept_api_auth :get_issue, :get_issue_id, :get_issue_subject, :get_activity
 
   include TimeTrackersHelper
 
