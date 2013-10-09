@@ -1,3 +1,5 @@
+[![Dependency Status](https://gemnasium.com/hicknhack-software/redmine_time_tracker.png)](https://gemnasium.com/hicknhack-software/redmine_time_tracker) [![Code Climate](https://codeclimate.com/github/hicknhack-software/redmine_time_tracker.png)](https://codeclimate.com/github/hicknhack-software/redmine_time_tracker)
+
 # Redmine Time Tracker plugin
 
 Time tracker is a Redmine plugin to ease time tracking when working on an issue.
@@ -31,7 +33,8 @@ Most current version is available at: [GitHub](https://github.com/hicknhack-soft
 ## Install
 
 1. Follow the Redmine plugin installation steps at http://www.redmine.org/wiki/redmine/Plugins Make sure the plugin is installed to `#{RAILS_ROOT}/plugins/redmine_time_tracker`
-1. Setup the database using the migrations. `redmine:plugins:migrate RAILS_ENV=production`
+1. Rerun `bundle install` to install all necessarry gems
+1. Setup the database using the migrations. `rake redmine:plugins:migrate RAILS_ENV=production`
 1. Login to your Redmine install as an Administrator
 1. Setup the "log time" permissions for your roles
 1. Add "Time tracking" to the enabled modules for your project
@@ -65,7 +68,7 @@ The stop watch. Time you spent get's "generated" by the tracker
 ###Time Log
 
 A time log is a spent amount of time. If you stop the tracker, a time log is created. A time log has nothing attached to it. To add this time to issues or projects, you **book** time.
-Role permissions can be edited to disable logging. This might be useful for reviewers, that do not generate time own their own but want to look up statistics on a project or user.
+Role permissions can be edited to disable logging. This might be useful for reviewers, that do not generate time on their own but want to look up statistics on a project or user.
 
 ###Time Booking
 
