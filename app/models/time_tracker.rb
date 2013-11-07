@@ -67,9 +67,9 @@ class TimeTracker < ActiveRecord::Base
     # have to change for special permissions in detail before saving the changes or undo them
     if self.changed?
       # changing the comments only could be allowed
-      if (self.changed - ['comments', 'round']).empty?
+      if (self.changed - ['comments', 'round', 'activity_id']).empty?
         raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless permission_level > 0
-      elsif (self.changed - ['comments', 'round', 'issue_id', 'project_id']).empty?
+      elsif (self.changed - ['comments', 'round', 'activity_id', 'issue_id', 'project_id']).empty?
         raise StandardError, l(:tt_error_not_allowed_to_change_logs) unless permission_level > 1
         # want to change more than comments only? => needs more permission!
       else

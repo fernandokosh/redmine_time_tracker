@@ -95,6 +95,14 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_equal("new comment", tt.comments, "updated TT-comment")
       end
 
+      should "update only TT -activity_id on own trackers" do
+        TimeTracker.delete 1
+        put :update, {:time_tracker => {:activity_id => 10}}
+        assert_response 302
+        tt = TimeTracker.where(:id => 3).first
+        assert_equal(10, tt.activity_id, "updated TT-activity_id")
+      end
+
       should "update only TT -round on own trackers" do
         TimeTracker.delete 1
         put :update, {:time_tracker => {:round => true}}
@@ -180,6 +188,14 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_equal("new comment", tt.comments, "updated TT-comment")
       end
 
+      should "update activity_id on own trackers" do
+        TimeTracker.delete 1
+        put :update, {:time_tracker => {:activity_id => 10}}
+        assert_response 302
+        tt = TimeTracker.where(:id => 3).first
+        assert_equal(10, tt.activity_id, "updated TT-activity_id")
+      end
+
       should "update round on own trackers" do
         TimeTracker.delete 1
         put :update, {:time_tracker => {:round => true}}
@@ -222,6 +238,13 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_response 302
         tt = TimeTracker.where(:id => 2).first
         assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
+      should "not update activity_id on foreign trackers" do
+        put :update, {:time_tracker => {:activity_id => 10}}
+        assert_response 302
+        tt = TimeTracker.where(:id => 3).first
+        assert_equal(9, tt.activity_id, "not updated foreign TT-activity_id")
       end
 
       should "not update round on foreign trackers" do
@@ -304,6 +327,14 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_equal("new comment", tt.comments, "updated TT-comment")
       end
 
+      should "update activity_id on own trackers" do
+        TimeTracker.delete 1
+        put :update, {:time_tracker => {:activity_id => 10}}
+        assert_response 302
+        tt = TimeTracker.where(:id => 3).first
+        assert_equal(10, tt.activity_id, "updated TT-activity_id")
+      end
+
       should "update round on own trackers" do
         TimeTracker.delete 1
         put :update, {:time_tracker => {:round => true}}
@@ -341,6 +372,13 @@ class TimeTrackersControllerTest < ActionController::TestCase
 
       #=============================
       # should "deny updating foreign TimeTrackers completely"
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response 302
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
       should "not update comments on foreign trackers" do
         put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
         assert_response 302
@@ -498,6 +536,13 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
       end
 
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response 302
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
       should "not update round on foreign trackers" do
         put :update, {:time_tracker => {:id => 2, :round => true}}
         assert_response 302
@@ -631,6 +676,13 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
       end
 
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response 302
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
       should "not update round on foreign trackers" do
         put :update, {:time_tracker => {:id => 2, :round => true}}
         assert_response 302
@@ -757,6 +809,13 @@ class TimeTrackersControllerTest < ActionController::TestCase
 
       #=============================
       # should "deny updating foreign TimeTrackers completely"
+      should "not update comments on foreign trackers" do
+        put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
+        assert_response 302
+        tt = TimeTracker.where(:id => 2).first
+        assert_equal("original comment", tt.comments, "not updated foreign TT-comment")
+      end
+
       should "not update comments on foreign trackers" do
         put :update, {:time_tracker => {:id => 2, :comments => "new comment"}}
         assert_response 302
