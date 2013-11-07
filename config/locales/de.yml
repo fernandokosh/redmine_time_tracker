@@ -132,6 +132,7 @@ de:
   time_tracker_report_total_time: "Zeitsumme"
   time_tracker_round_steps: "Schritt"
   time_tracker_round_limit: "Abrunden wenn unter"
+  time_tracker_round_default: "Runden standardmäßig an?"
   time_tracker_seconds: "Sekunden"
   time_tracker_settings_from_status: "von Status"
   time_tracker_settings_general_title: "Allgemein"

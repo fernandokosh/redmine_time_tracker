@@ -110,6 +110,7 @@ class TimeTracker < ActiveRecord::Base
     unless issue.nil?
       self.project_id = issue.project_id
     end
+    self.round = Setting.plugin_redmine_time_tracker[:round_default]
     raise StandardError, l(:tt_error_not_allowed_to_create_time_log) if permission_level < 1
   end
 

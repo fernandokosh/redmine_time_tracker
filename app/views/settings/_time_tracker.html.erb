@@ -20,3 +20,7 @@
   <%= label_tag 'settings[round_limit]', l(:time_tracker_round_limit) %>
   <%= text_field_tag 'settings[round_limit]', @settings[:round_limit], {:size => 2} %> (%)
 </p>
+<p>
+  <%= label_tag 'settings[round_default]', l(:time_tracker_round_default) %>
+  <%= check_box_tag 'settings[round_default]', true, @settings[:round_default] %>
+</p>

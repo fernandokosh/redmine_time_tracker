@@ -131,6 +131,7 @@ en:
   time_tracker_report_total_time: "Total Time"
   time_tracker_round_steps: "Steps"
   time_tracker_round_limit: "Round down if below"
+  time_tracker_round_default: "Round per default on?"
   time_tracker_seconds: "seconds"
   time_tracker_settings_from_status: "From status"
   time_tracker_settings_general_title: "General"
