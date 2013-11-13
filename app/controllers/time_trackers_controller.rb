@@ -11,16 +11,17 @@ class TimeTrackersController < ApplicationController
   # we could start an empty timeTracker to track time without any association.
   # we also can give some more information, so the timeTracker could be automatically associated later.
   def start(args = {})
-    default_args= {issue_id: nil, comments: nil, activity_id: nil}
+    default_args= {issue_id: nil, comments: nil, activity_id: nil, project_id: nil}
     args = default_args.merge(args)
 
     @time_tracker = get_current
     if @time_tracker.new_record?
       # TODO work out a nicer way to get the params from the form
       unless params[:time_tracker].nil?
-        args[:issue_id]=params[:time_tracker][:issue_id] if args[:issue_id].nil?
-        args[:comments]=params[:time_tracker][:comments].strip if args[:comments].nil? and not params[:time_tracker][:comments].nil?
-        args[:activity_id]=params[:time_tracker][:activity_id].strip if args[:activity_id].nil? and not params[:time_tracker][:activity_id].nil?
+        args[:issue_id] = params[:time_tracker][:issue_id] if args[:issue_id].nil?
+        args[:comments] = params[:time_tracker][:comments].strip if args[:comments].nil? and not params[:time_tracker][:comments].nil?
+        args[:activity_id] = params[:time_tracker][:activity_id].strip if args[:activity_id].nil? and not params[:time_tracker][:activity_id].nil?
+        args[:project_id] = params[:time_tracker][:project_id].strip if args[:project_id].nil? and not params[:time_tracker][:project_id].nil? and args[:issue_id].blank?
       end
       # parse comments for issue-id
       if args[:issue_id].nil? && !args[:comments].nil? && args[:comments].match(/\A\#(\d+)/)
@@ -33,7 +34,7 @@ class TimeTrackersController < ApplicationController
       end
 
 
-      @time_tracker = TimeTracker.new(:issue_id => args[:issue_id], :comments => args[:comments], :activity_id => args[:activity_id])
+      @time_tracker = TimeTracker.new(:issue_id => args[:issue_id], :comments => args[:comments], :activity_id => args[:activity_id], :project_id => args[:project_id])
       if @time_tracker.start
         flash[:notice] = l(:start_time_tracker_success)
       else
