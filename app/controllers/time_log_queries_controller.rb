@@ -1,5 +1,5 @@
 class TimeLogQueriesController < ApplicationController
-  menu_item :time_bookings
+  menu_item :time_logs
   before_filter :find_query, :except => [:new, :create, :index]
   before_filter :find_optional_project, :only => [:new, :create]
 
@@ -29,7 +29,7 @@ class TimeLogQueriesController < ApplicationController
 
     if @query.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to _project_time_logs_path(@project, :query_id => @query)
+      redirect_to last_path(:query_id => @query)
     else
       render :action => 'new', :layout => !request.xhr?
     end
@@ -47,7 +47,7 @@ class TimeLogQueriesController < ApplicationController
 
     if @query.save
       flash[:notice] = l(:notice_successful_update)
-      redirect_to _project_time_logs_path(@project, :query_id => @query)
+      redirect_to last_path(:query_id => @query)
     else
       render :action => 'edit'
     end
@@ -72,5 +72,10 @@ class TimeLogQueriesController < ApplicationController
     render_403 unless User.current.allowed_to?(:save_queries, @project, :global => true)
   rescue ActiveRecord::RecordNotFound
     render_404
+  end
+
+  def last_path(options = {})
+    target = params[:tt_request_referer] || URI(request.referer).path
+    target + (target.include?('?') ? '&' : '?') + options.to_param
   end
 end
