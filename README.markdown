@@ -84,6 +84,7 @@ Reports are the method of generating invoices for customers. The layout is set u
 
 ## Version History
 
+* 0.8.2 fixed missing activity on continue, filters in time recordings now get saved properly
 * 0.8.1 bugfix with permission, new setting for default rounding
 * 0.8.0 many bugfixes, localized time, new menu buttons, improved workflow
 * 0.7.0 compatible with Redmine 2.3.1
