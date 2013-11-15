@@ -16,6 +16,7 @@ class TtLogsListController < ApplicationController
   helper :time_logs_sidebar
 
   def index
+    query_from_id
     time_logs_query
 
     unless User.current.allowed_to_globally?(:tt_edit_time_logs, {})
