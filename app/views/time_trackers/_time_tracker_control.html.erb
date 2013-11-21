@@ -55,7 +55,7 @@
                   <!--  TODO refactor conditions for disabling the Time-Inputs to use special Role-settings instead of admin only  -->
                   <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
                   <div class="task_form_input"><%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => l(:start_time_tracker), :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 3 %></div>
-                  <%= f.hidden_field :running_time, name: 'time_tracker_time_offset', id: 'time_tracker_time_offset' %>
+                  <%= f.hidden_field :running_time, :name => 'time_tracker_time_offset', :id => 'time_tracker_time_offset' %>
                 </div>
                 <div class="task_form_sub_fields">
                   <div class="input_hint"><%= l(:time_tracker_label_start_date) %></div>

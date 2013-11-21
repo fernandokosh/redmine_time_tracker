@@ -3,7 +3,7 @@ class TimeTrackersController < ApplicationController
 
   menu_item :time_tracker_menu_tab_overview
   before_filter :js_auth, :authorize_global
-  around_filter :error_handling, only: [:stop, :start]
+  around_filter :error_handling, :only => [:stop, :start]
   accept_api_auth :update
 
   helper :time_trackers
@@ -11,7 +11,7 @@ class TimeTrackersController < ApplicationController
   # we could start an empty timeTracker to track time without any association.
   # we also can give some more information, so the timeTracker could be automatically associated later.
   def start(args = {})
-    default_args= {issue_id: nil, comments: nil, activity_id: nil, project_id: nil}
+    default_args= {:issue_id => nil, :comments => nil, :activity_id => nil, :project_id => nil}
     args = default_args.merge(args)
 
     @time_tracker = get_current

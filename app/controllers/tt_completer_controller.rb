@@ -14,7 +14,7 @@ class TtCompleterController < ApplicationController
 
   def get_activity
     activities = get_activities(params['project_id']).map do |activity|
-      {id: activity.id, name: activity.name}
+      {:id => activity.id, :name => activity.name}
     end
     respond_to do |format|
       format.json { render :json => activities }

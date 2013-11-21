@@ -28,4 +28,4 @@
     <% end %>
 <% end %>
 
-<%= render partial: 'time_trackers/start_dialog', locals: {time_tracker: time_tracker} if !display_stop && allowed_to_start && !time_tracker.nil? %>
+<%= render :partial => 'time_trackers/start_dialog', :locals => {time_tracker: time_tracker} if !display_stop && allowed_to_start && !time_tracker.nil? %>
