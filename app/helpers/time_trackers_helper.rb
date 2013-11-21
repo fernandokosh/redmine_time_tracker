@@ -63,8 +63,8 @@ module TimeTrackersHelper
 
   def parse_localised_date_string(date_string)
     1.upto(10) do |i|
-      matched = date_string.gsub!(l('date.month_names')[i], l('date.month_names', locale: :en)[i])
-      date_string.gsub!(l('date.abbr_month_names')[i], l('date.abbr_month_names', locale: :en)[i]) if matched.nil?
+      matched = date_string.gsub!(l('date.month_names')[i], l('date.month_names', :locale => :en)[i])
+      date_string.gsub!(l('date.abbr_month_names')[i], l('date.abbr_month_names', :locale => :en)[i]) if matched.nil?
     end
     user_time_zone.parse(Date.strptime(date_string, Setting.date_format.presence || l('date.formats.default')).to_s).to_date.to_s
   end
