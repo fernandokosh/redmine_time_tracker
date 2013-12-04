@@ -1,7 +1,9 @@
 class TimeLogQuery < Query
   include TtQueryOperators
+  include TtQueryHelper
 
   self.queried_class = TimeLog
+  @visibile_permission = :index_tt_logs_list
 
   self.available_columns = [
       QueryColumn.new(:comments, :caption => :field_tt_comments),
@@ -12,81 +14,9 @@ class TimeLogQuery < Query
       QueryColumn.new(:get_formatted_bookable_hours, :caption => :field_tt_log_bookable_hours),
   ]
 
-  scope :visible, lambda { |*args|
-    user = args.shift || User.current
-    base = Project.allowed_to_condition(user, :index_tt_logs_list, *args)
-    scope = includes(:project).where("#{table_name}.project_id IS NULL OR (#{base})")
-
-    if user.admin?
-      scope.where("#{table_name}.visibility <> ? OR #{table_name}.user_id = ?", VISIBILITY_PRIVATE, user.id)
-    elsif user.memberships.any?
-      scope.where(%{#{table_name}.visibility = ?
-                    OR (#{table_name}.visibility = ? AND #{table_name}.id IN (
-                      SELECT DISTINCT q.id FROM #{table_name} q
-                       INNER JOIN #{table_name_prefix}queries_roles#{table_name_suffix} qr on qr.query_id = q.id
-                       INNER JOIN #{MemberRole.table_name} mr ON mr.role_id = qr.role_id
-                       INNER JOIN #{Member.table_name} m ON m.id = mr.member_id AND m.user_id = ?
-                       WHERE q.project_id IS NULL OR q.project_id = m.project_id))
-                    OR #{table_name}.user_id = ?},
-                  VISIBILITY_PUBLIC, VISIBILITY_ROLES, user.id, user.id)
-    elsif user.logged?
-      scope.where("#{table_name}.visibility = ? OR #{table_name}.user_id = ?", VISIBILITY_PUBLIC, user.id)
-    else
-      scope.where("#{table_name}.visibility = ?", VISIBILITY_PUBLIC)
-    end
-  }
-
-  # Returns true if the query is visible to +user+ or the current user.
-  def visible?(user=User.current)
-    return true if user.admin?
-    return false unless project.nil? || user.allowed_to?(:index_tt_logs_list, project)
-    case visibility
-      when VISIBILITY_PUBLIC
-        true
-      when VISIBILITY_ROLES
-        if project
-          (user.roles_for_project(project) & roles).any?
-        else
-          Member.where(:user_id => user.id).joins(:roles).where(:member_roles => {:role_id => roles.map(&:id)}).any?
-        end
-      else
-        user == self.user
-    end
-  end
-
-  def is_private?
-    visibility == VISIBILITY_PRIVATE
-  end
-
-  def is_public?
-    !is_private?
-  end
-
-  def initialize_available_filters
-    principals = []
-
-    if project
-      principals += project.principals.sort
-      unless project.leaf?
-        subprojects = project.descendants.visible.all
-        principals += Principal.member_of(subprojects)
-      end
-    else
-      if all_projects.any?
-        principals += Principal.member_of(all_projects)
-      end
-    end
-    principals.uniq!
-    principals.sort!
-    users = principals.select { |p| p.is_a?(User) }
-
+  def auth_values
     add_available_filter 'tt_log_start_date', :type => :date, :order => 2
     add_available_filter 'tt_log_bookable', :type => :list, :order => 7, :values => [[l(:time_tracker_label_true), 1]]
-
-    author_values = []
-    author_values << ["<< #{l(:label_me)} >>", "me"] if User.current.logged?
-    author_values += users.collect { |s| [s.name, s.id.to_s] }
-    add_available_filter('tt_user', :type => :list, :values => author_values) unless author_values.empty?
   end
 
   def default_columns_names
@@ -117,10 +47,7 @@ class TimeLogQuery < Query
       rescue ActiveRecord::RecordNotFound
         r = {nil => log_count}
       end
-      c = group_by_column
-      if c.is_a?(QueryCustomFieldColumn)
-        r = r.keys.inject({}) { |h, k| h[c.custom_field.cast_value(k)] = r[k]; h }
-      end
+      custom_field_value()
     end
     r
   rescue ::ActiveRecord::StatementInvalid => e
@@ -143,34 +70,6 @@ class TimeLogQuery < Query
 
   rescue ::ActiveRecord::StatementInvalid => e
     raise Query::StatementInvalid.new(e.message)
-  end
-
-  def sql_for_tt_log_start_date_field(field, operator, value)
-    case operator
-      when "="
-        "DATE(#{TimeLog.table_name}.started_on) = '#{Time.parse(value[0]).to_date}'"
-      when "><"
-        "DATE(#{TimeLog.table_name}.started_on) >= '#{Time.parse(value[0]).to_date}' AND DATE(#{TimeLog.table_name}.started_on) <= '#{Time.parse(value[1]).to_date}'"
-      when "t"
-        "DATE(#{TimeLog.table_name}.started_on) = '#{Time.now.localtime.to_date}'"
-      when "w"
-        "DATE(#{TimeLog.table_name}.started_on) >= '#{Time.now.localtime.beginning_of_week.to_date}' AND DATE(#{TimeLog.table_name}.started_on) <= '#{Time.now.localtime.end_of_week.to_date}'"
-      # following filter is used as workaround for custom-filters. so the logic implemented here is not "none"!
-      # instead it represents "this month"
-      when "!*"
-        "DATE(#{TimeLog.table_name}.started_on) >= '#{Time.now.localtime.beginning_of_month.to_date}' AND DATE(#{TimeLog.table_name}.started_on) <= '#{Time.now.localtime.end_of_month.to_date}'"
-      when "*"
-        "DATE(#{TimeLog.table_name}.started_on) IS NOT NULL"
-      else
-        "#{TimeLog.table_name}.started_on >= '#{(Time.now.localtime-2.weeks).beginning_of_day.to_date}'"
-    end
-  end
-
-  def sql_for_tt_user_field(field, operator, value)
-    if value.delete('me')
-      value += User.current.id.to_s.to_a
-    end
-    "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
   end
 
   def sql_for_tt_log_bookable_field(field, operator, value = ["1"])
