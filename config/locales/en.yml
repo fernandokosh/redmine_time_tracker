@@ -95,7 +95,7 @@ en:
   time_tracker_label_menu_tab_logs_list: "Time Logs"
   time_tracker_label_menu_tab_reports: "Reports"
   time_tracker_label_none: "< none >"
-  time_tracker_label_person: "Person"
+  time_tracker_label_user: "User"
   time_tracker_label_print_report: "Print report"
   time_tracker_label_project: "Project"
   time_tracker_label_round: "Round Time"

@@ -51,6 +51,18 @@
 
     #tt_report-print-chart {
         height: 300px;
+        overflow: visible;
+    }
+    #tt_report-print-chart .jqplot-yaxis {
+        font-size: 75%;
+        text-align: right;
+        padding-right: 10px;
+    }
+    #tt_report-print-chart .jqplot-xaxis {
+        font-size: 75%;
+    }
+    #tt_report-print-chart .jqplot-xaxis-tick {
+        white-space: nowrap;
     }
 
     .tt_report-desc-head {
@@ -59,6 +71,9 @@
     .tt_report-date,
     .tt_report-time {
         white-space: nowrap;
+    }
+    .tt_report-user-head {
+        width: 130px;
     }
 
     .list td,
