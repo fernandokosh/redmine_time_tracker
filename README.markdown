@@ -84,6 +84,7 @@ Reports are the method of generating invoices for customers. The layout is set u
 
 ## Version History
 
+* 0.9.3 fixed date queries for time log and time booking
 * 0.9.2 fixed compatibility with ruby 1.8.7
 * 0.9.1 restored compatibility with ruby 1.8.7
 * 0.9.0 compatible with Redmine 2.4.0

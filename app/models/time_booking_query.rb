@@ -1,6 +1,6 @@
 class TimeBookingQuery < Query
   include TtQueryOperators
-  include TtQueryHelper
+  include TtQueryConcern
 
   self.queried_class = TimeBooking
   @visible_permission = :index_tt_bookings_list
@@ -18,7 +18,7 @@ class TimeBookingQuery < Query
   ]
 
   def auth_values
-    add_available_filter 'tt_booking_start_date', :type => :date, :order => 2
+    add_available_filter 'tt_start_date', :type => :date, :order => 2
     add_available_filter 'tt_booking_issue', :type => :list, :order => 4, :values => Issue.visible.all.collect { |s| [s.subject, s.id.to_s] }
     add_available_filter 'tt_booking_activity', :type => :list, :order => 4, :values => help.get_activities('').map { |s| [s.name, s.name] }
 

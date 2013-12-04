@@ -1,6 +1,6 @@
 class TimeLogQuery < Query
   include TtQueryOperators
-  include TtQueryHelper
+  include TtQueryConcern
 
   self.queried_class = TimeLog
   @visibile_permission = :index_tt_logs_list
@@ -15,7 +15,7 @@ class TimeLogQuery < Query
   ]
 
   def auth_values
-    add_available_filter 'tt_log_start_date', :type => :date, :order => 2
+    add_available_filter 'tt_start_date', :type => :date, :order => 2
     add_available_filter 'tt_log_bookable', :type => :list, :order => 7, :values => [[l(:time_tracker_label_true), 1]]
   end
 
