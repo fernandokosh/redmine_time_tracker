@@ -52,7 +52,7 @@ class TimeTrackersController < ApplicationController
 
   def stop
     @time_tracker = get_current
-    if @time_tracker.nil?
+    if @time_tracker.new_record?
       flash[:error] = l(:no_time_tracker_running)
       unless request.xhr?
         redirect_to :back
