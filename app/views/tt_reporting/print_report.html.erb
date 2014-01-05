@@ -52,7 +52,7 @@
      <td style="word-wrap: break-word;">
        <div style="overflow: hidden;">
          <div style="min-height: 1em;">
-           <% if entry.issue_id == '< none >' %>
+           <% if entry.issue.is_a?(String) %>
             <%= "#{entry.activity}: #{entry.comments}" %>
            <% else %>
             <%= entry.activity %>
@@ -62,7 +62,7 @@
          <div class="tt_list-project">
            <%= list = []
                list << entry.project.name unless entry.project.nil?
-               list << entry.issue.fixed_version.name unless entry.issue_id == '< none >' || entry.issue.fixed_version.nil?
+               list << entry.issue.fixed_version.name unless entry.issue.is_a?(String) || entry.issue.fixed_version.nil?
                list * ' / '
            %></div>
        </div>
