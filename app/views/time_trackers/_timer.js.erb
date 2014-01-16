@@ -1,20 +1,26 @@
 $(document).ready(function () {
     var start = new Date();
     function calcTime(){
+        var output = "";
         var offset = parseInt($('#time_tracker_time_offset').val(),10);
         var now = new Date();
         var diff = Math.floor((now - start) / 1000) + offset;
-        var h = Math.floor(diff / 3600);
-        var m = Math.floor((diff - h * 3600) / 60);
-        var s = Math.floor(diff - (h * 3600 + m * 60));
-        h < 10 ? h = "0" + h.toString() : h = h.toString();
-        m < 10 ? m = "0" + m.toString() : m = m.toString();
-        s < 10 ? s = "0" + s.toString() : s = s.toString();
-        if (!(h == "NaN" || m == "NaN" || s == "NaN")) {
-            $('#tt_running_time').html(h + ":" + m + ":" + s);
+        if(diff < 0){
+            output = "<%=l(:waiting_for_slot) %>";
+        }else{
+            var h = Math.floor(diff / 3600);
+            var m = Math.floor((diff - h * 3600) / 60);
+            var s = Math.floor(diff - (h * 3600 + m * 60));
+            h < 10 ? h = "0" + h.toString() : h = h.toString();
+            m < 10 ? m = "0" + m.toString() : m = m.toString();
+            s < 10 ? s = "0" + s.toString() : s = s.toString();
+            if (!(h == "NaN" || m == "NaN" || s == "NaN")) {
+                output = h + ":" + m + ":" + s;
+            }
         }
+        $('#tt_running_time').html(output);
     }
-    calcTime()
+    calcTime();
     window.setInterval(function () {
         calcTime()
     }, 1000);

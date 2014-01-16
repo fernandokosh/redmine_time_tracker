@@ -149,3 +149,4 @@ en:
   time_tracker_settings_zombie_transition: "zombie status transition"
   time_tracker_zombie_legend: "zombie time tracker"
   update_time_tracker_success: "Updated the time tracker"
+  waiting_for_slot: "Waiting to hit start time ..."

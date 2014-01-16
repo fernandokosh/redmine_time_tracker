@@ -149,3 +149,4 @@ de:
   time_tracker_settings_unknown_status: "Unbekannter Status"
   time_tracker_settings_zombie_transition: "Zombie Statusänderung"
   update_time_tracker_success: "Die Zeiterfassung wurde aktualisiert."
+  waiting_for_slot: "Warten auf Erreichen der Startzeit..."

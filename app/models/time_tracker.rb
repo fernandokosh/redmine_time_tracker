@@ -119,7 +119,9 @@ class TimeTracker < ActiveRecord::Base
       raise StandardError, l(:tt_error_not_allowed_to_create_time_log_on_project) unless help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], help.project_from_id(self.project_id))
     end
     if self.valid?
-      self.started_on = Time.now.localtime.change(:sec => 0)
+      current_time = Time.now.localtime.change(:sec => 0)
+      last_timelog = TimeLog.where("stopped_at > ?", current_time).first
+      self.started_on =  last_timelog.present? ? last_timelog.stopped_at : current_time
       self.save
     end
   end
