@@ -137,17 +137,21 @@ class TimeTracker < ActiveRecord::Base
           t_diff = (stop_time.to_i - start_time.to_i)
           unless (t_diff % step) == 0
             offset = (t_diff / step + (t_diff % step < step * (Setting.plugin_redmine_time_tracker[:round_limit].to_f / 100) ? 0 : 1)) * step
-            stop_time = start_time + offset if offset != 0
+            stop_time = start_time + offset
           end
         end
-        time_log = TimeLog.create(:user_id => user_id, :started_on => start_time, :stopped_at => stop_time, :comments => comments)
-        # if there already is a ticket-nr then we automatically associate the timeLog and the issue using a timeBooking-entry
-        # and creating a time_entry
-        issue = help.issue_from_id(issue_id)
-        time_log.add_booking({:project_id => project_id, :issue => issue, :activity_id => activity_id}) unless issue.nil? && project_id.nil?
-        # after creating the TimeLog we can remove the TimeTracker, so the user can start a new one
-        # print an error-message otherwise
-        self.destroy if time_log.save
+        if start_time < stop_time
+          time_log = TimeLog.create(:user_id => user_id, :started_on => start_time, :stopped_at => stop_time, :comments => comments)
+          # if there already is a ticket-nr then we automatically associate the timeLog and the issue using a timeBooking-entry
+          # and creating a time_entry
+          issue = help.issue_from_id(issue_id)
+          time_log.add_booking({:project_id => project_id, :issue => issue, :activity_id => activity_id}) unless issue.nil? && project_id.nil?
+          # after creating the TimeLog we can remove the TimeTracker, so the user can start a new one
+          # print an error-message otherwise
+          self.destroy if time_log.save
+        else
+          self.destroy
+        end
       end
     end # TODO raise an error if stop is called while self is not valid!! controller should check that too
   end
