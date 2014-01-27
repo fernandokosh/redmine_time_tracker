@@ -16,6 +16,7 @@ de:
   field_tt_stop: "Ende"
   field_tt_time: "benötigte Zeit"
   field_tt_user: "Benutzer"
+  field_tt_booking_fixed_version: "Zielversion"
   force_auth_requires_rest_api: "Wenn die Einstellung 'Authentifizierung notwendig' aktiviert ist, muss auch die RESP-API aktiviert sein, damit das Plugin ordnungsgemäß funktioniert"
   list_time_trackers: "Liste der Zeiterfassungen anzeigen"
   no_time_tracker: "Keine Zeiterfassung vorhanden."

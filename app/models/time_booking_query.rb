@@ -6,7 +6,7 @@ class TimeBookingQuery < Query
   @visible_permission = :index_tt_bookings_list
 
   self.available_columns = [
-      QueryColumn.new(:project, :sortable => "#{Project.table_name}.name", :groupable => true),
+      QueryColumn.new(:project, :sortable => "#{Project.table_name}.name", :groupable => "#{Project.table_name}.name"),
       QueryColumn.new(:activity, :caption => :field_tt_booking_activity, :sortable => "#{TimeEntryActivity.table_name}.name", :groupable => "#{TimeEntryActivity.table_name}.name"),
       QueryColumn.new(:comments, :caption => :field_tt_comments),
       QueryColumn.new(:user, :sortable => "#{User.table_name}.login", :caption => :field_tt_user),
@@ -15,6 +15,7 @@ class TimeBookingQuery < Query
       QueryColumn.new(:get_formatted_stop_time, :caption => :field_tt_stop),
       QueryColumn.new(:get_formatted_time, :caption => :field_tt_time),
       QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.subject", :caption => :field_tt_booking_issue, :groupable => "#{Issue.table_name}.subject"),
+      QueryColumn.new(:fixed_version, :sortable => lambda {Version.fields_for_order_statement}, :groupable => "#{Version.table_name}.name"),
   ]
 
   def auth_values
@@ -22,13 +23,28 @@ class TimeBookingQuery < Query
     add_available_filter 'tt_booking_issue', :type => :list, :order => 4, :values => Issue.visible.all.collect { |s| [s.subject, s.id.to_s] }
     add_available_filter 'tt_booking_activity', :type => :list, :order => 4, :values => help.get_activities('').map { |s| [s.name, s.name] }
 
+    project_values = []
     if project.nil?
-      project_values = []
       if User.current.logged? && User.current.memberships.any?
         project_values << ["<< #{l(:label_my_projects).downcase} >>", "mine"]
       end
       project_values += all_projects_values
       add_available_filter("tt_booking_project", :type => :list, :values => project_values) unless project_values.empty?
+    end
+
+    versions = []
+    if project
+      versions = project.shared_versions.all
+    else
+      # TODO: find a way to get shared_versions without killing the db
+      versions = Project.visible.includes(:versions).all.flat_map { |project| project.shared_versions.all }
+      versions.uniq!
+    end
+
+    if versions.any?
+      add_available_filter "tt_booking_fixed_version",
+                           :type => :list_optional,
+                           :values => versions.collect{|s| ["#{s.project.name} - #{s.name}", s.id.to_s] }.sort
     end
   end
 
@@ -42,7 +58,7 @@ class TimeBookingQuery < Query
   def booking_count
     # TODO refactor includes
     TimeBooking.visible.
-        includes([:project, {:time_entry => :issue}, {:time_entry => :activity}, {:time_log => :user}]).
+        joins(:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}).
         where(statement).
         count(:id)
   rescue ::ActiveRecord::StatementInvalid => e
@@ -58,12 +74,10 @@ class TimeBookingQuery < Query
         # for some reason including the :project will result in an "ambiguous column" - error if we try to group by
         # "project" and additionally filter by issue. so we have to use a small workaround
         # todo figure out the 'rails-way' to avoid ambiguous columns
-        gbs = group_by_statement
-        gbs = "#{Project.table_name}.name" if gbs == "project"
         r = TimeBooking.visible.
-            includes([:project, {:time_entry => :issue}, {:time_entry => :activity}, {:time_log => :user}]).
-            group(gbs).
+            joins(:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}).
             where(statement).
+            group(group_by_statement).
             count(:id)
       rescue ActiveRecord::RecordNotFound
         r = {nil => booking_count}
@@ -78,18 +92,17 @@ class TimeBookingQuery < Query
   # Returns the bookings
   # Valid options are :order, :offset, :limit, :include, :conditions
   def bookings(options={})
-    group_by_order = (group_by_sort_order || '').strip
-    options[:order].unshift group_by_order unless options[:order].map { |opt| opt.gsub('asc', '').gsub('desc', '').strip }.include? group_by_order.gsub('asc', '').gsub('desc', '').strip
-    order_option = options[:order].reject { |s| s.blank? }.join(',')
-    order_option = nil if order_option.blank?
+    order_option = [group_by_sort_order, options[:order]].flatten.reject(&:blank?)
 
-    TimeBooking.visible.
-        includes([:project, {:time_entry => :issue}, {:time_entry => :activity}, {:time_log => :user}]).
+    scope = TimeBooking.visible.
+        includes([:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}]).
         where(statement).
+        where(options[:conditions]).
         order(order_option).
         limit(options[:limit]).
         offset(options[:offset])
 
+    scope.all
   rescue ::ActiveRecord::StatementInvalid => e
     raise Query::StatementInvalid.new(e.message)
   end
@@ -119,5 +132,13 @@ class TimeBookingQuery < Query
 
   def sql_for_tt_booking_activity_field(field, operator, value)
     "( #{TimeEntryActivity.table_name}.name #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+  end
+
+  def sql_for_tt_booking_fixed_version_field(field, operator, value)
+    if operator == "="
+      "( #{Issue.table_name}.fixed_version_id IN (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+    else
+      "( #{Issue.table_name}.fixed_version_id NOT IN (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") OR #{Issue.table_name}.fixed_version_id IS NULL )"
+    end
   end
 end

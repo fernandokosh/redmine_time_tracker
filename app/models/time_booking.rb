@@ -9,6 +9,7 @@ class TimeBooking < ActiveRecord::Base
   belongs_to :time_entry, :dependent => :delete
   has_one :issue, :through => :time_entry
   has_one :activity, :through => :time_entry
+  has_one :fixed_version, :through => :issue, :class_name => 'Version', :foreign_key => 'fixed_version_id'
 
   validates_presence_of :time_log_id
   validates :time_entry_id, :presence => true
@@ -132,6 +133,14 @@ class TimeBooking < ActiveRecord::Base
       l(:time_tracker_label_none)
     else
       self.time_entry.issue.id.to_s
+    end
+  end
+
+  def fixed_version
+    if self.time_entry.issue.nil? || self.time_entry.issue.fixed_version.nil?
+      l(:time_tracker_label_none)
+    else
+      self.time_entry.issue.fixed_version
     end
   end
 
