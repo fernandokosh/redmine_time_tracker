@@ -6,19 +6,19 @@ Time tracker is a Redmine plugin to ease time tracking when working on an issue.
 The plugin allows to start/stop a timer on a per user basis. The timer can be started with or without any reference to a Redmine Issue.
 If you track multiple timelogs without Issue references, you are able to reference Issues later.
 
-It will be individual adjustable for every user and seperate includable for any project.
+It is be individual configurable for every user and as a module can be enabled per project.
 
 ## Features
 
 * Per user time tracking
 * Using known Redmine TimeEntries
-* Overview of spent Time
+* Overview of spent time
 * Track free time
 * Book tracked time on tickets
 * Detailed time tracking statistics for team management
 * Status monitor, watch currently tracked time of team
-* Detailed overview of spent time with filter options on (user, project, date)
-* Invoice generation on project basis including graphical time representation with customizable company logo
+* Detailed overview of spent time with filter options (user, project, date)
+* Invoice generation for projects, including graphical time representation with customizable company logo
 * User specific settings (time tracking on/off)
 * Project specific settings (time tracking on/off)
 * Admin page (add/remove time logs)
@@ -32,29 +32,29 @@ Most current version is available at: [GitHub](https://github.com/hicknhack-soft
 
 ## Install
 
-1. Follow the Redmine plugin installation steps at http://www.redmine.org/wiki/redmine/Plugins Make sure the plugin is installed to `#{RAILS_ROOT}/plugins/redmine_time_tracker`
-1. Rerun `bundle install` to install all necessarry gems
-1. Setup the database using the migrations. `rake redmine:plugins:migrate RAILS_ENV=production`
-1. Login to your Redmine install as an Administrator
+1. Follow the Redmine plugin installation steps at http://www.redmine.org/wiki/redmine/Plugins. Make sure the plugin is installed to `#{RAILS_ROOT}/plugins/redmine_time_tracker`
+1. Rerun `bundle install` to install all necessary gems
+1. Setup the database using the migrations: `rake redmine:plugins:migrate RAILS_ENV=production`
+1. Login to your Redmine install as an administrator
 1. Setup the "log time" permissions for your roles
-1. Add "Time tracking" to the enabled modules for your project
+1. Enable the "Time tracking" module for your project
 1. Activate "Enable REST web service" in the authentication tab in settings
-1. The link to the plugin should appear in the Main menu bar (upper left corner)
+1. Now the link to the plugin should appear in the Main menu bar (upper left corner)
 
 ## Update via Git
 
 1. Open a shell to your Redmine's `#{RAILS_ROOT}/plugins/redmine_time_tracker` folder
-1. Update your git copy with `git pull`
-1. Update the database using the migrations. `redmine:plugins:migrate RAILS_ENV=production`
-1. Restart your Redmine
+1. Update your git copy with: `git pull`
+1. Update the database using the migrations: `redmine:plugins:migrate RAILS_ENV=production`
+1. Restart your Redmine instance
 
 ## Usage
 
 To be able to use a time tracker, a user must have the 'log time' permission.
-If this is true, the time tracker menu will be visible in the top left menu
+If this is present, the time tracker menu will be visible in the top left menu
 
-To track time referring an issue, you can use the context menu (right click in the issues list) in
-the issue list to start or stop the timer.
+To track time on an issue, you can use the context menu (right click in the issues list) in
+the issue list to start or stop the timer or press the "Start Tracking" button on the top right, next to the default "Book Time" Redmine button.
 
 ## What's what?
 
@@ -76,7 +76,7 @@ A booking is time that is actually connected to a task (project or issue). To cr
 
 ###Settings
 
-The plugin offers a list of settings at the Redmine roles and permission settings page. Also you can set the size and file for a logo to be displayed at the report in the Redmine plugin settings.
+The plugin offers a list of settings at the Redmine roles and permission settings page. Also you can set the size and file for a logo to be displayed at the report in the Redmine plugin settings, enable rounding behaviour and interval as well as snapping percentage.
 
 ###Report
 
@@ -84,8 +84,8 @@ Reports are the method of generating invoices for customers. The layout is set u
 
 ## Version History
 
-* 0.9.6 timetracker now adjustes its start time according to last timelog entry
-* 0.9.5 fixed the error message, when trying to stop a non existant timer
+* 0.9.6 timetracker now adjustes it's start time according to last timelog entry
+* 0.9.5 fixed error message shown, when trying to stop a non existant timer
 * 0.9.4 fixed critical month name localization bug, fixed test execution, improved reports
 * 0.9.3 fixed date queries for time log and time booking
 * 0.9.2 fixed compatibility with ruby 1.8.7
