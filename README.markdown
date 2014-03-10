@@ -84,7 +84,7 @@ Reports are the method of generating invoices for customers. The layout is set u
 
 ## Version History
 
-* 0.9.6 timetracker now adjustes it's start time according to last timelog entry
+* 0.9.6 timetracker now adjusts it's start time according to last timelog entry
 * 0.9.5 fixed error message shown, when trying to stop a non existant timer
 * 0.9.4 fixed critical month name localization bug, fixed test execution, improved reports
 * 0.9.3 fixed date queries for time log and time booking
