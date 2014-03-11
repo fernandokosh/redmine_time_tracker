@@ -1,3 +1,7 @@
+= This project is NOT maintained anymore
+
+Please contact me if you want to maintain it.
+
 = Redmine Time Tracker plugin
 
 Time tracker is a Redmine plugin to ease time tracking when working on an issue.
