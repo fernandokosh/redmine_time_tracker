@@ -1,6 +1,7 @@
-= This project is NOT maintained anymore
+= This project has a new maintainer
 
-Please contact me if you want to maintain it.
+After a long time without any updates, now I will take a time for see the opened issues, pull requests and bug fixies.
+Please contact me for more info or help.
 
 = Redmine Time Tracker plugin
 
