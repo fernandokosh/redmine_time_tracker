@@ -43,8 +43,8 @@ class TimeTrackersController < ApplicationController
     else
       flash[:error] = l(:time_tracker_already_running_error)
     end
-    unless request.xhr?
-      redirect_to :back
+    if request.env['HTTP_REFERER'].present?
+      redirect_to request.env['HTTP_REFERER']
     else
       render :partial => 'flash_messages'
     end
@@ -72,8 +72,8 @@ class TimeTrackersController < ApplicationController
       if !params[:start_new_time_tracker].nil?
         start({:issue_id => params[:start_new_time_tracker]})
       else
-        unless request.xhr?
-          redirect_to :back
+        if request.env['HTTP_REFERER'].present?
+          redirect_to request.env['HTTP_REFERER']
         else
           render :partial => 'flash_messages'
         end
