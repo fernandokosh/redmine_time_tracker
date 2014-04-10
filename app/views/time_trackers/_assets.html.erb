@@ -1,3 +1,5 @@
+<% if User.current.allowed_to_globally?(:tt_log_time, {}) %>
+
 <%= stylesheet_link_tag 'time_tracker', :plugin => 'redmine_time_tracker' %>
 
 <% time_tracker = time_tracker_for(User.current) %>
@@ -26,3 +28,5 @@
 </script>
 
 <%= render :partial => 'time_trackers/activity_dialog', :locals => {:time_tracker => time_tracker, :stop_title => stop_title, :remote => false } if !time_tracker.nil? and !time_tracker.is_activity_id_correct_set? %>
+
+<% end %>
