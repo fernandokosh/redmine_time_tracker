@@ -29,8 +29,8 @@ Most current version is available at: [GitHub](https://github.com/hicknhack-soft
 
 ## Requirements
 * Redmine 2.4.0
-* ruby 1.8.7 (production, development)
-* ruby 1.9.3 (test, because of the gem 'timecop', which requires >= 1.9.2)
+* ruby >= 1.8.7 (production, development)
+* ruby >= 1.9.2 (test, because of the gem 'timecop', which requires >= 1.9.2)
 
 ## Install
 
