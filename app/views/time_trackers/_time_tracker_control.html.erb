@@ -1,0 +1,81 @@
+<div id="time-tracker-control" style="margin-bottom: 30px;">
+  <% unless @time_tracker.nil? %>
+      <% if @time_tracker.new_record? %>
+          <%= form_for @time_tracker, :url => {:controller => :time_trackers, :action => :start},
+                       :html => {:class => "time-tracker-form"} do |f| %>
+              <h3><%= f.label l(:time_tracker_label_current_task) %></h3>
+              <%= f.text_field :comments, :size => 30, :maxlength => 255 %>
+              <%= f.submit l(:start_time_tracker) %>
+          <% end %>
+      <% else %>
+          <%= form_for @time_tracker, :url => {:controller => :time_trackers, :action => :stop},
+                       :html => {:class => "time-tracker-form"} do |f| %>
+              <h3><%= l(:time_tracker_label_current_task) %></h3>
+
+              <div class="task_form_top_fields">
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_issue) %></div>
+                  <div class="task_form_input"><%= f.text_field :issue_text, :value => @time_tracker.issue_text, :size => "15", :placeholder => l(:time_tracker_label_issue), :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 2 %></div>
+                </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_comments) %></div>
+                  <div class="task_form_input"><%= f.text_field :comments, :size => 30, :maxlength => 255, :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 1 %></div>
+                </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_round) %></div>
+                  <div class="task_form_input">
+                    <%= f.check_box :round, :value => @time_tracker.round, :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 1 %>
+                  </div>
+                </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_running_time) %></div>
+                  <div id="tt_running_time" class="task_form_input"></div>
+                </div>
+              </div>
+              <% projects = User.current.memberships.collect(&:project).compact.uniq %>
+              <% @time_tracker.project_id.nil? ? select = nil : select = Project.find(@time_tracker.project_id) %>
+              <% proj_list = "<option value=''>#{ l(:time_tracker_label_none) }</option>" %>
+              <% proj_list << "<option value='' disabled='disabled'>---</option>" %>
+              <% proj_list = proj_list.html_safe %>
+              <% proj_list << project_tree_options_for_select(projects, :selected => select) %>
+              <div class="task_form_bottom_fields">
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
+                  <div class="task_form_input"><%= select_tag :project_id_select, proj_list, :onchange => "$('#time_tracker_project_id').val(this.value); updateTTControllerForm(this.form);", :disabled => (@time_tracker.permission_level < 2 || !@time_tracker.issue_id.nil?) %></div>
+                  <%= f.hidden_field :project_id %>
+                </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_activity) %></div>
+                  <div class="task_form_input">
+                    <% activities = get_activities @time_tracker.project_id %>
+                    <%= f.collection_select :activity_id, activities, :id, :name, {:include_blank => true}, :onchange => "updateTTControllerForm(this.form)" %>
+                  </div>
+                </div>
+                <div class="task_form_sub_fields">
+                  <!--  TODO refactor conditions for disabling the Time-Inputs to use special Role-settings instead of admin only  -->
+                  <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
+                  <div class="task_form_input"><%= f.text_field :start_time, :value => @time_tracker.get_formatted_time, :size => "15", :placeholder => l(:start_time_tracker), :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 3 %></div>
+                  <%= f.hidden_field :running_time, :name => 'time_tracker_time_offset', :id => 'time_tracker_time_offset' %>
+                </div>
+                <div class="task_form_sub_fields">
+                  <div class="input_hint"><%= l(:time_tracker_label_start_date) %></div>
+                  <div class="task_form_input">
+                    <%= f.text_field :date, :value => @time_tracker.get_formatted_date, :size => "15", :placeholder => l(:time_tracker_label_date), :onchange => "updateTTControllerForm(this.form)", :disabled => @time_tracker.permission_level < 3 %>
+                    <% unless @time_tracker.permission_level < 3 %>
+                        <%= javascript_tag("$(function() { $('#time_tracker_date').datepicker(locDatepickerOptions); });") %>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="task_form_sub_fields">
+                  <div class="task_form_input">
+                    <%= f.submit l(:stop_time_tracker) %>
+                  </div>
+                </div>
+                <div style="clear:both"></div>
+              </div>
+          <% end %>
+          <%= javascript_tag render :partial => 'time_trackers/timer', :formats => [:js], :locals => {:tracker => @time_tracker} %>
+      <% end %>
+      <%= javascript_tag render :partial => 'time_trackers/time_tracker_control_script', :formats => [:js], :locals => {:key => User.current.api_key} %>
+  <% end %>
+</div>

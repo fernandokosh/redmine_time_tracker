@@ -1,0 +1,188 @@
+function hideMultiFormButtons(button_class) {
+    var last = $('input.' + button_class).parent().parent().last().index();
+
+    $('input.' + button_class).each(function (a, b) {
+        if (last != $(this).parent().parent().index()) {
+            $(this).hide();
+        } else {
+            $(this).show();
+        }
+    });
+}
+function base_url() {
+    var src = $('link[href*="time_tracker.css"]')[0].href;
+    return src.substr(0, src.indexOf('plugin_assets'));
+}
+// ================== validation helpers ============================
+
+function validate_time_tracker_form() {
+    var proj_field = $("#time_tracker_project_id");
+    var activity_select = $("#time_tracker_activity_id");
+
+    var proj_id = proj_field.val();
+    var activity_id = activity_select.val();
+
+    activity_select.toggleClass('invalid', proj_id != '' && activity_id == '');
+
+    $('.time-tracker-form :submit').attr('disabled', $('.time-tracker-form :input').hasClass('invalid'));
+
+}
+
+function validate_list_inputs(name) {
+    var start_field = $("#" + name + "_start_time");
+    var stop_field = $("#" + name + "_stop_time");
+    var spent_field = $("#" + name + "_spent_time");
+    var proj_id_field = $("#" + name + "_project_id");
+    var proj_select = $("#" + name + "_project_id_select");
+    var activity_select = $("#" + name + "_activity_id_select");
+
+    var max_time_field = $("#" + name + "_max_time");
+    var min_time_field = $("#" + name + "_min_time");
+    var max_spent_time_field = $("#" + name + "_max_spent_time");
+
+    var start = timeString2min(start_field.val());
+    var stop = timeString2min(stop_field.val());
+    var spent_time = timeString2min(spent_field.val());
+    var max_time = max_time_field.length != 0 ? timeString2min(max_time_field.val()) : null;
+    var min_time = min_time_field.length != 0 ? timeString2min(min_time_field.val()) : null;
+    var max_spent_time = max_spent_time_field.length != 0 ? timeString2min(max_spent_time_field.val()) : null;
+
+    spent_field.toggleClass('invalid', max_spent_time !== null && spent_time > max_spent_time);
+    proj_select.toggleClass('invalid', proj_id_field.val() == "");
+    proj_id_field.toggleClass('invalid', proj_id_field.val() == "");
+    activity_select.toggleClass('invalid', activity_select.val() == '');
+
+    var date_field = $("#" + name + "_tt_booking_date"); // exists only in edit-bookings-form
+    if (date_field.length > 0) {
+        var valid_dates = $("#" + name + "_valid_dates").val().split("|");
+        date_field.toggleClass('invalid', $.inArray(date_field.val(), valid_dates) == -1);
+    }
+    if (max_time !== null && min_time !== null && max_spent_time < 1440) {
+        // if the stop-time looks smaller than the start-time, we assume a booking over midnight
+        var om = false;
+        if (min_time > max_time) {
+            om = true;
+        }
+        // first statement checks for over-midnight booking | second one checks normal boundaries
+        start_field.toggleClass('invalid', om && start < min_time && start > max_time || !om && (start < min_time || start > max_time));
+        stop_field.toggleClass('invalid', om && stop < min_time && stop > max_time || !om && (stop < min_time || stop > max_time));
+    }
+    if (max_spent_time !== null) {
+        max_spent_time_field.toggleClass('invalid', spent_time > max_spent_time);
+    }
+
+    start_field.parents('form:first').find(':submit').attr('disabled', start_field.parents('form:first').find(':input').hasClass('invalid'));
+}
+
+// ================== booking_form helpers ============================
+
+function updateBookingHours(name) {
+    var start = timeString2min($("#" + name + "_start_time").val());
+    var stop = timeString2min($("#" + name + "_stop_time").val());
+    // if the stop-time is smaller than the start-time, we assume a booking over midnight
+    $("#" + name + "_spent_time").val(min2timeString(stop + (stop < start ? 1440 : 0) - start));
+    validate_list_inputs(name);
+}
+
+function updateBookingStop(name) {
+    var start = timeString2min($("#" + name + "_start_time").val());
+    var spent_time = timeString2min($("#" + name + "_spent_time").val());
+    $("#" + name + "_stop_time").val(min2parsedTimeString((start + spent_time) % 1440));
+    validate_list_inputs(name);
+}
+
+function updateBookingProject(api_key, name) {
+    var issue_id_field = $("#" + name + "_issue_id");
+    var project_id_field = $("#" + name + "_project_id");
+    var project_id_select = $("#" + name + "_project_id_select");
+
+    var issue_id = issue_id_field.val();
+    // check if the string is blank
+    if (!issue_id || $.trim(issue_id) === "") {
+        project_id_select.attr('disabled', false);
+        issue_id_field.removeClass('invalid');
+        validate_list_inputs(name);
+    } else {
+        $.ajax({url: base_url() + 'issues/' + issue_id + '.json?key=' + api_key,
+            type: 'GET',
+            success: function (transport) {
+                issue_id_field.removeClass('invalid');
+                var issue = transport.issue;
+                if (issue == null) {
+                    project_id_select.attr('disabled', false);
+                } else {
+                    project_id_select.attr('disabled', true);
+                    project_id_field.val(issue.project.id);
+                    $("#" + project_id_select.attr("id")).val(issue.project.id);
+                }
+                updateBookingActivity(api_key, name);
+            },
+            error: function () {
+                project_id_select.attr('disabled', false);
+                issue_id_field.addClass('invalid');
+            },
+            complete: function () {
+                validate_list_inputs(name);
+            }
+        });
+    }
+}
+
+function updateBookingActivity(api_key, name) {
+    $.ajax({url: base_url() + 'tt_completer/get_activity.json?key=' + api_key + '&project_id=' + $("#" + name + "_project_id").val(),
+        type: 'GET',
+        success: function (activites) {
+            var activity_field = $("#" + name + "_activity_id_select");
+            activity_field.find('option[value!=""]').remove();
+            $.each(activites, function (i, activity) {
+                activity_field.append('<option value="' + activity.id + '">' + activity.name + '</option>')
+            });
+            validate_list_inputs(name);
+        }
+    });
+}
+
+function timeString2min(str) {
+    if (str.match(/\d\d?:\d\d?/)) {
+        var arr = str.trim().split(" ");
+        var time_arr = arr[0].trim().split(':');
+        var h = parseInt(time_arr[0], 10) + (arr.length == 2 && arr[1].search('<%= l('time.pm') %>') != -1 ? 12 : 0);
+        var m = parseInt(time_arr[1], 10);
+        return h * 60 + m;
+    }
+    var time_factor = {"m": 1, "min": 1, "h": 60, "d": 3600};
+    var min = 0;
+    var time_arr = str.match(/\d+\s*\D+/g);
+    jQuery.each(time_arr, function (index, item) {
+        item = item.trim();
+        var num = item.match(/\d+/);
+        var fac = item.match(/\D+/)[0].trim().toLowerCase();
+        if (time_factor[fac]) {
+            min += num * time_factor[fac];
+        }
+    });
+    return min;
+}
+function min2parsedTimeString(min) {
+    var am_pm_notation = <%= !Setting.time_format['%p'].nil?%>;
+    if (am_pm_notation) {
+        var am = min % 720 == min;
+        return min2timeString(min % 720) + ' ' + (am ? '<%= l('time.am') %>' : '<%= l('time.pm') %>');
+    } else {
+        return min2timeString(min);
+    }
+}
+
+function min2timeString(min) {
+    var h = Math.floor(min / 60);
+    var m = min % 60;
+    return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+}
+
+$(document).ready(function () {
+    $(document).on('ajax:success', '.tt_stop,.tt_start, .tt_dialog_stop', function (xhr, html, status) {
+        $('#content .flash').remove();
+        $('#content').prepend(html);
+    });
+    validate_time_tracker_form()
+});

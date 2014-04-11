@@ -1,0 +1,27 @@
+<td class="checkbox hide-when-print">
+  <%= check_box_tag("ids[]", entry.id, false, :id => nil) %>
+  <%= hidden_field_tag "entryClass", entry.class %>
+</td>
+<%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
+<td>
+  <% tt = TimeTracker.where(:user_id => User.current.id).first %>
+  <% if entry.user_id == User.current.id && tt.nil? && User.current.allowed_to_globally?({:controller => 'time_trackers', :action => 'start'}, {}) %>
+      <%= link_to '',
+                  {:controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => entry.virtual? ? nil : entry.time_entry.issue.id, :comments => entry.comments, :activity_id => entry.activity_id}},
+                  :class => 'icon-start tt_list_button'
+      %>
+  <% end %>
+  <% if User.current.allowed_to_globally?({:controller => 'time_bookings', :action => 'show_edit'}, {}) %>
+      <%= link_to '',
+                  {:controller => 'time_bookings', :action => 'show_edit', :time_booking_ids => entry.id},
+                  :class => 'icon-edit tt_list_button',
+                  :remote => true
+      %>
+  <% end %>
+  <% if User.current.allowed_to_globally?({:controller => 'time_bookings', :action => 'delete'}, {}) %>
+      <%= link_to '',
+                  {:controller => 'time_bookings', :action => 'delete', :time_booking_ids => entry.id},
+                  :class => 'icon-del tt_list_button'
+      %>
+  <% end %>
+</td>

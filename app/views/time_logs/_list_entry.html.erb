@@ -1,0 +1,28 @@
+<td class="checkbox hide-when-print">
+  <%= check_box_tag("ids[]", entry.id, false, :id => nil) %>
+  <%= hidden_field_tag "entryClass", entry.class %>
+</td>
+<!-- following line should contain a link to the time_bookings! again, look at the issues\_list -->
+<%= raw query.columns.map { |column| "<td class=\"#{column.css_classes}\">#{column_content(column, entry)}</td>" }.join %>
+<td>
+  <% if User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'show_booking'}, {}) %>
+      <%= link_to '',
+                  {:controller => 'time_logs', :action => 'show_booking', :time_log_ids => entry.id},
+                  :class => 'icon-time tt_list_button',
+                  :remote => true
+      %>
+  <% end %>
+  <% if User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'show_edit'}, {}) %>
+      <%= link_to '',
+                  {:controller => 'time_logs', :action => 'show_edit', :time_log_ids => entry.id},
+                  :class => 'icon-edit tt_list_button',
+                  :remote => true
+      %>
+  <% end %>
+  <% if User.current.allowed_to_globally?({:controller => 'time_logs', :action => 'delete'}, {}) %>
+      <%= link_to '',
+                  {:controller => 'time_logs', :action => 'delete', :time_log_ids => entry.id},
+                  :class => 'icon-del tt_list_button'
+      %>
+  <% end %>
+</td>

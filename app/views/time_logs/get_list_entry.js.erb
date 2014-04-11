@@ -1,0 +1,5 @@
+$('#<%= "entry-" + @entry.id.to_s %>').html('<%= escape_javascript(render(:partial => 'time_logs/list_entry', :locals => {:entry => @entry, :query => @query_logs})) %>');
+contextMenuHide();
+contextMenuUnselectAll();
+hideMultiFormButtons('tl_edit_form_update_button');
+hideMultiFormButtons('tl_book_form_button');

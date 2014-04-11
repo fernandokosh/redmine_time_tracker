@@ -1,0 +1,6 @@
+<%= javascript_include_tag 'jqplot/jquery.jqplot.min.js', :plugin => 'redmine_time_tracker' %>
+<%= javascript_include_tag 'jqplot/plugins/jqplot.barRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+<%= javascript_include_tag 'jqplot/plugins/jqplot.categoryAxisRenderer.min.js', :plugin => 'redmine_time_tracker' %>
+<%= stylesheet_link_tag 'jquery.jqplot.min.css', :plugin => 'redmine_time_tracker' %>
+
+<%= javascript_tag render :partial => 'chart', :formats => [:js], :locals => {:chart_data => chart_data, :chart_ticks => chart_ticks, :print => print} %>

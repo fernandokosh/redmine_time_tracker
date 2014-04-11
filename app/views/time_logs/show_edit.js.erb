@@ -1,0 +1,8 @@
+<% @time_logs.each do |item| %>
+
+$('#<%= "entry-" + item.id.to_s %>').html('<%= escape_javascript(render(:partial => 'time_logs/edit_form', :locals => {:time_log => item})) %>');
+
+<% end %>
+contextMenuHide();
+contextMenuUnselectAll();
+hideMultiFormButtons('tl_edit_form_update_button');

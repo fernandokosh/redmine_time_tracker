@@ -1,11 +1,26 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 one:
   id: 1
-  user_id: 1
+  user_id: 2
+  started_on: 2012-10-25 11:47:00 +2
+  comments: original comment
+  project_id: 1
   issue_id: 1
-  started_on: 2010-02-25 11:47:03
+  activity_id: 9
+  round: false
 two:
   id: 2
   user_id: 1
+  started_on: 2012-10-25 11:47:00 +2
+  comments: original comment
+  project_id: 1
   issue_id: 1
-  started_on: 2010-02-25 11:47:03
+  activity_id: 9
+  round: false
+three:
+  id: 3
+  user_id: 2
+  started_on: 2012-10-25 11:47:00 +2
+  comments: original comment
+  activity_id: 9
+  round: false

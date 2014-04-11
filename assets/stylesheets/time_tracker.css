@@ -1,7 +1,89 @@
-.icon-clock { background-image: url(../images/clock.gif); }
-.icon-start { background-image: url(../images/time_start.png); }
-.icon-pause { background-image: url(../images/time_pause.png); }
-.icon-stop { background-image: url(../images/time_stop.png); }
+@media print {
+    #tt_reporting_chart {
+        width: 99%;
+    }
+}
+
+input[readonly="readonly"] {
+    color: #545454;
+    background-color: #EBEBE4;
+    border: 1px solid #999;
+}
+
+fieldset#filters td.values input[type="button"] {
+    height: auto;
+}
+
+.invalid {
+    border: 2px solid #D00;
+    background-color: #FFE3E3;
+    color: #800;
+}
+
+.tt_list tr.entry {
+    white-space: nowrap;
+    text-align: center;
+}
+
+.tt_list .comments {
+    white-space: normal;
+}
+
+.tt_list .icon_column {
+    width: 1px;
+}
+
+tr:hover .tt_list_button {
+    visibility: visible;
+}
+
+.tt_list_button {
+    padding: 2px 16px;
+    background-repeat: no-repeat;
+    background-position: 10px 0;
+    visibility: hidden;
+}
+
+.task_form_top_fields, .task_form_btottom_fields {
+    width: 100%;
+    position: relative;
+    float: left;
+    margin-right: 205px;
+}
+
+.task_form_sub_fields {
+    float: left;
+    /*margin-left: 5%;*/
+    /*margin-right: 5%;*/
+    margin-right: 5px;
+}
+
+.input_hint {
+    float: left;
+    position: relative;
+    overflow: hidden;
+    font-size: 9px;
+}
+
+.task_form_input {
+    margin-top: 15px;
+}
+
+.icon-clock {
+    background-image: url(../images/clock.gif);
+}
+
+.icon-start {
+    background-image: url(../images/time_start.png);
+}
+
+.icon-pause {
+    background-image: url(../images/time_pause.png);
+}
+
+.icon-stop {
+    background-image: url(../images/time_stop.png);
+}
 
 .icon-action {
     background-repeat: no-repeat;
@@ -9,33 +91,59 @@
     padding-top: 2px;
     padding-bottom: 3px;
 }
+
 .icon-action:hover {
     padding-top: 1px;
     padding-bottom: 4px;
 }
 
-.icon-start-action { background-image: url(../images/start.png); }
-.icon-pause-action { background-image: url(../images/pause.png); }
-.icon-stop-action { background-image: url(../images/stop.png); }
-.icon-list-action { background-image: url(../images/list.png); }
-
-#time-tracker-menu { margin-right: 8px; }
-#time-tracker-menu a { margin-right: 0px; }
-#time-tracker-menu .icon { padding-left: 20px; }
-
-#time-tracker-admin td.start-date,
-#time-tracker-admin td.spent-time,
-#time-tracker-admin td.suspended-status,
-#time-tracker-admin td.msg {
-    text-align: center;
+.icon-start-action {
+    background-image: url(../images/start.png);
 }
 
-#time-tracker-admin td.user,
-#time-tracker-admin td.issue {
+.icon-pause-action {
+    background-image: url(../images/pause.png);
+}
+
+.icon-stop-action {
+    background-image: url(../images/stop.png);
+}
+
+.icon-list-action {
+    background-image: url(../images/list.png);
+}
+
+#time-tracker-menu {
+    margin-right: 8px;
+}
+
+#time-tracker-menu a {
+    margin-right: 0;
+}
+
+#time-tracker-menu .icon {
+    padding-left: 20px;
+}
+
+#user-time-bookings-list td.issue,
+#user-time-bookings-list td.comments,
+#time_tracker_list td.issue,
+#time_tracker_list td.comments,
+#tt-time-list td.issue,
+#tt-time-list td.comments,
+#user-time-logs-list td.comments {
     text-align: left;
 }
 
-#time-tracker-admin p.msg {
+#time_tracker_list td.user,
+#time_tracker_list td.project,
+#time_tracker_list td.activity,
+#time_tracker_list td.start-date,
+#time_tracker_list td.start-time,
+#time_tracker_list td.spent-time,
+#time_tracker_list td.buttons,
+#time_tracker_list p.msg,
+#time_tracker_list td.msg {
     text-align: center;
 }
 
@@ -46,8 +154,11 @@
 #status-transition-list td.zombie {
     font-style: italic;
 }
+
 #status-transition-list td.msg {
     text-align: center;
 }
 
-#settings form[action="/settings/plugin/redmine_time_tracker"] > div + div { display: none } /* Hack to remove the div opened by redmine before rendering the plugin settings partial */
+.ui-dialog .center {
+    text-align: center;
+}

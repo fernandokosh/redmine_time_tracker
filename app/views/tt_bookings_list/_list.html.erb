@@ -1,0 +1,59 @@
+<div id="tt-time-list">
+  <%= form_tag({:controller => :time_bookings, :action => "actions"}, :remote => false) do -%>
+      <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
+      <div class="autoscroll">
+        <table class="list tt_list">
+          <thead>
+          <tr>
+            <th class="checkbox hide-when-print"><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggleIssuesSelection(this); return false;',
+                                                             :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
+            </th>
+            <% query.inline_columns.each do |column| %>
+                <%= tt_column_header(column, :sort_bookings) %>
+            <% end %>
+            <th class="icon_column"></th>
+          </tr>
+          </thead>
+          <% previous_group = false %>
+          <tbody>
+          <% bookings.each do |entry| -%>
+              <% # workaround to enable group_by function with special columns   %>
+              <% if query.grouped? %>
+                  <% gb_col = query.group_by_column %>
+                  <% if entry.send(gb_col.name).nil?
+                       group = nil
+                     else
+                       group = case gb_col.name
+                                 when :tt_booking_date then
+                                   entry.send('started_on').send('localtime').to_date.to_s
+                                 when :issue then
+                                   entry.send('issue').send('subject') unless entry.send('issue') == l(:time_tracker_label_none)
+                                 else
+                                   query.group_by_column.value(entry).to_s
+                               end
+                     end %>
+                  <% if group != previous_group %>
+                      <% reset_cycle %>
+                      <tr class="group open">
+                        <td colspan="<%= query.columns.size + 2 %>">
+                          <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
+                          <%= group.blank? ? 'None' : column_content(query.group_by_column, entry) %>
+                          <span class="count">(<%= group.nil? ? @booking_count_by_group[nil] : (@booking_count_by_group.keys[0].is_a?(Date) ? @booking_count_by_group[group.to_date] : @booking_count_by_group[group]) %>)
+                          </span>
+                          <!-- TODO rewrite function-call -->
+                          <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}", "toggleAllRowGroups(this)", :class => 'toggle-all') %>
+                        </td>
+                      </tr>
+                      <% previous_group = group %>
+                  <% end %>
+              <% end %>
+
+              <tr id="booking-entry-<%= entry.id %>" class="hascontextmenu entry <%= cycle('odd', 'even') %>">
+                <%= render :partial => 'time_bookings/list_entry', :locals => {:entry => entry, :query => query} %>
+              </tr>
+          <% end -%>
+          </tbody>
+        </table>
+      </div>
+  <% end -%>
+</div>

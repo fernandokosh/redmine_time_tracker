@@ -1,0 +1,26 @@
+<h3><%= l(:time_tracker_settings_report_title) %></h3>
+<p>
+  <%= label_tag 'settings[report_title]', l(:time_tracker_report_title) %>
+  <%= text_field_tag 'settings[report_title]', @settings[:report_title], {:size => 23} %>
+</p>
+<p>
+  <%= label_tag 'settings[report_logo_url]', l(:time_tracker_report_logo_url) %>
+  <%= text_field_tag 'settings[report_logo_url]', @settings[:report_logo_url], {:size => 23} %>
+</p>
+<p>
+  <%= label_tag 'settings[report_logo_width]', l(:time_tracker_report_logo_width) %>
+  <%= text_field_tag 'settings[report_logo_width]', @settings[:report_logo_width], {:size => 2} %> (Pixel)
+</p>
+<h3><%= l(:time_tracker_settings_rounding_title) %></h3>
+<p>
+  <%= label_tag 'settings[round_steps]', l(:time_tracker_round_steps) %>
+  <%= text_field_tag 'settings[round_steps]', @settings[:round_steps], {:size => 2} %> (<%= l(:field_hours) %>)
+</p>
+<p>
+  <%= label_tag 'settings[round_limit]', l(:time_tracker_round_limit) %>
+  <%= text_field_tag 'settings[round_limit]', @settings[:round_limit], {:size => 2} %> (%)
+</p>
+<p>
+  <%= label_tag 'settings[round_default]', l(:time_tracker_round_default) %>
+  <%= check_box_tag 'settings[round_default]', true, @settings[:round_default] %>
+</p>

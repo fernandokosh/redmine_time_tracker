@@ -1,0 +1,17 @@
+<% unless lab_ids.nil? %>
+$(document).ready(function () {
+    <% lab_ids.each do |id| %>
+    $("#booking-entry-<%= id %>").css({"backgroundColor":"#FFFF4D"});
+    var bg_col = "#FFF"; // default bg_color is white
+    if ($("#booking-entry-<%= id %>").hasClass("odd")) {
+        bg_col = "#FCFD8D";
+    }
+    $("#booking-entry-<%= id %>").animate({
+                backgroundColor:bg_col
+            }, 3141, function () {
+                $("#booking-entry-<%= id %>").attr("style", "");
+            }
+    );
+    <% end %>
+});
+<% end %>

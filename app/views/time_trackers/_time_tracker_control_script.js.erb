@@ -1,0 +1,53 @@
+// ================== time_tracker_controller helpers ============================
+function updateTTControllerForm(form) {
+    $.ajax({url: base_url() + '/time_trackers/update?key=<%= key %>&' + $("#" + form.id).serialize(),
+        type: 'PUT',
+        dataType: 'html',
+        success: function (html) {
+            $('#content .flash').remove();
+            $('#content').prepend($(html).filter('.flash'));
+            $('#time-tracker-control').replaceWith($(html).filter('#time-tracker-control'))
+            $('#time_tracker_date').datepicker(locDatepickerOptions);
+            validate_time_tracker_form();
+            enableIssueAutoCompletion();
+        }
+    });
+}
+
+function enableIssueAutoCompletion(){
+    $('#time_tracker_issue_text').autocomplete({
+        source: 'tt_completer/get_issue.json?key=<%= key %>',
+        minLength: 0,
+        select: function (event, ui) {
+            $('#time_tracker_issue_text').val(ui.item.label);
+            $('#time_tracker_issue_text').change();
+        }
+    });
+}
+
+$(document).ready(function () {
+    enableIssueAutoCompletion();
+});
+
+$(document).ready(function () {
+    $(function () {
+        if ($('#new_time_tracker').length == 1) {
+            $('#time_tracker_comments').autocomplete({
+                source: 'tt_completer/get_issue.json?key=<%= key %>',
+                minLength: 0,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    $(this).val(ui.item.label);
+                }
+            });
+        }
+    });
+});
+$(document).ready(function () {
+    $('.time-tracker-form, .tt_list').on('keydown', 'input', function (event) {
+        if (event.keyCode == 13 && this.type != 'submit') {
+            $(this).parents('form').find('input[type=submit]').focus()
+            event.preventDefault()
+        }
+    });
+});

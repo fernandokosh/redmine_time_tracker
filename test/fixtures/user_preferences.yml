@@ -1,0 +1,9 @@
+--- 
+pref_001:
+  id: 1
+  user_id: 1
+  time_zone: UTC
+pref_002:
+  id: 2
+  user_id: 2
+  time_zone: Berlin

@@ -1,0 +1,31 @@
+<% if !@project.nil? and !@issue.nil? %>
+    <% time_tracker = time_tracker_for(User.current) %>
+    <% display_stop = !time_tracker.nil?  && time_tracker.issue_id == @issue.id %>
+    <% allowed_to_start = User.current.allowed_to?(:tt_log_time, @project) and help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], @project) %>
+    <% if display_stop %>
+        <%# A time tracker exists and is attached to the clicked issue, display the stop action %>
+        <li>
+          <% suffix = time_tracker.issue_id.nil? ? l(:time_tracker_label_timer) : '#' + time_tracker.issue_id.to_s %>
+          <%= link_to l(:stop_time_tracker).capitalize + ' ' + suffix,
+                      {:controller => 'time_trackers', :action => 'stop'},
+                      :class => 'icon icon-stop tt_stop',
+                      :onclick => "contextMenuHide();",
+                      :remote => time_tracker.is_activity_id_correct_set?,
+                      :data => {:type => 'html'}
+          %>
+        </li>
+    <% elsif allowed_to_start %>
+        <%# No time tracker is running, but the user has the rights to track time on this issue %>
+        <%# Display the start time tracker action %>
+        <li>
+          <%= link_to l(:start_time_tracker).capitalize + ' #' + @issue.id.to_s,
+                      {:controller => 'time_trackers', :action => 'start', :time_tracker => {:issue_id => @issue.id}},
+                      :class => 'icon icon-start tt_start',
+                      :onclick => "contextMenuHide();",
+                      :data => {:type => 'html'}
+          %>
+        </li>
+    <% end %>
+<% end %>
+
+<%= render :partial => 'time_trackers/start_dialog', :locals => {time_tracker: time_tracker} if !display_stop && allowed_to_start && !time_tracker.nil? %>

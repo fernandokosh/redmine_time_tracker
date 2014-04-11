@@ -1,0 +1,32 @@
+<% if User.current.allowed_to_globally?(:tt_log_time, {}) %>
+
+<%= stylesheet_link_tag 'time_tracker', :plugin => 'redmine_time_tracker' %>
+
+<% time_tracker = time_tracker_for(User.current) %>
+<% timer_link = if !time_tracker.nil? %>
+<%# A time tracker exists, display the stop action %>
+    <% suffix = time_tracker.issue_id.nil? ? l(:time_tracker_label_timer) : '#' + time_tracker.issue_id.to_s %>
+    <% stop_title = l(:stop_time_tracker).capitalize + ' ' + suffix %>
+    <% link_to stop_title,
+           {:controller => 'time_trackers', :action => 'stop'},
+           :class => 'icon icon-stop tt_stop',
+           :data => {:type => 'html'}
+%>
+<% elsif User.current.allowed_to_globally?(:tt_log_time,{}) %>
+<%# No time tracker is running, but the user has the rights to track time %>
+<%# Display the start time tracker action %>
+<% link_to "#{l(:start_time_tracker).capitalize} #{l(:time_tracker_label_timer)}",
+           {:controller => 'time_trackers', :action => 'start'},
+           :class => 'icon icon-start tt_start',
+           :data => {:type => 'html'}
+%>
+<% end %>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.time-tracker-quick-menu').replaceWith('<%=timer_link%>');
+    });
+</script>
+
+<%= render :partial => 'time_trackers/activity_dialog', :locals => {:time_tracker => time_tracker, :stop_title => stop_title, :remote => false } if !time_tracker.nil? and !time_tracker.is_activity_id_correct_set? %>
+
+<% end %>

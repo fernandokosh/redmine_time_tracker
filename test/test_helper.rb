@@ -1,5 +1,7 @@
-# Load the normal Rails helper
-require File.expand_path(File.dirname(__FILE__) + '/../../../../test/test_helper')
+# Load the Redmine helper
+require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
+ActiveSupport::TestCase.fixture_path=File.dirname(__FILE__) + '/fixtures/'
 
-# Ensure that we are using the temporary fixture path
-Engines::Testing.set_fixture_path
+# next two lines are necessary to get Unit-Tests handled by RubyMine
+require "minitest/reporters"
+MiniTest::Reporters.use!
