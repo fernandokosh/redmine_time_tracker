@@ -17,6 +17,10 @@ module TimeTrackersHelper
     Enumeration.find(activity_id)
   end
 
+  def shared_activities
+    TimeEntryActivity.shared.all
+  end
+
   def get_activities(project_id)
     if project_id.blank?
       TimeEntryActivity.shared.active.all
