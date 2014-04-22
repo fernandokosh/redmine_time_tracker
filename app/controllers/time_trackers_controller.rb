@@ -83,12 +83,15 @@ class TimeTrackersController < ApplicationController
 
   def delete
     time_tracker = TimeTracker.where(:id => params[:id]).first
-    if User.current.id == time_tracker.user_id && User.current.allowed_to?([:tt_edit_own_time_logs], {}) || User.current.allowed_to_globally?([:tt_edit_time_logs], {}) # user could only delete his own entries, except he's admin
+    #if User.current.id == time_tracker.user_id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}) || User.current.allowed_to_globally?(:tt_edit_time_logs, {}) # user could only delete his own entries, except he's admin
+    
+    if User.current.id == time_tracker.user_id && (User.current.allowed_to_globally?(:tt_edit_time_logs, {}) or User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}))
       time_tracker.destroy
+      flash[:notice] = l(:time_tracker_delete_success)
     else
       flash[:error] = l(:time_tracker_delete_fail)
     end
-    flash[:notice] = l(:time_tracker_delete_success)
+    
     if !params[:start_new_time_tracker].nil?
       start({:issue_id => params[:start_new_time_tracker]})
     else

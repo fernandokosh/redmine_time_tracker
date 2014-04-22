@@ -1,4 +1,6 @@
 <%= javascript_tag render :partial => 'tt_overview/time_tracker', :formats => [:js] %>
+
+<%= debug time_tracker %>
 <%
    str_takeover = 'takeover'
    str_discard = 'discard'
@@ -7,8 +9,9 @@
    takeover_label = content_tag :span, l(:tt_start_dialog_take_over_option)
    takeover_opt = takeover_radio + takeover_label + tag('br')
    discard_radio = radio_button_tag 'running_timer', str_discard, false, :onchange => "updateOkButton('#{str_discard}')"
-   discard_label = content_tag :span, l(:tt_start_dialog_discard_option)
-   discard_opt = discard_radio + discard_label + tag('br')
+   discard_label = content_tag :span, l(:tt_start_dialog_discard_option) 
+
+   discard_opt = discard_radio + discard_label + tag('br') if User.current.id == time_tracker.user_id and (User.current.allowed_to_globally?(:tt_edit_time_logs, {}) or User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}))
    log_radio = radio_button_tag 'running_timer', str_log, true, :onchange => "updateOkButton('#{str_log}')"
    log_label = content_tag :span, l(:tt_start_dialog_log_option)
    log_opt = log_radio + log_label + tag('br')
@@ -31,7 +34,7 @@
             case '<%=str_log%>':
                 $button_text.wrap('<%=link_to '',{:controller => 'time_trackers', :action => 'stop', :start_new_time_tracker => @issue.id},:data => {:type => 'html'}, :class => 'tt_start_dialog_stop' %>');
                 break;
-        }
+        }                       
     }
     function showStartDialog() {
         var $dialog = $('#start_dialog')
