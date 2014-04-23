@@ -21,8 +21,8 @@ class TtReportingController < ApplicationController
     if @query_bookings.valid?
       @limit = per_page_option
 
-      @booking_count = @query_bookings.booking_count
-      @booking_pages = Paginator.new @booking_count, @limit, params['page'], 'page'
+      @booking_count = @query_bookings.bookings.count
+      @booking_pages = Paginator.new @booking_count, @limit, params['page_bookings']
       @offset ||= @booking_pages.offset
       @bookings = @query_bookings.bookings(:order => sort_bookings_clause,
                                            :offset => @offset,
@@ -67,7 +67,7 @@ class TtReportingController < ApplicationController
 
   def total_booked
     hours = 0
-    @bookings.each do |tb|
+    @query_bookings.bookings.each do |tb|
       hours += tb.hours_spent
     end
     hours

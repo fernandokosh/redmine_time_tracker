@@ -53,7 +53,7 @@ class TtOverviewController < ApplicationController
     tt_sort_update(:sort_bookings, @query_bookings.sortable_columns, "tt_booking_sort")
 
     if @query_bookings.valid?
-      @booking_count = @query_bookings.booking_count
+      @booking_count = @query_bookings.bookings.count
       @booking_pages = Paginator.new @booking_count, @limit, params['page_bookings'], 'page_bookings'
       @booking_offset ||= @booking_pages.offset
       @bookings = @query_bookings.bookings(:order => sort_bookings_clause,

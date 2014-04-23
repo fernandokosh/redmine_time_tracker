@@ -29,7 +29,7 @@ class TtBookingsListController < ApplicationController
     if @query_bookings.valid?
       @limit = per_page_option
 
-      @booking_count = @query_bookings.booking_count
+      @booking_count = @query_bookings.bookings.count
       @booking_pages = Paginator.new @booking_count, @limit, params['page'], 'page'
       @offset ||= @booking_pages.offset
       @bookings = @query_bookings.bookings(:order => sort_bookings_clause,
