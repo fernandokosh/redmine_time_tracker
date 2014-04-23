@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require File.dirname(__FILE__) + '../../test_helper'
 
 class TimeBookingsControllerTest < ActionController::TestCase
   fixtures :projects, :users, :user_preferences, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
