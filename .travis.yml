@@ -7,7 +7,6 @@ branches:
   only:
     - master
 env:
-  - REDMINE_VERSION=2.3.3 VERBOSE=yes
   - REDMINE_VERSION=2.4.5 VERBOSE=yes
   - REDMINE_VERSION=2.5.1 VERBOSE=yes
 script:
