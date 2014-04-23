@@ -6,7 +6,6 @@ class TimeBookingsControllerTest < ActionController::TestCase
            :enumerations, :time_entries, :time_bookings, :time_logs
 
   def setup
-    Time.zone = ActiveSupport::TimeZone["UTC"]
     Timecop.travel(Time.local(2012, 10, 30, 12, 0, 0))
     @controller = TimeBookingsController.new
     @request = ActionController::TestRequest.new

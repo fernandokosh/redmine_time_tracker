@@ -6,7 +6,6 @@ class TimeTrackersControllerTest < ActionController::TestCase
            :enumerations, :time_entries, :time_trackers
 
   def setup
-    Time.zone = ActiveSupport::TimeZone["UTC"]
     Timecop.travel(Time.local(2012, 10, 30, 12, 0, 0))
     @controller = TimeTrackersController.new
     @request = ActionController::TestRequest.new
