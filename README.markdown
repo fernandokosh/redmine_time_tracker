@@ -1,5 +1,5 @@
-[![Dependency Status](https://gemnasium.com/hicknhack-software/redmine_time_tracker.png)](https://gemnasium.com/hicknhack-software/redmine_time_tracker) [![Code Climate](https://codeclimate.com/github/hicknhack-software/redmine_time_tracker.png)](https://codeclimate.com/github/hicknhack-software/redmine_time_tracker)
-
+[![Dependency Status](https://gemnasium.com/hicknhack-software/redmine_time_tracker.png)](https://gemnasium.com/hicknhack-software/redmine_time_tracker)
+[![Code Climate](https://codeclimate.com/github/hicknhack-software/redmine_time_tracker.png)](https://codeclimate.com/github/hicknhack-software/redmine_time_tracker)
 [![Build Status](https://travis-ci.org/hicknhack-software/redmine_time_tracker.png)](https://travis-ci.org/hicknhack-software/redmine_time_tracker)
 
 # Redmine Time Tracker plugin
