@@ -1,10 +1,11 @@
-require File.dirname(__FILE__) + '../../test_helper'
+require_relative '../test_helper'
 
 class TimeBookingsControllerTest < ActionController::TestCase
   fixtures :projects, :users, :user_preferences, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
            :enumerations, :time_entries, :time_bookings, :time_logs
 
   def setup
+    Time.zone = ActiveSupport::TimeZone["UTC"]
     Timecop.travel(Time.local(2012, 10, 30, 12, 0, 0))
     @controller = TimeBookingsController.new
     @request = ActionController::TestRequest.new
