@@ -15,3 +15,7 @@ end
 def local_date(date)
   User.current.time_zone.parse(date).localtime.to_date.to_s(:db)
 end
+
+def local_datetime(datetime)
+  User.current.time_zone.parse(datetime).localtime
+end

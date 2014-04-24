@@ -136,8 +136,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_response 302
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 3).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "illegally updated TT-start_time")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "illegally updated TT-date")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "illegally updated TT-datetime")
       end
     end
 
@@ -227,8 +226,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         put :update, {:time_tracker => {:start_time => "10:23", :date => "2012-10-23"}}
         assert_response 302
         tt = TimeTracker.where(:id => 3).first
-        assert_equal(local_time("2012-10-23 10:23:00"), tt.started_on.localtime.to_time.strftime("%H:%M"), "updated TT-start_time")
-        assert_equal(local_date("2012-10-23 10:23:00"), tt.started_on.to_date.to_s(:db), "updated TT-date")
+        assert_equal(local_datetime("2012-10-23 10:23:00"), tt.started_on, "updated TT-datetime")
       end
       #=============================
 
@@ -274,8 +272,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response 302
         tt = TimeTracker.where(:id => 2).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "not updated foreign TT-datetime")
       end
       #=============================
     end
@@ -366,8 +363,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         put :update, {:time_tracker => {:start_time => "10:23", :date => "2012-10-23"}}
         assert_response 302
         tt = TimeTracker.where(:id => 3).first
-        assert_equal(local_time("2012-10-23 10:23:00"), tt.started_on.localtime.to_time.strftime("%H:%M"), "updated TT-start_time")
-        assert_equal(local_date("2012-10-23 10:23:00"), tt.started_on.to_date.to_s(:db), "updated TT-date")
+        assert_equal(local_datetime("2012-10-23 10:23:00"), tt.started_on, "updated TT-datetime")
       end
       #=============================
 
@@ -413,8 +409,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response 302
         tt = TimeTracker.where(:id => 2).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "not updated foreign TT-datetime")
       end
       #=============================
     end
@@ -523,8 +518,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_response 302
         #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "not updated TT-start_time illegally")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "not updated TT-datetime illegally")
       end
       # ============================
 
@@ -570,8 +564,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response 302
         tt = TimeTracker.where(:id => 2).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "not updated foreign TT-datetime")
       end
       #=============================
     end
@@ -663,8 +656,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_response 302
         #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "not updated TT-start_time illegally")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "not updated TT-datetime illegally")
       end
       # ============================
 
@@ -710,8 +702,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response 302
         tt = TimeTracker.where(:id => 2).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "not updated foreign TT-datetime")
       end
       #=============================
     end
@@ -803,8 +794,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         assert_response 302
         #assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "flashing the right error")
         tt = TimeTracker.where(:id => 1).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "not updated TT-start_time illegally")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "not updated TT-date illegally")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "not updated TT-datetime illegally")
       end
       # ============================
 
@@ -850,8 +840,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         put :update, {:time_tracker => {:id => 2, :start_time => "10:23", :date => "2012-10-23"}}
         assert_response 302
         tt = TimeTracker.where(:id => 2).first
-        assert_equal(local_time("2012-10-25 11:47:00"), tt.started_on.localtime.strftime("%H:%M"), "not updated foreign TT-start_time")
-        assert_equal(local_date("2012-10-25 11:47:00"), tt.started_on.to_date.to_s(:db), "not updated foreign TT-date")
+        assert_equal(local_datetime("2012-10-25 11:47:00"), tt.started_on, "not updated foreign TT-datetime")
       end
       #=============================
     end
@@ -873,8 +862,7 @@ class TimeTrackersControllerTest < ActionController::TestCase
         put :update, {:time_tracker => {:start_time => "1:23 pm", :date => "23.10.2012"}}
         assert_response 302
         tt = TimeTracker.where(:id => 2).first
-        assert_equal(local_time("2012-10-23 13:23:00"), tt.started_on.localtime.to_time.strftime("%H:%M"), "updated TT-start_time")
-        assert_equal(local_date("2012-10-23 13:23:00"), tt.started_on.to_date.to_s(:db), "updated TT-date")
+        assert_equal(local_datetime("2012-10-23 13:23:00"), tt.started_on, "updated TT-datetime")
       end
     end
   end
