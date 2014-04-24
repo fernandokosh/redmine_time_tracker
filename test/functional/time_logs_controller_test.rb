@@ -83,8 +83,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("23:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 23:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 23:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "not update TL -comments on foreign logs" do
@@ -104,8 +104,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 8:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 8:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
 
@@ -147,8 +147,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice] || flash[:error], "show flash-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("12:42", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-23", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-23 12:42:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-23 12:42:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "not update TL -comments on foreign logs" do
@@ -168,8 +168,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 8:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 8:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
 
@@ -211,8 +211,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice] || flash[:error], "show flash-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("12:42", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-23", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-23 12:42:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-23 12:42:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "update TL -comments on foreign logs" do
@@ -232,8 +232,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice] || flash[:error], "show flash-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("12:42", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-23", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-23 12:42:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-23 12:42:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
 
@@ -317,8 +317,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("23:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 23:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 23:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "not update TL -comments on foreign logs" do
@@ -338,8 +338,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 8:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 8:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
 
@@ -403,8 +403,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("23:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 23:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 23:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "not update TL -comments on foreign logs" do
@@ -424,8 +424,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 8:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 8:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
 
@@ -489,8 +489,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("23:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 23:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 23:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
 
       should "update TL -comments on foreign logs" do
@@ -510,8 +510,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_error_not_allowed_to_change_foreign_logs), flash[:error], "show error-message")
         tl = TimeLog.where(:id => 2).first
-        assert_equal("08:47", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-25", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-25 8:47:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-25 8:47:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
 
@@ -535,8 +535,8 @@ class TimeLogsControllerTest < ActionController::TestCase
         assert_response 302, "on update TL"
         assert_equal(I18n.t(:tt_update_log_success), flash[:notice] || flash[:error], "show flash-message")
         tl = TimeLog.where(:id => 1).first
-        assert_equal("23:48", tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
-        assert_equal("2012-10-23", tl.started_on.to_date.to_s(:db), "not updated TL-date")
+        assert_equal(local_time("2012-10-23 21:48:00"), tl.started_on.to_time.localtime.strftime("%H:%M"), "not updated TL-time")
+        assert_equal(local_date("2012-10-23 21:48:00"), tl.started_on.to_date.to_s(:db), "not updated TL-date")
       end
     end
   end

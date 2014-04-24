@@ -7,3 +7,11 @@ require "minitest/reporters"
 MiniTest::Reporters.use!
 
 Zonebie.set_random_timezone
+
+def local_time(date)
+  User.current.time_zone.parse(date).localtime.strftime("%H:%M")
+end
+
+def local_date(date)
+  User.current.time_zone.parse(date).localtime.to_date.to_s(:db)
+end
