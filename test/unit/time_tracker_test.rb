@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '../../test_helper'
+require File.dirname(__FILE__) + '../../minitest_helper'
 
 class TimeTrackerTest < ActiveSupport::TestCase
   fixtures :time_trackers
