@@ -13,6 +13,7 @@ module RedmineTimeTracker
     include Rails.application.routes.url_helpers
     include Capybara::DSL
     self.use_transactional_fixtures = false
+    Capybara.default_wait_time = 2
 
     def log_user(login, password)
       visit '/my/page'
