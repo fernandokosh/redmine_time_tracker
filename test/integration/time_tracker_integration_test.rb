@@ -18,6 +18,7 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
       page.text.must_include 'Your time logs'
       click_button('start')
       page.text.must_include 'Started the time tracker'
+      click_button('stop')
     end
   end
 end
