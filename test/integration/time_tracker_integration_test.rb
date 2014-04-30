@@ -15,7 +15,6 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
     end
 
     should "have permission to start a time tracker" do
-      puts "Current user: #{User.current.login} - permission granted: #{Role.find(2).permissions.include? :tt_log_time}"
       visit '/tt_overview'
       page.text.must_include 'Your time logs'
       click_button('start')
@@ -24,7 +23,6 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
     end
 
     should "have started one time tracker" do
-      puts "Current user: #{User.current.login} - permission granted: #{Role.find(2).permissions.include? :tt_log_time}"
       visit '/tt_overview'
       click_button('start')
       time_tracker = TimeTracker.where(user_id: User.current.id)
@@ -33,7 +31,6 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
     end
 
     should "have created a time log after stopping the time tracker" do
-      puts "Current user: #{User.current.login} - permission granted: #{Role.find(2).permissions.include? :tt_log_time}"
       visit '/tt_overview'
       click_button('start')
       click_button('stop')
@@ -52,7 +49,6 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
     end
 
     should 'not have permission to start a time tracker' do
-      puts "Current user: #{User.current.login} - permission removed: #{!Role.find(2).permissions.include? :tt_log_time}"
       visit '/tt_overview'
       page.text.must_include 'You are not authorized to access this page.'
     end
