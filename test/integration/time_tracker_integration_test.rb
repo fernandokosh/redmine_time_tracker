@@ -2,23 +2,61 @@ require File.dirname(__FILE__) + '../../minitest_helper'
 
 
 class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
+  fixtures :projects, :users, :user_preferences, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
+           :enumerations
+  def setup
+    log_user('jsmith', 'jsmith')
+  end
 
-  context 'User' do
-
-    def setup
-      log_user('jsmith', 'jsmith') 
-      # current user is John Smith (no admin) in each test of this context
-      # set permissions for this user
+  context 'User with permission :tt_log_time' do
+    setup do
       Role.find(2).add_permission! :tt_log_time
+      #puts "Current user: #{User.current.login} - permission granted: #{Role.find(2).permissions.include? :tt_log_time}"
     end
 
-
-    should "have permission to start a time tracker", js: true do
+    should "have permission to start a time tracker" do
+      puts "Current user: #{User.current.login} - permission granted: #{Role.find(2).permissions.include? :tt_log_time}"
       visit '/tt_overview'
       page.text.must_include 'Your time logs'
       click_button('start')
       page.text.must_include 'Started the time tracker'
       click_button('stop')
     end
+
+    should "have started one time tracker" do
+      puts "Current user: #{User.current.login} - permission granted: #{Role.find(2).permissions.include? :tt_log_time}"
+      visit '/tt_overview'
+      click_button('start')
+      time_tracker = TimeTracker.where(user_id: User.current.id)
+      assert_equal(time_tracker.exists?, true)
+      click_button('stop')
+    end
+
+    should "have created a time log after stopping the time tracker" do
+      puts "Current user: #{User.current.login} - permission granted: #{Role.find(2).permissions.include? :tt_log_time}"
+      visit '/tt_overview'
+      click_button('start')
+      click_button('stop')
+      page.text.must_include 'Stopped the time tracker'
+      time_logs = TimeLog.where(user_id: User.current.id)
+      assert_equal(time_logs.size, 1)
+    end
   end
+
+
+  context 'User without permissions' do
+    setup do
+      
+      Role.find(2).remove_permission! :tt_log_time
+      #puts "Current user: #{User.current.login} - permission removed: #{!Role.find(2).permissions.include? :tt_log_time}"
+    end
+
+    should 'not have permission to start a time tracker' do
+      puts "Current user: #{User.current.login} - permission removed: #{!Role.find(2).permissions.include? :tt_log_time}"
+      visit '/tt_overview'
+      page.text.must_include 'You are not authorized to access this page.'
+    end
+  end
+
+
 end

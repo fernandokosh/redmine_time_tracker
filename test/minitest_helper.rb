@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
 ActiveSupport::TestCase.fixture_path=File.dirname(__FILE__) + '/fixtures/'
 
 # make output prettier
-Turn.config.format = :progress
+Turn.config.format = :outline
 
 # setup capybara for integration tests
 require 'capybara/rails'
@@ -13,8 +13,6 @@ module RedmineTimeTracker
     include Rails.application.routes.url_helpers
     include Capybara::DSL
     self.use_transactional_fixtures = false
-
-    fixtures :users
 
     def log_user(login, password)
       visit '/my/page'
