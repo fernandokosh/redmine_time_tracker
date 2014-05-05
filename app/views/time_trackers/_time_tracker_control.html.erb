@@ -5,7 +5,7 @@
                        :html => {:class => "time-tracker-form"} do |f| %>
               <h3><%= f.label l(:time_tracker_label_current_task) %></h3>
               <%= f.text_field :comments, :size => 30, :maxlength => 255 %>
-              <%= f.submit l(:start_time_tracker) %>
+              <%= f.submit l(:start_time_tracker), id: 'start-time-tracker-button' %>
           <% end %>
       <% else %>
           <%= form_for @time_tracker, :url => {:controller => :time_trackers, :action => :stop},
@@ -68,7 +68,7 @@
                 </div>
                 <div class="task_form_sub_fields">
                   <div class="task_form_input">
-                    <%= f.submit l(:stop_time_tracker) %>
+                    <%= f.submit l(:stop_time_tracker), id: 'stop-time-tracker-button' %>
                   </div>
                 </div>
                 <div style="clear:both"></div>
