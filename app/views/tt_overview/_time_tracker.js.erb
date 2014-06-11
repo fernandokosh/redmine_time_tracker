@@ -133,9 +133,13 @@ function updateBookingActivity(api_key, name) {
         type: 'GET',
         success: function (activites) {
             var activity_field = $("#" + name + "_activity_id_select");
+            var selected_activity = activity_field.find('option:selected').text();
             activity_field.find('option[value!=""]').remove();
             $.each(activites, function (i, activity) {
                 activity_field.append('<option value="' + activity.id + '">' + activity.name + '</option>')
+                if(selected_activity == activity.name){
+                    activity_field.val(activity.id)
+                }
             });
             validate_list_inputs(name);
         }
