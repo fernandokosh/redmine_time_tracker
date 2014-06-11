@@ -9,12 +9,13 @@ function updateTTControllerForm(form) {
             $('#time-tracker-control').replaceWith($(html).filter('#time-tracker-control'))
             $('#time_tracker_date').datepicker(locDatepickerOptions);
             validate_time_tracker_form();
+            start_time_tracker_timer();
             enableIssueAutoCompletion();
         }
     });
 }
 
-function enableIssueAutoCompletion(){
+function enableIssueAutoCompletion() {
     $('#time_tracker_issue_text').autocomplete({
         source: 'tt_completer/get_issue.json?key=<%= key %>',
         minLength: 0,
