@@ -1,13 +1,15 @@
-$(document).ready(function () {
+var time_tracker_timer_interval = null;
+function start_time_tracker_timer() {
     var start = new Date();
-    function calcTime(){
+
+    function calcTime() {
         var output = "";
-        var offset = parseInt($('#time_tracker_time_offset').val(),10);
+        var offset = parseInt($('#time_tracker_time_offset').val(), 10);
         var now = new Date();
         var diff = Math.floor((now - start) / 1000) + offset;
-        if(diff < 0){
+        if (diff < 0) {
             output = "<%=l(:waiting_for_slot) %>";
-        }else{
+        } else {
             var h = Math.floor(diff / 3600);
             var m = Math.floor((diff - h * 3600) / 60);
             var s = Math.floor(diff - (h * 3600 + m * 60));
@@ -20,8 +22,16 @@ $(document).ready(function () {
         }
         $('#tt_running_time').html(output);
     }
+
     calcTime();
-    window.setInterval(function () {
+    if (time_tracker_timer_interval != null) {
+        window.clearInterval(time_tracker_timer_interval);
+    }
+    time_tracker_timer_interval = window.setInterval(function () {
         calcTime()
     }, 1000);
+}
+
+$(document).ready(function () {
+    start_time_tracker_timer()
 });
