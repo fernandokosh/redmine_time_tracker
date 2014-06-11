@@ -5,4 +5,5 @@ group :test do
   gem "minitest"
   gem 'timecop'
   gem 'turn'
+  gem 'poltergeist'
 end

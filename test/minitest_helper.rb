@@ -7,6 +7,7 @@ Turn.config.format = :progress
 
 # setup capybara for integration tests
 require 'capybara/rails'
+require 'capybara/poltergeist'
 
 module RedmineTimeTracker 
   class IntegrationTest < ActionDispatch::IntegrationTest
@@ -14,6 +15,7 @@ module RedmineTimeTracker
     include Capybara::DSL
     self.use_transactional_fixtures = false
     Capybara.default_wait_time = 15
+    Capybara.javascript_driver = :poltergeist
 
     def log_user(login, password)
       visit '/my/page'
