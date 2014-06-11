@@ -7,3 +7,5 @@ group :test do
   gem 'turn'
   gem 'poltergeist'
 end
+
+gem 'debugger', {group: [:test, :development]}.merge(ENV['RM_INFO'] ? {require: false} : {})
