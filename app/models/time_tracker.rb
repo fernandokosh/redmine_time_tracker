@@ -120,7 +120,7 @@ class TimeTracker < ActiveRecord::Base
     end
     if self.valid?
       current_time = Time.now.localtime.change(:sec => 0)
-      last_timelog = TimeLog.where("stopped_at > ?", current_time).first
+      last_timelog = TimeLog.from_current_user.where("stopped_at > ?", current_time).first
       self.started_on =  last_timelog.present? ? last_timelog.stopped_at : current_time
       self.save
     end

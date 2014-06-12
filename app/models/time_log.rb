@@ -28,6 +28,10 @@ class TimeLog < ActiveRecord::Base
     end
   }
 
+  scope :from_current_user, lambda {
+    where arel_table[:user_id].eq User.current.id
+  }
+
   # we have to check user-permissions. i some cass we have to forbid some or all of his actions
   before_update do
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we
