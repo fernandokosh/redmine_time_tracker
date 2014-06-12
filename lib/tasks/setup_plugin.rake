@@ -27,7 +27,7 @@ namespace :redmine do
         end
 
         puts "You can run $ guard to watch coffee and scss/sass files. They will automatically copied to the redmines public assets folder when something has changed."
-        puts "\n$ guard\n"
+        puts "\n$ bundle exec guard\n"
       end
 
       namespace :convert do
