@@ -14,8 +14,11 @@ require 'tt_context_menus_controller_patch'
 
 # workaround helping rails to find the helper-methods
 require File.join(File.dirname(__FILE__), 'app/helpers/application_helper.rb')
-
 # TODO rails 3.2 has assets-directories as sub-dirs in app, lib and vendor => maybe we should organize our assets that way!
+
+# update assets 
+load File.join(File.dirname(__FILE__), 'lib/tasks/setup_plugin.rake')
+Rake::Task['redmine:plugins:redmine_time_tracker:install'].invoke
 
 require_dependency 'tt_time_tracker_hooks'
 
@@ -25,7 +28,7 @@ Redmine::Plugin.register :redmine_time_tracker do
   author 'HicknHack Software GmbH'
   author_url 'http://www.hicknhack-software.com'
   description 'Keep track of all the time. Associate it at your will. Create and print custom reports.'
-  version '0.9.10'
+  version  File.read(Rails.root.join('plugins/redmine_time_tracker/.plugin_version'))#'0.9.10'
 
   requires_redmine :version_or_higher => '2.4.0'
 
