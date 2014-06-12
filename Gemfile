@@ -12,5 +12,6 @@ gem 'debugger', {group: [:test, :development]}.merge(ENV['RM_INFO'] ? {require: 
 group :development, :test do 
   gem 'coffee-script'
   gem 'sass'
+  gem 'listen', '~> 2.7.5' if RUBY_PLATFORM =~ /(win32|w32)/
   gem 'guard-rake'
 end

@@ -63,7 +63,7 @@ namespace :redmine do
         end
 
         task :sass do
-          puts "Compiling coffeescript files:"
+          puts "Compiling scss files:"
           puts '---'
           
           source_dir = Rails.root.join("plugins/#{@plugin}/app/assets/stylesheets")
