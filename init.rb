@@ -93,7 +93,9 @@ Redmine::Plugin.register :redmine_time_tracker do
                                          :tt_overview => [:index],
                                          :tt_reporting => [:index, :print_report]},
                      :require => :loggedin
-
+      # view foreign time trackers
+      map.permission :view_others_time_trackers, {:tt_info => [:index]},
+                     :require => :loggedin
       # only admin can
       # :time_logs_queries => [:edit, :show, :update, :create, :destroy],
       # :time_bookings_queries => [:edit, :show, :update, :create, :destroy],

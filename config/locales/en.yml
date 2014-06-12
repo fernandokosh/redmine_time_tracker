@@ -1,6 +1,7 @@
 # English strings go here for Rails i18n
 en:
   error_booking_negative_time: "Not allowed to book time less than or equal to zero!"
+  error_booking_overlapping: "There are already existing bookings from this time tracking which intersect with the choosen time period!"
   error_booking_to_much_time: "Not allowed to book more time than available!"
   error_add_booking_failed: "Booking could not be added!"
   field_tt_booking_issue: "Issue"

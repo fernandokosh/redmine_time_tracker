@@ -1,6 +1,7 @@
 # German strings go here for Rails i18n
 de:
   error_booking_negative_time: "Die Zeitangabe muss größer null sein!"
+  error_booking_overlapping: "Es existieren bereits Zeitbuchungen der gewählten Zeiterfassung, die sich mit dem gewählten Zeitraum überkreuzen!"
   error_booking_to_much_time: "Es ist nicht möglich mehr Zeit als verfügbar zu buchen!"
   error_add_booking_failed: "Die Zeitbuchung ist fehlgeschlagen!"
   field_tt_booking_issue: "Ticket"
