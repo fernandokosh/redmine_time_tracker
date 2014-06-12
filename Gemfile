@@ -8,3 +8,9 @@ group :test do
 end
 
 gem 'debugger', {group: [:test, :development]}.merge(ENV['RM_INFO'] ? {require: false} : {})
+
+group :development, :test do 
+  gem 'coffee-script'
+  gem 'sass'
+  gem 'guard-rake'
+end
