@@ -26,6 +26,14 @@ class TimeBooking < ActiveRecord::Base
      :conditions => cond}
   }
 
+  scope :from_time_log, lambda { |time_log_id|
+    where(time_log_id: time_log_id)
+  }
+
+  scope :overlaps_with, lambda { |start_time, stop_time|
+    where(arel_table[:started_on].lteq(stop_time), arel_table[:stopped_at].gteq(start_time))
+  }
+
   # check user-permissions. in some cass we need to prevent some or all of his actions
   before_update do
     # if the object changed and the user has not the permission to change every TimeLog (includes active trackers), we

@@ -15,7 +15,8 @@ class TimeLogsController < ApplicationController
     unless params[:time_log_add_booking].nil?
       tl_add_booking = params[:time_log_add_booking]
       tl_add_booking.keys.each do |tl_key|
-        last_added_booking_ids.push(add_booking tl_add_booking[tl_key])
+        last_added_booking_id = add_booking tl_add_booking[tl_key]
+        last_added_booking_ids.push last_added_booking_id if last_added_booking_id.present?
       end
     end
 
@@ -92,6 +93,7 @@ class TimeLogsController < ApplicationController
     last_added_booking_id
   rescue StandardError => e
     flash[:error] = e.message
+    nil
   end
 
   def update(tl)

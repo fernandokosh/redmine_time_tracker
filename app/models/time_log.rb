@@ -102,6 +102,7 @@ class TimeLog < ActiveRecord::Base
 
     raise StandardError, l(:error_booking_negative_time) if args[:hours] <= 0
     raise StandardError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
+    raise StandardError, l(:error_booking_overlapping) if TimeBooking.from_time_log(self.id).overlaps_with(args[:started_on], args[:stopped_at]).exists?
 
     args[:time_log_id] = self.id
     # userid of booking will be set to the user who created timeLog, even if the admin will create the booking
