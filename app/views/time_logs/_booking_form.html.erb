@@ -1,7 +1,7 @@
 <% unless time_log.nil? %>
     <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", time_log.id, false, :id => nil) %></td>
     <td class="tt_log_date"><%= time_log.tt_log_date %></td>
-    <td colspan=4 data-entry-id="<%=time_log.id%>">
+    <td colspan=4 data-validator="AddBookingValidator" data-name="time_log_add_booking_<%=time_log.id%>">
       <% prefix = "time_log_add_booking[]" %>
       <%= fields_for prefix, time_log do |f| %>
           <%= f.hidden_field(:id) %>
