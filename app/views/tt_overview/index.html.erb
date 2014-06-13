@@ -1,5 +1,6 @@
 <% content_for :header_tags do %>
     <%= javascript_include_tag 'time_tracker2', :plugin => 'redmine_time_tracker' %>
+    <%= javascript_include_tag 'validations', :plugin => 'redmine_time_tracker' %>
 <% end %>
 <%= javascript_tag render :partial => 'tt_overview/time_tracker', :formats => [:js] %>
 

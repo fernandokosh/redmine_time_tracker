@@ -12,6 +12,6 @@ $(function () {
 });
 
 $(document).ready(function() {
-    redmine_time_tracker.TimeTracker.validate_list_inputs('time_booking_edit_<%= time_booking.id.to_s %>');
+    (new redmine_time_tracker.EditBookingValidator('time_booking_edit_<%= time_booking.id.to_s %>')).validate();
 });
 <% end %>

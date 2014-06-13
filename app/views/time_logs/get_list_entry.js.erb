@@ -2,5 +2,5 @@ $('#<%= "entry-" + @entry.id.to_s %>').html('<%= escape_javascript(render(:parti
 $('#<%= "entry-"+ @entry.id.to_s %>').addClass('hascontextmenu');
 contextMenuHide();
 contextMenuUnselectAll();
-window.redmine_time_tracker.TimeTracker.hideMultiFormButtons('tl_edit_form_update_button');
-window.redmine_time_tracker.TimeTracker.hideMultiFormButtons('tl_book_form_button');
+redmine_time_tracker.TimeTracker.hideMultiFormButtons('tl_edit_form_update_button');
+redmine_time_tracker.TimeTracker.hideMultiFormButtons('tl_book_form_button');
