@@ -39,10 +39,7 @@ class TimeLogsController < ApplicationController
           if item.time_bookings.count == 0
             item.destroy
           else
-            booked_time = item.hours_spent - item.bookable_hours
-            item.stopped_at = item.started_on + booked_time.hours
-            item.bookable = false
-            item.save!
+            raise StandardError, l(:tt_error_not_allowed_to_delete_logs)
           end
         else
           flash[:error] = l(:tt_error_not_allowed_to_delete_logs)
@@ -56,6 +53,15 @@ class TimeLogsController < ApplicationController
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to :back
+  end
+
+  def trim
+    if item.time_bookings.count == 1
+      booked_time = item.hours_spent - item.bookable_hours
+      item.stopped_at = item.started_on + booked_time.hours
+      item.bookable = false
+      item.save!
+    end
   end
 
   def show_booking

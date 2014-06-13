@@ -63,6 +63,7 @@ de:
   tt_error_not_allowed_to_create_time_log_on_project: "Sie haben keine Berechtigung Zeit in diesem Projekt erfassen!"
   tt_error_not_allowed_to_delete_bookings: "Sie haben keine Berechtigung Zeitbuchungen zu löschen!"
   tt_error_not_allowed_to_delete_logs: "Sie haben keine Berechtigung Zeiterfassungen zu löschen!"
+  tt_error_not_possible_to_delete_logs: "Die Zeiterfassung kann nicht gelöscht werden, solange Zeitbuchungen hierfür existieren!"
   tt_error_not_allowed_to_start_tracker_on_issue: "Sie haben keine Berechtigung Zeit für dieses Ticket zu erfassen oder das Ticket ist geschlossen!"
   tt_error_could_not_set_comments: "Kommentare konnten nicht gespeichert werden!"
   tt_error_could_not_set_issue: "Die Ticketeinstellung konnte nicht gespeichert werden!"
