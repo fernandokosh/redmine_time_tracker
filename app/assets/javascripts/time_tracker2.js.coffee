@@ -12,14 +12,6 @@ class @redmine_time_tracker.TimeTracker
     src = $("link[href*=\"time_tracker.css\"]")[0].href
     src.substr 0, src.indexOf("plugin_assets")
 
-  @validate_time_tracker_form: ->
-    proj_field = $ '#time_tracker_project_id'
-    activity_select = $ '#time_tracker_activity_id'
-    proj_id = proj_field.val()
-    activity_id = activity_select.val()
-    activity_select.toggleClass 'invalid', proj_id isnt "" and activity_id is ""
-    $(".time-tracker-form :submit").attr "disabled", $(".time-tracker-form :input").hasClass("invalid")
-
   @updateBookingHours: (name) ->
     start = timeString2min($("#" + name + "_start_time").val())
     stop = timeString2min($("#" + name + "_stop_time").val())
@@ -93,4 +85,4 @@ $ ->
   $(document).on "ajax:success", ".tt_stop, .tt_start, .tt_dialog_stop", (xhr, html, status) ->
     $("#content .flash").remove()
     $("#content").prepend html
-  redmine_time_tracker.TimeTracker.validate_time_tracker_form()
+  (new redmine_time_tracker.TimeTrackerFormValidator).validate()

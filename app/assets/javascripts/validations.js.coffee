@@ -39,6 +39,7 @@ class @redmine_time_tracker.ListInputValidator extends @redmine_time_tracker.For
     @_validates_presence_of @start_field
     @_validates_presence_of @stop_field
     @_validates_presence_of @spent_field
+    super
 
 class @redmine_time_tracker.EditTimeLogValidator extends @redmine_time_tracker.ListInputValidator
   constructor: (name) ->
@@ -89,4 +90,16 @@ class @redmine_time_tracker.EditBookingValidator extends @redmine_time_tracker.A
   _do_validation: () ->
     @_validates_presence_of @date_field
     @_validates @date_field, not ($.inArray(@date_field.val(), @valid_dates) is -1)
+    super
+
+class @redmine_time_tracker.TimeTrackerFormValidator extends @redmine_time_tracker.FormValidator
+  constructor: ->
+    @proj_field = $('#time_tracker_project_id')
+    @activity_select = $('#time_tracker_activity_id')
+    super $('.time-tracker-form')
+
+  _do_validation: () ->
+    proj_id = @proj_field.val()
+    activity_id = @activity_select.val()
+    @_validates @activity_select, proj_id is "" or activity_id isnt ""
     super

@@ -8,7 +8,7 @@ function updateTTControllerForm(form) {
             $('#content').prepend($(html).filter('.flash'));
             $('#time-tracker-control').replaceWith($(html).filter('#time-tracker-control'))
             $('#time_tracker_date').datepicker(locDatepickerOptions);
-            redmine_time_tracker.TimeTracker.validate_time_tracker_form();
+            (new redmine_time_tracker.TimeTrackerFormValidator).validate()
             start_time_tracker_timer();
             enableIssueAutoCompletion();
         }
