@@ -34,3 +34,7 @@ function min2timeString(min) {
     var m = min % 60;
     return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
 }
+
+function current_user_api_key(){
+    return '<%=User.current.api_key%>'
+}

@@ -12,7 +12,7 @@ class @redmine_time_tracker.FieldUpdater
     spent_time = timeString2min($("#" + name + "_spent_time").val())
     $("#" + name + "_stop_time").val min2parsedTimeString((start + spent_time) % 1440)
 
-  @updateBookingProject: (api_key, name) ->
+  @updateBookingProject: (name) ->
     issue_id_field = $("#" + name + "_issue_id")
     project_id_field = $("#" + name + "_project_id")
     project_id_select = $("#" + name + "_project_id_select")
@@ -24,7 +24,7 @@ class @redmine_time_tracker.FieldUpdater
       issue_id_field.removeClass "invalid"
     else
       $.ajax
-        url: redmine_time_tracker.TimeTracker.base_url() + "issues/" + issue_id + ".json?key=" + api_key
+        url: redmine_time_tracker.TimeTracker.base_url() + "issues/" + issue_id + ".json?key=" + current_user_api_key()
         type: "GET"
         success: (transport) =>
           issue_id_field.removeClass "invalid"
@@ -34,16 +34,18 @@ class @redmine_time_tracker.FieldUpdater
           else
             project_id_select.attr "disabled", true
             project_id_field.val issue.project.id
-            $("#" + project_id_select.attr("id")).val issue.project.id
-          @updateBookingActivity api_key, name
+            $("#" + project_id_select.attr("id"))
+            .val(issue.project.id)
+            .trigger('change')
+          @updateBookingActivity name
 
         error: ->
           project_id_select.attr "disabled", false
           issue_id_field.addClass "invalid"
 
-  @updateBookingActivity: (api_key, name) ->
+  @updateBookingActivity: (name) ->
     $.ajax
-      url: redmine_time_tracker.TimeTracker.base_url() + "tt_completer/get_activity.json?key=" + api_key + "&project_id=" + $("#" + name + "_project_id").val()
+      url: redmine_time_tracker.TimeTracker.base_url() + "tt_completer/get_activity.json?key=" + current_user_api_key() + "&project_id=" + $("#" + name + "_project_id").val()
       type: "GET"
       success: (activites) =>
         activity_field = $("#" + name + "_activity_id_select")
