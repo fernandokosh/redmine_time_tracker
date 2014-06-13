@@ -1,14 +1,16 @@
 language: ruby
 rvm:
-  - 2.1.1
-  - 2.0.0
   - 1.9.3
+  - 2.0.0
+  - 2.1.2
 branches:
   only:
     - master
     - travis
 env:
+  - REDMINE_VERSION=2.4.0 VERBOSE=yes
   - REDMINE_VERSION=2.4.5 VERBOSE=yes
+  - REDMINE_VERSION=2.5.0 VERBOSE=yes
   - REDMINE_VERSION=2.5.1 VERBOSE=yes
 script:
   - export PLUGIN=redmine_time_tracker
