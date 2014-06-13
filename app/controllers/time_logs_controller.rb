@@ -39,7 +39,7 @@ class TimeLogsController < ApplicationController
           if item.time_bookings.count == 0
             item.destroy
           else
-            raise StandardError, l(:tt_error_not_allowed_to_delete_logs)
+            raise StandardError, l(:tt_error_not_possible_to_delete_logs)
           end
         else
           flash[:error] = l(:tt_error_not_allowed_to_delete_logs)
