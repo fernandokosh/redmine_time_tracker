@@ -6,7 +6,7 @@ $(function () {
         minLength:0,
         select:function (event, ui) {
             $('#time_booking_edit_<%= time_booking.id.to_s %>_issue_id').val(ui.item.value);
-            redmine_time_tracker.TimeTracker.updateBookingProject('<%= key %>', 'time_booking_edit_<%= time_booking.id.to_s %>');
+            redmine_time_tracker.FieldUpdater.updateBookingProject('<%= key %>', 'time_booking_edit_<%= time_booking.id.to_s %>');
         }
     });
 });

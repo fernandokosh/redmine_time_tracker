@@ -27,6 +27,7 @@ function enableIssueAutoCompletion() {
 }
 
 $(document).ready(function () {
+    (new redmine_time_tracker.TimeTrackerFormValidator).validate();
     enableIssueAutoCompletion();
 });
 
