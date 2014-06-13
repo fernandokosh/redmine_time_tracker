@@ -5,6 +5,8 @@ namespace :redmine do
   namespace :plugins do
     namespace :redmine_time_tracker do
       @plugin = 'redmine_time_tracker'
+      @source_dir = Rails.root.join("plugins/#{@plugin}/app/assets")
+      @dest_dir = Rails.root.join("public/plugin_assets/#{@plugin}")
 
       task :install do
         Rake::Task["redmine:plugins:redmine_time_tracker:convert:coffeescript"].invoke
@@ -32,68 +34,69 @@ namespace :redmine do
 
       namespace :convert do
 
-        task :coffeescript do
+        task :coffeescript, [:paths] do |t, args|
           puts "Compiling coffeescript files:"
           puts '---'
-
-          source_dir = Rails.root.join("plugins/#{@plugin}/app/assets/javascripts")
-          dest_dir = Rails.root.join("public/plugin_assets/#{@plugin}/javascripts")
-
-          directories = Dir.glob(source_dir.join('**/*')).select {|fn| File.directory? fn }
-          directories << source_dir
-          directories.each do |cs_dir|
-            Dir.glob("#{cs_dir}/*.coffee").each do |cs_file|
-              cs_filename = File.basename cs_file
-              js_filename = cs_filename.sub('.coffee', '')
-
-              rel_js_dir = cs_dir.sub(source_dir.to_path, '')        
-              js_dir = [dest_dir, rel_js_dir].join('')
-
-              js_content = CoffeeScript.compile File.read(cs_file)
-              FileUtils.mkdir_p(js_dir)
-              js_file = [js_dir, js_filename].join('/')
-              File.open(js_file, 'w') { |file| file.write(js_content) }
-
-              puts "FROM: #{cs_file}"
-              puts "TO: #{js_file}"
-              puts '---'
+          source_dir = @source_dir.join('javascripts')
+          dest_dir = @dest_dir.join('javascripts')
+          if args.paths.nil?
+            directories = Dir.glob(source_dir.join('**/*')).select {|fn| File.directory? fn }
+            directories << source_dir
+            directories.each do |cs_dir|
+              Dir.glob("#{cs_dir}/*.coffee").each do |cs_file|
+                convert_file(cs_file, source_dir, dest_dir, 'coffee')
+              end
             end
-            
+          else
+            args.paths.each do |changed_file|
+              convert_file(Rails.root.join(changed_file), source_dir, dest_dir, 'coffee')
+            end
           end
           
         end
 
-        task :sass do
-          puts "Compiling scss files:"
+        task :sass, [:paths] do |t, args|
+          puts "Compiling sass files:"
           puts '---'
-          
-          source_dir = Rails.root.join("plugins/#{@plugin}/app/assets/stylesheets")
-          dest_dir = Rails.root.join("public/plugin_assets/#{@plugin}/stylesheets")
-
-          directories = Dir.glob(source_dir.join('**/*')).select {|fn| File.directory? fn }
-          directories << source_dir
-          directories.each do |sass_dir|
-            Dir.glob("#{sass_dir}/*.scss").each do |sass_file|
-              sass_filename = File.basename sass_file
-              css_filename = sass_filename.sub('.scss', '')
-
-              rel_css_dir = sass_dir.sub(source_dir.to_path, '')        
-              css_dir = [dest_dir, rel_css_dir].join('')
-
-              
-
-              css_content = Sass.compile File.read(sass_file)
-              FileUtils.mkdir_p(css_dir)
-              css_file = [css_dir, css_filename].join('/')
-              File.open(css_file, 'w') { |file| file.write(css_content) }
-
-              puts "FROM: #{sass_file}"
-              puts "TO: #{css_file}"
-              puts '---'
+          source_dir = @source_dir.join('stylesheets')
+          dest_dir = @dest_dir.join('stylesheets')
+          if args.paths.nil?
+            
+            directories = Dir.glob(@source_dir.join('**/*')).select {|fn| File.directory? fn }
+            directories << @source_dir
+            directories.each do |sass_dir|
+              Dir.glob("#{sass_dir}/*.scss").each do |sass_file|
+                convert_file(sass_file, source_dir, dest_dir, 'scss')
+              end
+            end
+          else
+            args.paths.each do |changed_file|
+              convert_file(Rails.root.join(changed_file), source_dir, dest_dir, 'scss')
             end
           end
         end
       end
     end
+  end
+
+  def convert_file(source_file, source_dir, dest_dir, ext)
+    source_filename = File.basename source_file
+    dest_filename = source_filename.sub(".#{ext}", '')
+
+    rel_dest_dir = File.dirname(source_file).sub("#{source_dir}", '')     
+    assets_dest_dir = [dest_dir, rel_dest_dir].join('')
+
+    if ext.eql? 'coffee'
+      file_content = CoffeeScript.compile File.read(source_file)
+    else
+      file_content = Sass.compile File.read(source_file)
+    end
+
+    FileUtils.mkdir_p(assets_dest_dir)
+    dest_file = [assets_dest_dir, dest_filename].join('/')
+    File.open(dest_file, 'w') { |file| file.write(file_content) }
+
+    puts "[#{ext.upcase}]> FROM: #{source_file}"
+    puts "[#{ext.upcase}]> TO: #{dest_file}"
   end
 end
