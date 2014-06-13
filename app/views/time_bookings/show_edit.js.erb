@@ -1,7 +1,11 @@
-<% @time_bookings.each do |item| %>
-
-$('#<%= "booking-entry-" + item.id.to_s %>').html('<%= escape_javascript(render(:partial => 'time_bookings/edit_form', :locals => {:time_booking => item})) %>');
-
+<% @time_bookings.each do |time_booking| %>
+var $entry = $('#<%="booking-entry-#{time_booking.id}"%>')
+        .html('<%=j render(:partial => 'time_bookings/edit_form', :locals => {:time_booking => time_booking})%>')
+        .removeClass('hascontextmenu');
+var validator = new redmine_time_tracker.EditBookingValidator('time_booking_edit_<%=time_booking.id%>');
+$entry.on('change', 'input, select', function () {
+    validator.validate()
+});
 <% end %>
 contextMenuHide();
 contextMenuUnselectAll();

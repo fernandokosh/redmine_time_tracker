@@ -1,7 +1,11 @@
-<% @time_logs.each do |item| %>
-
-$('#<%= "entry-" + item.id.to_s %>').html('<%= escape_javascript(render(:partial => 'time_logs/booking_form', :locals => {:time_log => item})) %>');
-
+<% @time_logs.each do |time_log| %>
+var $entry = $('#<%="entry-#{time_log.id}"%>')
+        .html('<%=j render(:partial => 'time_logs/booking_form', :locals => {:time_log => time_log})%>')
+        .removeClass('hascontextmenu');
+var validator = new redmine_time_tracker.AddBookingValidator('time_log_add_booking_<%=time_log.id%>');
+$entry.on('change', 'input, select', function () {
+    validator.validate()
+});
 <% end %>
 contextMenuHide();
 contextMenuUnselectAll();

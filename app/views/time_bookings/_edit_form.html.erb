@@ -1,6 +1,6 @@
 <% unless time_booking.nil? %>
     <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", time_booking.id, false, :id => nil) %></td>
-    <td colspan=7 data-validator="EditBookingValidator" data-name="time_booking_edit_<%=time_booking.id%>">
+    <td colspan=7>
       <% prefix = "time_booking_edit[]" %>
       <%= fields_for prefix, time_booking do |f| %>
           <%= f.hidden_field(:id) %>
