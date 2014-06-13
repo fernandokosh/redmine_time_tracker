@@ -1,7 +1,7 @@
 <% unless time_log.nil? %>
     <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", time_log.id, false, :id => nil) %></td>
     <td class="tt_log_date"><%= time_log.tt_log_date %></td>
-    <td colspan=4>
+    <td colspan=4 data-entry-id="<%=time_log.id%>">
       <% prefix = "time_log_add_booking[]" %>
       <%= fields_for prefix, time_log do |f| %>
           <%= f.hidden_field(:id) %>
@@ -15,7 +15,7 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_project) %></div>
             <div class="task_form_input">
-              <%= select_tag "time_log_add_booking_#{time_log.id}_project_id_select", proj_list, :onchange => "$('#time_log_add_booking_#{time_log.id}_project_id').val(this.value); (new redmine_time_tracker.AddBookingValidator('time_log_add_booking_#{time_log.id}')).validate(); redmine_time_tracker.FieldUpdater.updateBookingActivity('#{User.current.api_key}', 'time_log_add_booking_#{time_log.id}')" %>
+              <%= select_tag "time_log_add_booking_#{time_log.id}_project_id_select", proj_list, :onchange => "$('#time_log_add_booking_#{time_log.id}_project_id').val(this.value); redmine_time_tracker.FieldUpdater.updateBookingActivity('#{User.current.api_key}', 'time_log_add_booking_#{time_log.id}')" %>
             </div>
             <%= f.hidden_field :project_id %>
           </div>
@@ -24,7 +24,7 @@
             <div class="input_hint"><%= l(:time_tracker_label_activity) %></div>
             <div class="task_form_input">
               <% activities = get_activities time_log.project_id %>
-              <%= select_tag "time_log_add_booking_#{time_log.id}_activity_id_select",options_from_collection_for_select(activities, :id, :name), :onchange => "(new redmine_time_tracker.AddBookingValidator('time_log_add_booking_#{time_log.id}')).validate();", :name=> "time_log_add_booking[#{time_log.id}][activity_id]", :include_blank => true%>
+              <%= select_tag "time_log_add_booking_#{time_log.id}_activity_id_select",options_from_collection_for_select(activities, :id, :name), :name=> "time_log_add_booking[#{time_log.id}][activity_id]", :include_blank => true%>
             </div>
           </div>
 
@@ -42,7 +42,7 @@
             <div class="input_hint"><%= l(:time_tracker_label_start_time) + " (min: #{time_log.get_formatted_start_time})" %></div>
             <div class="task_form_input">
               <%= hidden_field_tag "time_log_add_booking_#{time_log.id}_min_time", time_log.get_formatted_start_time %>
-              <%= f.text_field :start_time, :value => time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "redmine_time_tracker.FieldUpdater.updateBookingHours('time_log_add_booking_#{time_log.id}');(new redmine_time_tracker.AddBookingValidator('time_log_add_booking_#{time_log.id}')).validate()" %>
+              <%= f.text_field :start_time, :value => time_log.get_formatted_start_time, :size => "10", :placeholder => "start", :onchange => "redmine_time_tracker.FieldUpdater.updateBookingHours('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
 
@@ -50,7 +50,7 @@
             <div class="input_hint"><%= l(:time_tracker_label_stop_time) + " (max: #{time_log.get_formatted_stop_time})" %></div>
             <div class="task_form_input">
               <%= hidden_field_tag "time_log_add_booking_#{time_log.id}_max_time", time_log.get_formatted_stop_time %>
-              <%= f.text_field :stop_time, :value => time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "redmine_time_tracker.FieldUpdater.updateBookingHours('time_log_add_booking_#{time_log.id}');(new redmine_time_tracker.AddBookingValidator('time_log_add_booking_#{time_log.id}')).validate()" %>
+              <%= f.text_field :stop_time, :value => time_log.get_formatted_stop_time, :size => "10", :placeholder => "stop", :onchange => "redmine_time_tracker.FieldUpdater.updateBookingHours('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
 
@@ -58,7 +58,7 @@
             <div class="input_hint"><%= l(:time_tracker_label_time_spent) + " (max: #{time_log.get_formatted_bookable_hours})" %></div>
             <div class="task_form_input">
               <%= hidden_field_tag "time_log_add_booking_#{time_log.id}_max_spent_time", time_log.get_formatted_bookable_hours %>
-              <%= f.text_field :spent_time, :value => time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "redmine_time_tracker.FieldUpdater.updateBookingStop('time_log_add_booking_#{time_log.id}');(new redmine_time_tracker.AddBookingValidator('time_log_add_booking_#{time_log.id}')).validate();" %>
+              <%= f.text_field :spent_time, :value => time_log.get_formatted_bookable_hours, :size => "12", :placeholder => "spent time", :onchange => "redmine_time_tracker.FieldUpdater.updateBookingStop('time_log_add_booking_#{time_log.id}')" %>
             </div>
           </div>
 

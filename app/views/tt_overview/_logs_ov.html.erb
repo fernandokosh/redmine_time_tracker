@@ -4,6 +4,10 @@
         <h3><%= l(:time_tracker_label_your_time_logs) %></h3>
         <p class="nodata"><%= l(:label_no_data) %></p>
     <% else %>
+        <% content_for :header_tags do %>
+            <%= javascript_include_tag 'add_booking_form', :plugin => 'redmine_time_tracker' %>
+            <%= javascript_include_tag 'edit_log_form', :plugin => 'redmine_time_tracker' %>
+        <% end %>
         <%= render :partial => 'time_logs/list_unbooked_logs', :locals => {:logs => @logs, :query => @query_logs} %>
         <p class="pagination"><%= pagination_links_full @log_pages, @log_count, :per_page_links => false %></p>
     <% end %>
