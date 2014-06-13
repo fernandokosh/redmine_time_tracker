@@ -1,6 +1,6 @@
 // ================== time_tracker_controller helpers ============================
 function updateTTControllerForm(form) {
-    $.ajax({url: base_url() + '/time_trackers/update?key=<%= key %>&' + $("#" + form.id).serialize(),
+    $.ajax({url: redmine_time_tracker.TimeTracker.base_url() + '/time_trackers/update?key=<%= key %>&' + $("#" + form.id).serialize(),
         type: 'PUT',
         dataType: 'html',
         success: function (html) {
@@ -8,7 +8,7 @@ function updateTTControllerForm(form) {
             $('#content').prepend($(html).filter('.flash'));
             $('#time-tracker-control').replaceWith($(html).filter('#time-tracker-control'))
             $('#time_tracker_date').datepicker(locDatepickerOptions);
-            validate_time_tracker_form();
+            redmine_time_tracker.TimeTracker.validate_time_tracker_form();
             start_time_tracker_timer();
             enableIssueAutoCompletion();
         }

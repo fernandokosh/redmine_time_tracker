@@ -5,4 +5,4 @@ $('#<%= "booking-entry-" + item.id.to_s %>').html('<%= escape_javascript(render(
 <% end %>
 contextMenuHide();
 contextMenuUnselectAll();
-hideMultiFormButtons('tb_edit_form_update_button');
+redmine_time_tracker.TimeTracker.hideMultiFormButtons('tb_edit_form_update_button');

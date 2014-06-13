@@ -6,12 +6,12 @@ $(function () {
         minLength:0,
         select:function (event, ui) {
             $('#time_log_add_booking_<%= time_log.id.to_s %>_issue_id').val(ui.item.value);
-            updateBookingProject('<%= key %>', 'time_log_add_booking_<%= time_log.id.to_s %>');
+            redmine_time_tracker.TimeTracker.updateBookingProject('<%= key %>', 'time_log_add_booking_<%= time_log.id.to_s %>');
         }
     });
 });
 
 $(document).ready(function() {
-    validate_list_inputs('time_log_add_booking_<%= time_log.id.to_s %>');
+    redmine_time_tracker.TimeTracker.validate_list_inputs('time_log_add_booking_<%= time_log.id.to_s %>');
 });
 <% end %>
