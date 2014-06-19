@@ -1,8 +1,17 @@
-<% @time_logs.each do |item| %>
-
-$('#<%= "entry-" + item.id.to_s %>').html('<%= escape_javascript(render(:partial => 'time_logs/booking_form', :locals => {:time_log => item})) %>');
-
+<% @time_logs.each do |time_log| %>
+var name = 'time_log_add_booking_<%=time_log.id%>';
+var $entry = $('#<%="entry-#{time_log.id}"%>')
+        .html('<%=j render(:partial => 'time_logs/booking_form', :locals => {:time_log => time_log})%>')
+        .removeClass('hascontextmenu');
+var validator = new redmine_time_tracker.AddBookingValidator(name);
+$entry.on('change', 'input, select', function () {
+    validator.validate();
+    var updater = $(this).data('updater');
+    if (updater != null && updater != '') {
+        redmine_time_tracker.FieldUpdater[updater](name)
+    }
+});
 <% end %>
 contextMenuHide();
 contextMenuUnselectAll();
-hideMultiFormButtons('tl_book_form_button');
+redmine_time_tracker.TimeTracker.hideMultiFormButtons('tl_book_form_button');
