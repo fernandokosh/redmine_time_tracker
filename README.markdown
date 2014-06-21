@@ -87,7 +87,8 @@ The plugin offers a list of settings at the Redmine roles and permission setting
 Reports are the method of generating invoices for customers. The layout is set up to be a simple list and you are able to generate a print-out. You can add you custom logo via the plugin settings in the Redmine administration.
 
 ## Version History
-* 0.9.12 fixed javascript bugs with assets
+* 0.9.13 fixed javascript bugs with assets
+* 0.9.12 fixed gemfile dependency problem 
 * 0.9.11 added new assets
 * 0.9.10 Separate filters for bookings and reports
 * 0.9.9 fixed bugs
