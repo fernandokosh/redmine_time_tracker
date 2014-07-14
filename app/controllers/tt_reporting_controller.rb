@@ -13,7 +13,7 @@ class TtReportingController < ApplicationController
   include TtSortHelper
   helper :time_trackers
   include TimeTrackersHelper
-  helper :time_bookings_sidebar
+  helper :report_sidebar
 
   def index
     fetch_query
