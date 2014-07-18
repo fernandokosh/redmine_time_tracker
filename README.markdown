@@ -38,7 +38,7 @@ Most current version is available at: [GitHub](https://github.com/hicknhack-soft
 1. Follow the Redmine plugin installation steps at http://www.redmine.org/wiki/redmine/Plugins. Make sure the plugin is installed to `#{RAILS_ROOT}/plugins/redmine_time_tracker`
 1. Rerun `bundle install` to install all necessary gems
 1. Run `rake db:migrate RAILS_ENV=production`
-1. Run `rake redmine:plugins:redmine_time_tracker:install RAILS_ENV=production` to load assets
+1. Run `rake redmine:plugins:migrate RAILS_ENV=production` to load assets
 1. Login to your Redmine install as an administrator
 1. Setup the "log time" permissions for your roles
 1. Enable the "Time tracking" module for your project
