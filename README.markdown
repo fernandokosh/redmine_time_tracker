@@ -49,7 +49,7 @@ Most current version is available at: [GitHub](https://github.com/hicknhack-soft
 
 1. Open a shell to your Redmine's `#{RAILS_ROOT}/plugins/redmine_time_tracker` folder
 1. Update your git copy with: `git pull`
-1. Update the database using the migrations: `redmine:plugins:migrate RAILS_ENV=production`
+1. Update the database using the migrations: `rake redmine:plugins:migrate RAILS_ENV=production`
 1. Run `rake redmine:plugins:redmine_time_tracker:install RAILS_ENV=production` to load assets
 1. Restart your Redmine instance
 
