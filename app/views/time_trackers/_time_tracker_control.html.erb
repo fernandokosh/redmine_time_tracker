@@ -32,7 +32,7 @@
                   <div id="tt_running_time" class="task_form_input"></div>
                 </div>
               </div>
-              <% projects = User.current.memberships.collect(&:project).compact.uniq %>
+              <% projects = projects_for_time_tracking_and_current_user %>
               <% @time_tracker.project_id.nil? ? select = nil : select = Project.find(@time_tracker.project_id) %>
               <% proj_list = "<option value=''>#{ l(:time_tracker_label_none) }</option>" %>
               <% proj_list << "<option value='' disabled='disabled'>---</option>" %>
