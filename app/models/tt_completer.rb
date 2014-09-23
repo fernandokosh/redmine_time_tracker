@@ -10,7 +10,11 @@ class TtCompleter
     issue_list = Array.new
     if term.match(/^\d+$/)
       issue_list << Issue.visible.find_by_id(term.to_i)
-      issue_list += Issue.visible.where(["CAST(#{Issue.table_name}.id AS VARCHAR) LIKE ?", "%#{term}%"]).all
+      if Issue.connection.adapter_name == 'PostgreSQL'
+        issue_list += Issue.visible.where(["CAST(#{Issue.table_name}.id AS VARCHAR) LIKE ?", "%#{term}%"]).all
+      else
+        issue_list += Issue.visible.where(["CAST(#{Issue.table_name}.id AS CHAR) LIKE ?", "%#{term}%"]).all
+      end
     end
     unless term.blank?
       issue_list += Issue.visible.where(["LOWER(#{Issue.table_name}.subject) LIKE ?", "%#{term.downcase}%"]).all
