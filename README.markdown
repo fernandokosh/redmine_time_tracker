@@ -88,6 +88,7 @@ The plugin offers a list of settings at the Redmine roles and permission setting
 Reports are the method of generating invoices for customers. The layout is set up to be a simple list and you are able to generate a print-out. You can add you custom logo via the plugin settings in the Redmine administration.
 
 ## Version History
+* 0.9.16 improved start/stop routine of a timer
 * 0.9.15 set jqplot margin to 2
 * 0.9.14 fixed report queries being totally broken
 * 0.9.13 fixed javascript bugs with assets
