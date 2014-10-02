@@ -38,6 +38,7 @@ class TimeTrackersController < ApplicationController
       if @time_tracker.start
         flash[:notice] = l(:start_time_tracker_success)
       else
+        @time_tracker.destroy
         flash[:error] = l(:start_time_tracker_error)
       end
     else
@@ -60,23 +61,25 @@ class TimeTrackersController < ApplicationController
         render :partial => 'flash_messages'
       end
     else
-      unless params[:time_tracker].nil?
+      if params[:time_tracker].present?
         @time_tracker.issue_text = params[:time_tracker][:issue_text]
         @time_tracker.comments = params[:time_tracker][:comments]
         @time_tracker.activity_id = params[:time_tracker][:activity_id]
       end
       @time_tracker.stop
-      flash[:error] = l(:stop_time_tracker_error) unless @time_tracker.destroyed?
-      @time_tracker = get_current
-      flash[:notice] = l(:stop_time_tracker_success)
-      if !params[:start_new_time_tracker].nil?
-        start({:issue_id => params[:start_new_time_tracker]})
-      else
-        if request.env['HTTP_REFERER'].present?
-          redirect_to request.env['HTTP_REFERER']
-        else
-          render :partial => 'flash_messages'
+      if @time_tracker.destroyed?
+        flash[:notice] = l(:stop_time_tracker_success)
+        if params[:start_new_time_tracker].present?
+          start({:issue_id => params[:start_new_time_tracker]})
+          return
         end
+      else
+        flash[:error] = l(:stop_time_tracker_error)
+      end
+      if request.env['HTTP_REFERER'].present?
+        redirect_to request.env['HTTP_REFERER']
+      else
+        render :partial => 'flash_messages'
       end
     end
   end
