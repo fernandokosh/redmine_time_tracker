@@ -1,3 +1,4 @@
+require 'rake'
 require 'fileutils'
 
 desc "Install redmine time tracker plugin"
