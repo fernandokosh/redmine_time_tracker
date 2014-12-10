@@ -31,7 +31,7 @@ class TimeBooking < ActiveRecord::Base
   }
 
   scope :overlaps_with, lambda { |start_time, stop_time|
-    where(arel_table[:started_on].lteq(stop_time).and(arel_table[:stopped_at].gteq(start_time)))
+    where(arel_table[:started_on].lt(stop_time).and(arel_table[:stopped_at].gt(start_time)))
   }
 
   # check user-permissions. in some cass we need to prevent some or all of his actions
