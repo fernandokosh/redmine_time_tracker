@@ -107,8 +107,12 @@ class TimeTrackersController < ApplicationController
 
   def update
     @time_tracker = get_current
-    @time_tracker.update_attributes!(params[:time_tracker])
-    flash[:notice] = l(:update_time_tracker_success)
+    unless @time_tracker.new_record?
+      @time_tracker.update_attributes!(params[:time_tracker])
+      flash[:notice] = l(:update_time_tracker_success)
+    else
+      flash[:error] = l(:update_time_tracker_already_deleted)
+    end
     unless request.xhr?
       redirect_to :back
     else

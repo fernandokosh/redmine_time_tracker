@@ -152,4 +152,5 @@ en:
   time_tracker_settings_zombie_transition: "zombie status transition"
   time_tracker_zombie_legend: "zombie time tracker"
   update_time_tracker_success: "Updated the time tracker"
+  update_time_tracker_already_deleted: "Couldn't update the time tracker. The current instance isn't valid (maybe already stopped or deleted)."
   waiting_for_slot: "Waiting to hit start time ..."
