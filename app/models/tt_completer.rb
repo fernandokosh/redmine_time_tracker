@@ -10,7 +10,7 @@ class TtCompleter
     issue_list = Array.new
     if term.match(/^\d+$/)
       issue_list << Issue.visible.find_by_id(term.to_i)
-      issue_list += Issue.visible.where(["LOWER(#{Issue.table_name}.id) LIKE ?", "%#{term.downcase}%"]).all
+      issue_list += Issue.visible.where(["#{Issue.table_name}.id LIKE ?", "%#{term.downcase}%"]).all
     end
     unless term.blank?
       issue_list += Issue.visible.where(["LOWER(#{Issue.table_name}.subject) LIKE ?", "%#{term.downcase}%"]).all
