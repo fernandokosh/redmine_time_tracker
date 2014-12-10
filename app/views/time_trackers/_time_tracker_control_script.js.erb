@@ -4,6 +4,9 @@ function updateTTControllerForm(form) {
         type: 'PUT',
         dataType: 'html',
         success: function (html) {
+            if (time_tracker_timer_interval != null && time_tracker_timer_interval != undefined) {
+              window.clearInterval(time_tracker_timer_interval);
+            }
             $('#content .flash').remove();
             $('#content').prepend($(html).filter('.flash'));
             $('#time-tracker-control').replaceWith($(html).filter('#time-tracker-control'))
