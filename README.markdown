@@ -32,8 +32,16 @@ It is be individual configurable for every user and as a module can be enabled p
 Most current version is available at: [GitHub](https://github.com/hicknhack-software/redmine_time_tracker).
 
 ## Requirements
-* Redmine 2.4.0
-* ruby >= 1.9.2
+* Redmine one of (see travis.yml)
+  * Version 2.4.0
+  * Version 2.4.5
+  * Version 2.5.0
+  * Version 2.5.1
+  * Version 2.6.0
+* Ruby one of
+  * Version 1.9.3
+  * Version 2.0.0
+  * Version 2.1.1
 
 ## Install
 
