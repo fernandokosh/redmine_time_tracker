@@ -1,7 +1,7 @@
 <h2><%= l(:label_query) %></h2>
 
 <%= form_tag(time_booking_query_path(@query), :onsubmit => 'selectAllOptions("selected_columns");', :method => :put) do %>
- <%= hidden_field_tag 'tt_request_referer', URI(request.referer).path %>
+ <%= hidden_field_tag 'tt_request_referer', params[:tt_request_referer] || URI(request.referer).path %>
  <%= render :partial => 'queries/form', :locals => {:query => @query} %>
  <%= submit_tag l(:button_save) %>
 <% end %>

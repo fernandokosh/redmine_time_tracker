@@ -1,7 +1,7 @@
 <h2><%= l(:label_query_new) %></h2>
 
 <%= form_tag(@project ? project_time_log_queries_path(@project) : time_log_queries_path, :onsubmit => 'selectAllOptions("selected_columns");') do %>
- <%= hidden_field_tag 'tt_request_referer', URI(request.referer).path %>
+ <%= hidden_field_tag 'tt_request_referer', params[:tt_request_referer] || URI(request.referer).path %>
  <%= render :partial => 'queries/form', :locals => {:query => @query} %>
  <%= submit_tag l(:button_save) %>
 <% end %>
