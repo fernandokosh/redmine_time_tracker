@@ -64,7 +64,7 @@ run_tests() {
     if [ "$VERBOSE" = "yes" ]; then
       export TRACE=--backtrace
     fi
-    script -e -c "bundle exec rspec plugins\\$PLUGIN\spec $TRACE"
+    script -e -c "bundle exec rspec plugins/$PLUGIN/spec $TRACE"
   else
     if [ "$VERBOSE" = "yes" ]; then
       export TRACE=--trace
