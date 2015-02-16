@@ -58,18 +58,18 @@ run_tests() {
   # exit if tests fail
   set -e
 
-  cd $PATH_TO_REDMINE
+  cd "$PATH_TO_REDMINE"
   if [ "$USE_RSPEC" = "yes" ]
   then
     if [ "$VERBOSE" = "yes" ]; then
       export TRACE=--backtrace
     fi
-    script -e -c "bundle exec rspec plugins\"$PLUGIN"\spec" $TRACE
+    script -e -c "bundle exec rspec plugins\\$PLUGIN\spec $TRACE"
   else
     if [ "$VERBOSE" = "yes" ]; then
       export TRACE=--trace
     fi
-    script -e -c "bundle exec rake redmine:plugins:test NAME="$PLUGIN $TRACE
+    script -e -c "bundle exec rake redmine:plugins:test NAME=$PLUGIN $TRACE"
   fi
 
 }
