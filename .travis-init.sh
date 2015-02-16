@@ -59,12 +59,19 @@ run_tests() {
   set -e
 
   cd $PATH_TO_REDMINE
-
-  if [ "$VERBOSE" = "yes" ]; then
-    TRACE=--trace
+  if [ "$USE_RSPEC" = "yes" ]
+  then
+    if [ "$VERBOSE" = "yes" ]; then
+      export TRACE=--backtrace
+    fi
+    script -e -c "bundle exec rspec plugins\"$PLUGIN"\spec" $TRACE
+  else
+    if [ "$VERBOSE" = "yes" ]; then
+      export TRACE=--trace
+    fi
+    script -e -c "bundle exec rake redmine:plugins:test NAME="$PLUGIN $TRACE
   fi
 
-  script -e -c "bundle exec rake redmine:plugins:test NAME="$PLUGIN $VERBOSE
 }
 
 uninstall() {
@@ -72,7 +79,7 @@ uninstall() {
   cd $PATH_TO_REDMINE
   # clean up database
   if [ "$VERBOSE" = "yes" ]; then
-    TRACE=--trace
+    export TRACE=--trace
   fi
   bundle exec rake $TRACE $MIGRATE_PLUGINS NAME=$PLUGIN VERSION=0
 }
