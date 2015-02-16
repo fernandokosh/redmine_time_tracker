@@ -1,4 +1,5 @@
 function timeString2min(str) {
+    str = str.toLowerCase();
     if (str.match(/\d\d?:\d\d?/)) {
         var arr = str.trim().split(" ");
         var time_arr = arr[0].trim().split(':');

@@ -40,6 +40,12 @@ module ApplicationHelper
     false
   end
 
+  def projects_for_time_tracking_and_current_user
+    User.current.memberships.collect(&:project).compact.uniq.select { |project|
+      project.allows_to? :tt_log_time
+    }
+  end
+
   # Redmine uses localized datepickers, but overrides the dateFormat setting.
   # So we need to patch it, to have it localized again.
   # We dont use a redmine patch to keep the patch limited to all timetracker forms.
