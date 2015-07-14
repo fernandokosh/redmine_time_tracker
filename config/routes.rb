@@ -42,6 +42,6 @@ match '/tt_date_shifter/get_next_time_span', :to => 'tt_date_shifter#get_next_ti
 match '/tt_menu_switcher/index', :to => 'tt_menu_switcher#index', :via => [:get]
 
 # context menus
-match '/tt_overview/context_menu', :to => 'context_menus#tt_overview', :as => 'tt_overview_context_menu'
-match '/tt_bookings_list/context_menu', :to => 'context_menus#tt_bookings_list', :as => 'tt_bookings_list_context_menu'
-match '/tt_logs_list/context_menu', :to => 'context_menus#tt_logs_list', :as => 'tt_logs_list_context_menu'
+match '/tt_overview/context_menu', to: 'context_menus#tt_overview', as: 'tt_overview_context_menu',  via: [:all]
+match '/tt_bookings_list/context_menu', to: 'context_menus#tt_bookings_list', as: 'tt_bookings_list_context_menu', via: [:all]
+match '/tt_logs_list/context_menu', to: 'context_menus#tt_logs_list', as: 'tt_logs_list_context_menu', via: [:all]
