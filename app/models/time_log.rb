@@ -16,7 +16,9 @@ class TimeLog < ActiveRecord::Base
   validates :started_on, :presence => true
   validates :stopped_at, :presence => true
 
-  scope :bookable, where(:bookable => true)
+   scope :bookable, -> {
+      where(:bookable => true)
+      }
 
   scope :visible, lambda {
     if help.permission_checker([:tt_edit_time_logs], {}, true)
