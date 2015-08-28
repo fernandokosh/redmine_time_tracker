@@ -29,21 +29,21 @@ match '/time_trackers/delete', :to => 'time_trackers#delete', :via => [:get, :po
 match '/tt_bookings_list', :to => 'tt_bookings_list#index', :via => [:get, :post]
 match '/tt_info', :to => 'tt_info#index', :via => [:get, :post]
 match '/tt_logs_list', :to => 'tt_logs_list#index', :via => [:get, :post]
-match '/tt_print_report', :to => 'tt_reporting#print_report', :via => [:get]
+get '/tt_print_report', :to => 'tt_reporting#print_report'
 match '/tt_reporting', :to => 'tt_reporting#index', :via => [:get, :post]
 
 #helpers
-match '/tt_completer/get_issue', :to => 'tt_completer#get_issue', :via => [:get]
-match '/tt_completer/get_issue_id', :to => 'tt_completer#get_issue_id', :via => [:get]
-match '/tt_completer/get_issue_subject', :to => 'tt_completer#get_issue_subject', :via => [:get]
-match '/tt_completer/get_activity', :to => 'tt_completer#get_activity', :via => [:get]
+get '/tt_completer/get_issue', :to => 'tt_completer#get_issue'
+get '/tt_completer/get_issue_id', :to => 'tt_completer#get_issue_id'
+get '/tt_completer/get_issue_subject', :to => 'tt_completer#get_issue_subject'
+get '/tt_completer/get_activity', :to => 'tt_completer#get_activity'
 
-match '/tt_date_shifter/get_prev_time_span', :to => 'tt_date_shifter#get_prev_time_span', :via => [:get]
-match '/tt_date_shifter/get_next_time_span', :to => 'tt_date_shifter#get_next_time_span', :via => [:get]
+get '/tt_date_shifter/get_prev_time_span', :to => 'tt_date_shifter#get_prev_time_span'
+get '/tt_date_shifter/get_next_time_span', :to => 'tt_date_shifter#get_next_time_span'
 
-match '/tt_menu_switcher/index', :to => 'tt_menu_switcher#index', :via => [:get]
+get '/tt_menu_switcher/index', :to => 'tt_menu_switcher#index'
 
 # context menus
-match '/tt_overview/context_menu', :to => 'context_menus#tt_overview', :as => 'tt_overview_context_menu'
-match '/tt_bookings_list/context_menu', :to => 'context_menus#tt_bookings_list', :as => 'tt_bookings_list_context_menu'
-match '/tt_logs_list/context_menu', :to => 'context_menus#tt_logs_list', :as => 'tt_logs_list_context_menu'
+get '/tt_overview/context_menu', :to => 'context_menus#tt_overview', :as => 'tt_overview_context_menu'
+get '/tt_bookings_list/context_menu', :to => 'context_menus#tt_bookings_list', :as => 'tt_bookings_list_context_menu'
+get '/tt_logs_list/context_menu', :to => 'context_menus#tt_logs_list', :as => 'tt_logs_list_context_menu'
