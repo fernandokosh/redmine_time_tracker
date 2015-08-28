@@ -20,11 +20,11 @@ class TimeLog < ActiveRecord::Base
 
   scope :visible, lambda {
     if help.permission_checker([:tt_edit_time_logs], {}, true)
-      {:conditions => "1 = 1"}
+      where("1 = 1")
     elsif help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], {}, true)
       where(:user_id => User.current.id)
     else
-      {:conditions => "1 = 0"}
+      where("1 = 0")
     end
   }
 
