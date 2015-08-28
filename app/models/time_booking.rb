@@ -6,6 +6,7 @@ class TimeBooking < ActiveRecord::Base
   attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :project, :project_id
   belongs_to :project
   belongs_to :time_log
+  has_one :user, through: :time_log
   belongs_to :time_entry, :dependent => :delete
   has_one :issue, :through => :time_entry
   has_one :activity, :through => :time_entry
