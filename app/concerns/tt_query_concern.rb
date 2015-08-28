@@ -6,7 +6,7 @@ module TtQueryConcern
       scope :visible, lambda { |*args|
         user = args.shift || User.current
         base = Project.allowed_to_condition(user, @visibile_permission, *args)
-        scope = includes(:project).where("#{table_name}.project_id IS NULL OR (#{base})")
+        scope = joins(:project).where("#{table_name}.project_id IS NULL OR (#{base})")
 
         if user.admin?
           scope.where("#{table_name}.visibility <> ? OR #{table_name}.user_id = ?", Query::VISIBILITY_PRIVATE, user.id)

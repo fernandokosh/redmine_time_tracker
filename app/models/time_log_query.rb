@@ -26,7 +26,7 @@ class TimeLogQuery < Query
   # Returns the logs count
   def log_count
     TimeLog.visible.
-        includes(:user).
+        joins(:user).
         where(statement).
         count(:id)
   rescue ::ActiveRecord::StatementInvalid => e
@@ -40,7 +40,7 @@ class TimeLogQuery < Query
       begin
         gbs = group_by_statement
         r = TimeLog.visible.
-            includes(:user).
+            joins(:user).
             group(gbs).
             where(statement).
             count(:id)
@@ -62,7 +62,7 @@ class TimeLogQuery < Query
     order_option = nil if order_option.blank?
 
     TimeLog.visible.
-        includes(:user, :time_bookings).
+        joins(:user, :time_bookings).
         where(statement).
         order(order_option).
         limit(options[:limit]).

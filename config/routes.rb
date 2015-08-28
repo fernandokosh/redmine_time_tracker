@@ -21,7 +21,7 @@ match '/time_logs/get_list_entry', :to => 'time_logs#get_list_entry', :via => [:
 
 match '/tt_overview', :to => 'tt_overview#index', :via => [:get, :post]
 
-match '/time_trackers/stop', :to => 'time_trackers#stop', :via => [:get, :put, :post]
+match '/time_trackers/stop', :to => 'time_trackers#stop', :via => [:get, :put, :post, :patch]
 match '/time_trackers/start', :to => 'time_trackers#start', :via => [:post, :get]
 match '/time_trackers/update', :to => 'time_trackers#update', :via => [:get, :put]
 match '/time_trackers/delete', :to => 'time_trackers#delete', :via => [:get, :post]
