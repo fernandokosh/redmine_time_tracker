@@ -23,8 +23,7 @@ class TimeBooking < ActiveRecord::Base
     }
     cond = [ca.map { |c| c[0] }.join(" OR ")]
 
-    {:include => :project,
-     :conditions => cond}
+    joins(:project).where(cond)
   }
 
   scope :from_time_log, lambda { |time_log_id|

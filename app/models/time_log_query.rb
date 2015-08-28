@@ -76,15 +76,15 @@ class TimeLogQuery < Query
     case operator
       when "="
         if value[0] == "1"
-          "#{TimeLog.table_name}.bookable = " + connection.quoted_true
+          "#{TimeLog.table_name}.bookable = " + self.class.connection.quoted_true
         else
-          "#{TimeLog.table_name}.bookable = " + connection.quoted_false
+          "#{TimeLog.table_name}.bookable = " + self.class.connection.quoted_false
         end
       when "!"
         if value[0] == "1"
-          "#{TimeLog.table_name}.bookable = " + connection.quoted_false
+          "#{TimeLog.table_name}.bookable = " + self.class.connection.quoted_false
         else
-          "#{TimeLog.table_name}.bookable = " + connection.quoted_true
+          "#{TimeLog.table_name}.bookable = " + self.class.connection.quoted_true
         end
       else
         ""

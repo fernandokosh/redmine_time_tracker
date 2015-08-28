@@ -110,7 +110,7 @@ module TtQueryConcern
     if value.delete('me')
       value += User.current.id.to_s.to_a
     end
-    "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+    "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{self.class.connection.quote_string(val)}'" }.join(",") + ") )"
   end
 
   def initialize_available_filters
