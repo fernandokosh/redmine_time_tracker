@@ -8,7 +8,6 @@ group :test do
   gem 'zonebie'
   gem 'minitest'
   gem 'minitest-reporters'
-  gem 'shoulda-matchers'
   gem 'timecop'
   gem 'poltergeist'
 end

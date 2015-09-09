@@ -5,10 +5,8 @@ ActiveSupport::TestCase.fixture_path=File.dirname(__FILE__) + '/fixtures/'
 # setup capybara for integration tests
 require 'capybara/rails'
 require 'capybara/poltergeist'
-require 'minitest/autorun'
 
 # make output prettier
-require 'minitest/reporters'
 Minitest::Reporters.use!
 
 module RedmineTimeTracker 
