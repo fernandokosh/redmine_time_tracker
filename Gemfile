@@ -6,9 +6,10 @@ gem 'sass'
 
 group :test do
   gem 'zonebie'
-  gem "minitest"
-  gem 'timecop'
+  gem 'minitest'
   gem 'minitest-reporters'
+  gem 'shoulda-matchers'
+  gem 'timecop'
   gem 'poltergeist'
 end
 
