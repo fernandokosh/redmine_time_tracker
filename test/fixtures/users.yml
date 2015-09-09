@@ -1,4 +1,4 @@
---- 
+---
 users_001:
   created_on: 2006-07-19 19:12:21 +02:00
   status: 1
@@ -9,7 +9,6 @@ users_001:
   hashed_password: b5b6ff9543bf1387374cdfa27a54c96d236a7150
   updated_on: 2006-07-19 22:57:52 +02:00
   admin: true
-  mail: admin@somenet.foo
   lastname: Admin
   firstname: redMine
   id: 1
@@ -27,7 +26,6 @@ users_002:
   hashed_password: bfbe06043353a677d0215b26a5800d128d5413bc
   updated_on: 2006-07-19 22:42:15 +02:00
   admin: false
-  mail: jsmith@somenet.foo
   lastname: Smith
   firstname: John
   id: 2
