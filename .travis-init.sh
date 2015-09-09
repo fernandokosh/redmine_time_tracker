@@ -25,6 +25,11 @@ case $REDMINE_VERSION in
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VERSION.tar.gz
           ;;
+  3.*)  export PATH_TO_PLUGINS=./plugins # for redmine > 3.0
+          export GENERATE_SECRET=generate_secret_token
+          export MIGRATE_PLUGINS=redmine:plugins:migrate
+          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VERSION.tar.gz
+          ;;
   master) export PATH_TO_PLUGINS=./plugins
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
