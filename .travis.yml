@@ -13,6 +13,7 @@ env:
   - REDMINE_VERSION=2.5.0 VERBOSE=yes
   - REDMINE_VERSION=2.5.1 VERBOSE=yes
   - REDMINE_VERSION=2.6.0 VERBOSE=yes
+  - REDMINE_VERSION=3.0.4 VERBOSE=yes
 script:
   - export PLUGIN=redmine_time_tracker
   - export WORKSPACE=$(pwd)/workspace
