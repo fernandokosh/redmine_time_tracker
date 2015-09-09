@@ -11,6 +11,7 @@ group :test do
     gem 'turn'
   else
     gem 'minitest-reporters'
+    gem 'shoulda-context'
   end
   gem 'timecop'
   gem 'poltergeist'
