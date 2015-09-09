@@ -2,12 +2,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
 ActiveSupport::TestCase.fixture_path=File.dirname(__FILE__) + '/fixtures/'
 
+if Gem::Version.new(ENV['$REDMINE_VERSION']) < Gem::Version.new('3.0.0')
+  # make output prettier
+  Turn.config.format = :progress
+end
+
 # setup capybara for integration tests
 require 'capybara/rails'
 require 'capybara/poltergeist'
+require 'minitest/autorun'
 
-# make output prettier
-Minitest::Reporters.use!
+unless Gem::Version.new(ENV['$REDMINE_VERSION']) < Gem::Version.new('3.0.0')
+  require 'minitest/reporters'
+  Minitest::Reporters.use!
+end
 
 module RedmineTimeTracker 
   class IntegrationTest < ActionDispatch::IntegrationTest
