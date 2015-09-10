@@ -38,6 +38,8 @@ Most current version is available at: [GitHub](https://github.com/hicknhack-soft
   * Version 2.5.0
   * Version 2.5.1
   * Version 2.6.0
+  * Version 3.0.4
+  * Version 3.1.0
 * Ruby one of
   * Version 1.9.3
   * Version 2.0.0
