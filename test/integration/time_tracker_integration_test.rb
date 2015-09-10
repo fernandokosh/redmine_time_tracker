@@ -2,8 +2,9 @@ require File.dirname(__FILE__) + '../../minitest_helper'
 
 
 class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
-  fixtures :projects, :users, :user_preferences, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses, :enabled_modules,
-           :enumerations
+  fixtures :projects, :users, :user_preferences, :roles, :members, :member_roles, :issues, :trackers, :issue_statuses,
+           :enabled_modules, :enumerations
+
   def setup
     log_user('jsmith', 'jsmith')
     page.save_screenshot("#{screenshot_path}/after.png")
@@ -20,9 +21,9 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
 
     should "have permission to start a time tracker", js: true do
       visit '/tt_overview'
-      page.text.must_include 'Your time logs'
+      assert_match('Your time logs', page.text)
       find(:css, '#start-time-tracker-button').click
-      page.text.must_include 'Started the time tracker'
+      assert_match('Started the time tracker', page.text)
       find(:css, '#stop-time-tracker-button').click
     end
 
@@ -43,7 +44,7 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
       visit '/tt_overview'
       find(:css, '#start-time-tracker-button').click
       find(:css, '#stop-time-tracker-button').click
-      page.text.must_include 'Stopped the time tracker'
+      assert_match('Stopped the time tracker', page.text)
 
       time_logs = TimeLog.where(user_id: User.current)
 
@@ -51,19 +52,14 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
     end
   end
 
-
   context 'User without permissions' do
     setup do
-      
       Role.find(2).remove_permission! :tt_log_time
-      #puts "Current user: #{User.current.login} - permission removed: #{!Role.find(2).permissions.include? :tt_log_time}"
     end
 
     should 'not have permission to start a time tracker', js: true do
       visit '/tt_overview'
-      page.text.must_include 'You are not authorized to access this page.'
+      assert_match('You are not authorized to access this page.', page.text)
     end
   end
-
-
 end
