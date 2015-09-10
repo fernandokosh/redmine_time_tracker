@@ -62,7 +62,7 @@ class TimeLogQuery < Query
     order_option = nil if order_option.blank?
 
     TimeLog.visible.
-        joins(:user, :time_bookings).
+        joins(:user).
         where(statement).
         order(order_option).
         limit(options[:limit]).
