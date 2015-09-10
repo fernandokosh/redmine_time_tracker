@@ -3,7 +3,7 @@ class TimeBooking < ActiveRecord::Base
   include Redmine::I18n
   unloadable
 
-  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :project, :project_id
+  attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :project, :project_id, :comments, :issue, :activity_id
   belongs_to :project
   belongs_to :time_log
   has_one :user, through: :time_log
@@ -202,6 +202,7 @@ class TimeBooking < ActiveRecord::Base
 
   def comments=(comments)
     # workaround to get dirty-flag working even for associated fields!
+    @changed_attributes ||= {}
     @changed_attributes['comments'] = self.comments unless comments == self.comments
     self.time_entry.update_attributes! :comments => comments
   end
