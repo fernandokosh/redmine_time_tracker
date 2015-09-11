@@ -1,6 +1,6 @@
 # Load the Redmine helper
 require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
-ActiveSupport::TestCase.fixture_path=File.dirname(__FILE__) + '/fixtures/'
+ActiveSupport::TestCase.fixture_path = File.dirname(__FILE__) + '/fixtures/'
 
 if (Gem::Version.new(ENV['REDMINE_VERSION']) < Gem::Version.new('3.0.0')) && !ENV['REDMINE_VERSION'].nil?
   # make output prettier
@@ -22,7 +22,8 @@ module RedmineTimeTracker
     include Rails.application.routes.url_helpers
     include Capybara::DSL
     self.use_transactional_fixtures = false
-    
+    self.fixture_path = File.dirname(__FILE__) + '/fixtures/'
+
     Capybara.register_driver :poltergeist do |app|
       Capybara::Poltergeist::Driver.new(app, {debug: false, :default_wait_time => 30, :timeout => 90, inspector: true})
     end
