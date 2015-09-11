@@ -25,7 +25,7 @@ module RedmineTimeTracker
     self.fixture_path = File.dirname(__FILE__) + '/fixtures/'
 
     Capybara.register_driver :poltergeist do |app|
-      Capybara::Poltergeist::Driver.new(app, {debug: false, :default_wait_time => 30, :timeout => 90, inspector: true})
+      Capybara::Poltergeist::Driver.new(app, {debug: false, :default_wait_time => 30, :timeout => 90, inspector: true, :js_errors => false})
     end
 
     Capybara.javascript_driver = :poltergeist
