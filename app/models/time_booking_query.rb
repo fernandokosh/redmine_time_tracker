@@ -37,7 +37,7 @@ class TimeBookingQuery < Query
       versions = project.shared_versions.all
     else
       # TODO: find a way to get shared_versions without killing the db
-      versions = Project.visible.joins(:versions).all.flat_map { |project| project.shared_versions.all }
+      versions = Project.visible.includes(:versions).all.flat_map { |project| project.shared_versions.all }
       versions.uniq!
     end
 
@@ -95,7 +95,7 @@ class TimeBookingQuery < Query
     order_option = [group_by_sort_order, options[:order]].flatten.reject(&:blank?)
 
     scope = TimeBooking.visible.
-        joins([:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}]).
+        includes([:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}]).
         where(statement).
         where(options[:conditions]).
         order(order_option).

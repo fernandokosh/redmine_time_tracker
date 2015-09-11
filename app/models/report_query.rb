@@ -58,7 +58,7 @@ class ReportQuery < Query
   def booking_count
     # TODO refactor includes
     TimeBooking.visible.
-        joins(:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}).
+        includes(:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}).
         where(statement).
         count(:id)
   rescue ::ActiveRecord::StatementInvalid => e
@@ -75,7 +75,7 @@ class ReportQuery < Query
         # "project" and additionally filter by issue. so we have to use a small workaround
         # todo figure out the 'rails-way' to avoid ambiguous columns
         r = TimeBooking.visible.
-            joins(:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}).
+            includes(:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}).
             where(statement).
             group(group_by_statement).
             count(:id)
@@ -95,7 +95,7 @@ class ReportQuery < Query
     order_option = [group_by_sort_order, options[:order]].flatten.reject(&:blank?)
 
     scope = TimeBooking.visible.
-        joins([:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}]).
+        includes([:project, {:time_entry => [{:issue => :fixed_version}, :activity]}, {:time_log => :user}]).
         where(statement).
         where(options[:conditions]).
         order(order_option).
