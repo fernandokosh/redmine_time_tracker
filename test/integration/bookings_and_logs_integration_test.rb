@@ -60,7 +60,7 @@ class BookingsAndLogsIntegrationTest < RedmineTimeTracker::IntegrationTest
         find(:css, 'a.tt_stop').click
 
         visit '/tt_logs_list'
-        assert_no_match(I18n::t('label_no_data'), page.text)
+        assert_no_match(/#{I18n::t('label_no_data')}/, page.text)
         page.assert_selector(:css, 'table.tt_list')
       end
 
@@ -68,14 +68,14 @@ class BookingsAndLogsIntegrationTest < RedmineTimeTracker::IntegrationTest
         generate_booking
         visit '/tt_bookings_list'
         assert_match('eCookbook', page.text)
-        assert_no_match(I18n::t('label_no_data'), page.text)
+        assert_no_match(/#{I18n::t('label_no_data')}/, page.text)
       end
 
       should 'have a booking entry after booking a logged time at the report tab', :js => true, :type => :feature do
         generate_booking
         visit '/tt_reporting'
         assert_match('eCookbook', page.text)
-        assert_no_match(I18n::t('label_no_data'), page.text)
+        assert_no_match(/#{I18n::t('label_no_data')}/, page.text)
       end
     end
   end

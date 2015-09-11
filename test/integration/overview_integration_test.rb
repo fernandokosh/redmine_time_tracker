@@ -45,7 +45,7 @@ class OverviewIntegrationTest < RedmineTimeTracker::IntegrationTest
 
       should 'not see logs older than 2 weeks' do
         visit '/tt_overview'
-        assert_no_match('old time log', page.text)
+        assert_no_match(/old time log/, page.text)
       end
     end
 
