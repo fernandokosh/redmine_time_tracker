@@ -81,8 +81,6 @@ class TimeBookingsController < ApplicationController
     tl.check_bookable
     flash[:notice] = l(:tt_update_booking_success)
   rescue StandardError => e
-    #puts e.backtrace
-
     flash[:error] = e.message
   end
 end
