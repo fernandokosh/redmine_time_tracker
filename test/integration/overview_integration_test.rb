@@ -40,13 +40,11 @@ class OverviewIntegrationTest < RedmineTimeTracker::IntegrationTest
 
       should 'see the all logs from the last 2 weeks' do
         visit '/tt_overview'
-
         assert_match('actual time log', page.text)
       end
 
       should 'not see logs older than 2 weeks' do
         visit '/tt_overview'
-
         assert_no_match('old time log', page.text)
       end
     end
@@ -77,13 +75,11 @@ class OverviewIntegrationTest < RedmineTimeTracker::IntegrationTest
 
       should 'see all the bookings from the last 2 weeks' do
         visit '/tt_overview'
-
         page.assert_selector(:css, 'td.tt_booking_date', :text => '10/29/2012')
       end
 
       should 'not see bookings older than 2 weeks' do
         visit '/tt_overview'
-
         page.assert_no_selector(:css, 'td.tt_booking_date', :text => '10/29/2011')
       end
     end

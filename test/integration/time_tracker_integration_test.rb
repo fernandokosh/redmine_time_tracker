@@ -19,15 +19,16 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
       TimeLog.delete_all
     end
 
-    should "have permission to start a time tracker", js: true do
+    should 'have permission to start a time tracker', js: true do
       visit '/tt_overview'
       assert_match('Your time logs', page.text)
       find(:css, '#start-time-tracker-button').click
       assert_match('Started the time tracker', page.text)
       find(:css, '#stop-time-tracker-button').click
+      assert_match('Stopped the time tracker', page.text)
     end
 
-    should "have started one time tracker", js: true do
+    should 'have started one time tracker', js: true do
       TimeTracker.delete_all
       TimeLog.delete_all
       visit '/tt_overview'
@@ -38,7 +39,7 @@ class TimeTrackerIntegrationTest < RedmineTimeTracker::IntegrationTest
       find(:css, '#stop-time-tracker-button').click
     end
 
-    should "have created a time log after stopping the time tracker", js: true do
+    should 'have created a time log after stopping the time tracker', js: true do
       TimeTracker.delete_all
       TimeLog.delete_all
       visit '/tt_overview'
