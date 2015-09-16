@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 if [[ ! "$WORKSPACE" = /* ]] ||
    [[ ! "$PATH_TO_PLUGIN" = /* ]] ||
