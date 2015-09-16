@@ -18,18 +18,18 @@ case $REDMINE_VERSION in
   1.4.*)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
           export GENERATE_SECRET=generate_session_store
           export MIGRATE_PLUGINS=db:migrate_plugins
-          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VERSION.tar.gz
+          export REDMINE_TARBALL=https://github.com/redmine/redmine/archive/$REDMINE_VERSION.tar.gz
           ;;
   2.*|3.*)
           export PATH_TO_PLUGINS=./plugins # for redmine >= 2.0
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
-          export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VERSION.tar.gz
+          export REDMINE_TARBALL=https://github.com/redmine/redmine/archive/$REDMINE_VERSION.tar.gz
           ;;
   master) export PATH_TO_PLUGINS=./plugins
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
-          export REDMINE_GIT_REPO=git://github.com/edavis10/redmine.git
+          export REDMINE_GIT_REPO=git://github.com/redmine/redmine.git
           export REDMINE_GIT_TAG=master
           ;;
   *)      echo "Unsupported platform $REDMINE_VERSION"
