@@ -15,15 +15,14 @@ env:
   global:
   - PLUGIN=redmine_time_tracker
   - REDMINE=test_redmine
-  - TRACE=--trace
 
   matrix:
-  - REDMINE_VERSION=2.4.0
-  - REDMINE_VERSION=2.4.5
-  - REDMINE_VERSION=2.5.3
-  - REDMINE_VERSION=2.6.6 TRACE=
-  - REDMINE_VERSION=3.0.4
-  - REDMINE_VERSION=3.1.0
+  - REDMINE_VERSION=2.4.0 TRACE=--trace
+  - REDMINE_VERSION=2.4.5 TRACE=--trace
+  - REDMINE_VERSION=2.5.3 TRACE=--trace
+  - REDMINE_VERSION=2.6.6 TRACE=-v
+  - REDMINE_VERSION=3.0.4 TRACE=--trace
+  - REDMINE_VERSION=3.1.0 TRACE=--trace
 
 matrix:
   exclude:
