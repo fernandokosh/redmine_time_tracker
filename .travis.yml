@@ -2,7 +2,8 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
-  - 2.1.1
+  - 2.1.7
+  - 2.2.3
 branches:
   only:
     - master
@@ -10,9 +11,8 @@ branches:
 env:
   - REDMINE_VERSION=2.4.0 VERBOSE=yes
   - REDMINE_VERSION=2.4.5 VERBOSE=yes
-  - REDMINE_VERSION=2.5.0 VERBOSE=yes
-  - REDMINE_VERSION=2.5.1 VERBOSE=yes
-  - REDMINE_VERSION=2.6.0 VERBOSE=yes
+  - REDMINE_VERSION=2.5.3 VERBOSE=yes
+  - REDMINE_VERSION=2.6.6 VERBOSE=yes
   - REDMINE_VERSION=3.0.4 VERBOSE=yes
   - REDMINE_VERSION=3.1.0 VERBOSE=yes
 script:
