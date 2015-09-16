@@ -1,28 +1,31 @@
 language: ruby
 sudo: false
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.7
-  - 2.2.3
+- 1.9.3
+- 2.0.0
+- 2.1.7
+- 2.2.3
+
 branches:
   only:
-    - master
-    - travis
+  - master
+  - travis
+
 env:
-  - REDMINE_VERSION=2.4.0 VERBOSE=yes
-  - REDMINE_VERSION=2.4.5 VERBOSE=yes
-  - REDMINE_VERSION=2.5.3 VERBOSE=yes
-  - REDMINE_VERSION=2.6.6 VERBOSE=yes
-  - REDMINE_VERSION=3.0.4 VERBOSE=yes
-  - REDMINE_VERSION=3.1.0 VERBOSE=yes
+- REDMINE_VERSION=2.4.0 VERBOSE=yes
+- REDMINE_VERSION=2.4.5 VERBOSE=yes
+- REDMINE_VERSION=2.5.3 VERBOSE=yes
+- REDMINE_VERSION=2.6.6 VERBOSE=no
+- REDMINE_VERSION=3.0.4 VERBOSE=yes
+- REDMINE_VERSION=3.1.0 VERBOSE=yes
+
 script:
-  - export PLUGIN=redmine_time_tracker
-  - export WORKSPACE=$(pwd)/workspace
-  - export PATH_TO_PLUGIN=$(pwd)
-  - export PATH_TO_REDMINE=$WORKSPACE/redmine
-  - mkdir $WORKSPACE
-  - bash -x ./.travis-init.sh -r || exit 1
-  - bash -x ./.travis-init.sh -i || exit 1
-  - bash -x ./.travis-init.sh -t || exit 1
-  - bash -x ./.travis-init.sh -u || exit 1
+- export PLUGIN=redmine_time_tracker
+- export WORKSPACE=$(pwd)/workspace
+- export PATH_TO_PLUGIN=$(pwd)
+- export PATH_TO_REDMINE=$WORKSPACE/redmine
+- mkdir $WORKSPACE
+- bash .travis-init.sh -r
+- bash .travis-init.sh -i
+- bash .travis-init.sh -t
+- bash .travis-init.sh -u
