@@ -49,6 +49,8 @@ gemfile: test_redmine/Gemfile
 
 before_script:
 - cd $PATH_TO_REDMINE
+- pwd
+- ls -la
 - bundle exec rake db:migrate $TRACE
 - bundle exec rake redmine:load_default_data REDMINE_LANG=en $TRACE
 - bundle exec rake $GENERATE_SECRET $TRACE
