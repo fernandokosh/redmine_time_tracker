@@ -47,14 +47,14 @@ gemfile: test_redmine/Gemfile
 install:
 - cd $PATH_TO_REDMINE
 - bundle install --jobs=3 --retry=3 --path=$PATH_TO_PLUGIN/vendor/bundle
-- bundle exec rake db:migrate $TRACE
-- bundle exec rake redmine:load_default_data REDMINE_LANG=en $TRACE
-- bundle exec rake $GENERATE_SECRET $TRACE
-- bundle exec rake $MIGRATE_PLUGINS $TRACE
+- bundle exec rake $TRACE db:migrate
+- bundle exec rake $TRACE redmine:load_default_data REDMINE_LANG=en
+- bundle exec rake $TRACE $GENERATE_SECRET
+- bundle exec rake $TRACE $MIGRATE_PLUGINS
 
 script:
 - cd $PATH_TO_REDMINE
-- bundle exec rake redmine:plugins:test NAME=$PLUGIN $TRACE
+- bundle exec rake $TRACE redmine:plugins:test NAME=$PLUGIN
 
 cache:
   directories:
