@@ -36,6 +36,8 @@ matrix:
   - rvm: 2.2.3
     env: REDMINE_VERSION=2.5.3 TRACE=--trace
   - rvm: 2.2.3
+    env: REDMINE_VERSION=2.6.3 TRACE=--trace
+  - rvm: 2.2.3
     env: REDMINE_VERSION=2.6.4
   # Redmine before 2.5 will not run on Ruby 2.1
   - rvm: 2.1.7
