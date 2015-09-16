@@ -38,3 +38,13 @@ else
     mkdir -p $PATH_TO_REDMINE
     wget $REDMINE_TARBALL -O- | tar -C $PATH_TO_REDMINE -xz --strip=1 --show-transformed -f -
 fi
+
+# prepare plugin for tests
+cd $PATH_TO_REDMINE
+
+if [ -L "$PATH_TO_PLUGINS/$PLUGIN" ]; then
+    rm "$PATH_TO_PLUGINS/$PLUGIN"
+fi
+ln -s "$PATH_TO_PLUGIN" "$PATH_TO_PLUGINS/$PLUGIN"
+
+cp $PATH_TO_PLUGINS/$PLUGIN/.travis/database.yml config/database.yml
