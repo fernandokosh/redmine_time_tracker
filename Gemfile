@@ -7,7 +7,7 @@ gem 'sass'
 group :test do
   gem 'zonebie'
   gem 'minitest'
-  if (Gem::Version.new(ENV['REDMINE_VERSION']) < Gem::Version.new('3.0.0')) && !ENV['REDMINE_VERSION'].nil?
+  if (Gem::Version.new(ENV['REDMINE_VERSION']) < Gem::Version.new('2.6.5')) && !ENV['REDMINE_VERSION'].nil?
     gem 'turn'
   else
     gem 'minitest-reporters'
