@@ -1,31 +1,59 @@
 language: ruby
 sudo: false
+cache: bundler
+branches:
+  only:
+  - master
+  - travis
+
 rvm:
 - 1.9.3
 - 2.0.0
 - 2.1.7
 - 2.2.3
 
-branches:
-  only:
-  - master
-  - travis
-
 env:
-- REDMINE_VERSION=2.4.0 VERBOSE=yes
-- REDMINE_VERSION=2.4.5 VERBOSE=yes
-- REDMINE_VERSION=2.5.3 VERBOSE=yes
-- REDMINE_VERSION=2.6.6 VERBOSE=no
-- REDMINE_VERSION=3.0.4 VERBOSE=yes
-- REDMINE_VERSION=3.1.0 VERBOSE=yes
+  global:
+  - PLUGIN=redmine_time_tracker
+  - WORKSPACE=workspace
+  - TRACE=--trace
 
-script:
-- export PLUGIN=redmine_time_tracker
-- export WORKSPACE=$(pwd)/workspace
+  matrix:
+  - REDMINE_VERSION=2.4.0
+  - REDMINE_VERSION=2.4.5
+  - REDMINE_VERSION=2.5.3
+  - REDMINE_VERSION=2.6.6
+  - REDMINE_VERSION=3.0.4
+  - REDMINE_VERSION=3.1.0
+
+matrix:
+  exclude:
+  # Redmine before 2.6.6 will not run on Ruby 2.2
+  - rvm: 2.2.3
+    env: REDMINE_VERSION=2.4.0
+  - rvm: 2.2.3
+    env: REDMINE_VERSION=2.4.5
+  - rvm: 2.2.3
+    env: REDMINE_VERSION=2.5.3
+  # Redmine before 2.5 will not run on Ruby 2.1
+  - rvm: 2.1.7
+    env: REDMINE_VERSION=2.4.0
+  - rvm: 2.1.7
+    env: REDMINE_VERSION=2.4.5
+
+before_install:
+- export WORKSPACE=$(pwd)/$WORKSPACE
 - export PATH_TO_PLUGIN=$(pwd)
 - export PATH_TO_REDMINE=$WORKSPACE/redmine
-- mkdir $WORKSPACE
-- bash .travis-init.sh -r
-- bash .travis-init.sh -i
-- bash .travis-init.sh -t
-- bash .travis-init.sh -u
+- bash .travis/clone_redmine.sh
+- bash .travis/prepare_plugin.sh
+
+gemfile: workspace/redmine/Gemfile
+install:
+- bundle exec rake db:migrate $TRACE
+- bundle exec rake redmine:load_default_data REDMINE_LANG=en $TRACE
+- bundle exec rake $GENERATE_SECRET $TRACE
+- bundle exec rake $MIGRATE_PLUGINS $TRACE
+
+script:
+- bundle exec rake redmine:plugins:test NAME=$PLUGIN $TRACE
