@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
 ActiveSupport::TestCase.fixture_path = File.dirname(__FILE__) + '/fixtures/'
 
-if (Gem::Version.new(ENV['REDMINE_VERSION']) <= Gem::Version.new('2.6.4')) && !ENV['REDMINE_VERSION'].nil?
+if (Gem::Version.new(ENV['REDMINE_VERSION']) < Gem::Version.new('2.6.4')) && !ENV['REDMINE_VERSION'].nil?
   # make output prettier
   Turn.config.format = :progress
 end
@@ -12,7 +12,7 @@ require 'capybara/rails'
 require 'capybara/poltergeist'
 require 'minitest/autorun'
 
-if (Gem::Version.new(ENV['REDMINE_VERSION']) > Gem::Version.new('2.6.4')) && !ENV['REDMINE_VERSION'].nil?
+if (Gem::Version.new(ENV['REDMINE_VERSION']) >= Gem::Version.new('2.6.4')) && !ENV['REDMINE_VERSION'].nil?
   require 'minitest/reporters'
   Minitest::Reporters.use!
 end
