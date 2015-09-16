@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+export PATH_TO_PLUGIN=$(pwd)
+export PATH_TO_REDMINE=$(pwd)/$REDMINE
+
 case $REDMINE_VERSION in
   1.4.*)  export PATH_TO_PLUGINS=./vendor/plugins # for redmine < 2.0
           export GENERATE_SECRET=generate_session_store
@@ -24,7 +27,6 @@ case $REDMINE_VERSION in
           ;;
 esac
 
-rm -rf $PATH_TO_REDMINE
 if [ ! "$VERBOSE" = "yes" ]; then
     QUIET=--quiet
 fi
@@ -36,5 +38,3 @@ else
     mkdir -p $PATH_TO_REDMINE
     wget $REDMINE_TARBALL -O- | tar -C $PATH_TO_REDMINE -xz --strip=1 --show-transformed -f -
 fi
-
-

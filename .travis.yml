@@ -15,7 +15,7 @@ rvm:
 env:
   global:
   - PLUGIN=redmine_time_tracker
-  - WORKSPACE=workspace
+  - REDMINE=test_redmine
   - TRACE=--trace
 
   matrix:
@@ -42,18 +42,17 @@ matrix:
     env: REDMINE_VERSION=2.4.5
 
 before_install:
-- export WORKSPACE=$(pwd)/$WORKSPACE
-- export PATH_TO_PLUGIN=$(pwd)
-- export PATH_TO_REDMINE=$WORKSPACE/redmine
-- bash .travis/clone_redmine.sh
-- bash .travis/prepare_plugin.sh
+- . .travis/clone_redmine.sh
+- .travis/prepare_plugin.sh
 
-gemfile: workspace/redmine/Gemfile
+gemfile: test_redmine/Gemfile
 install:
+- cd $PATH_TO_REDMINE
 - bundle exec rake db:migrate $TRACE
 - bundle exec rake redmine:load_default_data REDMINE_LANG=en $TRACE
 - bundle exec rake $GENERATE_SECRET $TRACE
 - bundle exec rake $MIGRATE_PLUGINS $TRACE
 
 script:
+- cd $PATH_TO_REDMINE
 - bundle exec rake redmine:plugins:test NAME=$PLUGIN $TRACE
