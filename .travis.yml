@@ -6,10 +6,10 @@ branches:
   - travis
 
 rvm:
-#- 1.9.3
+- 1.9.3
 - 2.0.0
-#- 2.1.7
-#- 2.2.3
+- 2.1.7
+- 2.2.3
 
 env:
   global:
@@ -17,18 +17,14 @@ env:
   - REDMINE=test_redmine
 
   matrix:
-  #- REDMINE_VERSION=2.4.0
-  #- REDMINE_VERSION=2.4.5
+  - REDMINE_VERSION=2.4.0 TRACE=--trace
+  - REDMINE_VERSION=2.4.5 TRACE=--trace
   - REDMINE_VERSION=2.5.3 TRACE=--trace
-  - REDMINE_VERSION=2.6.0 TRACE=--trace
-  - REDMINE_VERSION=2.6.1 TRACE=--trace
-  - REDMINE_VERSION=2.6.2 TRACE=--trace
   - REDMINE_VERSION=2.6.3 TRACE=--trace
   - REDMINE_VERSION=2.6.4
-  - REDMINE_VERSION=2.6.5
   - REDMINE_VERSION=2.6.6
-  #- REDMINE_VERSION=3.0.4
-  #- REDMINE_VERSION=3.1.0
+  - REDMINE_VERSION=3.0.4 TRACE=--trace
+  - REDMINE_VERSION=3.1.0 TRACE=--trace
 
 matrix:
   exclude:
