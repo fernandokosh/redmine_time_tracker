@@ -1,6 +1,5 @@
 language: ruby
 sudo: false
-cache: bundler
 branches:
   only:
   - master
@@ -47,7 +46,7 @@ before_install:
 gemfile: test_redmine/Gemfile
 install:
 - cd $PATH_TO_REDMINE
-- bundle install
+- bundle install --jobs=3 --retry=3 --path=$PATH_TO_PLUGIN/vendor/bundle
 - bundle exec rake db:migrate $TRACE
 - bundle exec rake redmine:load_default_data REDMINE_LANG=en $TRACE
 - bundle exec rake $GENERATE_SECRET $TRACE
@@ -56,3 +55,7 @@ install:
 script:
 - cd $PATH_TO_REDMINE
 - bundle exec rake redmine:plugins:test NAME=$PLUGIN $TRACE
+
+cache:
+  directories:
+  - vendor/bundle
