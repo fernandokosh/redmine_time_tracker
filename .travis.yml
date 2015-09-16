@@ -30,18 +30,18 @@ matrix:
   exclude:
   # Redmine before 2.6.6 will not run on Ruby 2.2
   - rvm: 2.2.3
-    env: REDMINE_VERSION=2.4.0
+    env: REDMINE_VERSION=2.4.0 TRACE=--trace
   - rvm: 2.2.3
-    env: REDMINE_VERSION=2.4.5
+    env: REDMINE_VERSION=2.4.5 TRACE=--trace
   - rvm: 2.2.3
-    env: REDMINE_VERSION=2.5.3
+    env: REDMINE_VERSION=2.5.3 TRACE=--trace
   - rvm: 2.2.3
     env: REDMINE_VERSION=2.6.4
   # Redmine before 2.5 will not run on Ruby 2.1
   - rvm: 2.1.7
-    env: REDMINE_VERSION=2.4.0
+    env: REDMINE_VERSION=2.4.0 TRACE=--trace
   - rvm: 2.1.7
-    env: REDMINE_VERSION=2.4.5
+    env: REDMINE_VERSION=2.4.5 TRACE=--trace
 
 before_install:
 - . .travis/clone_redmine.sh
