@@ -45,12 +45,9 @@ before_install:
 - . .travis/clone_redmine.sh
 
 gemfile: test_redmine/Gemfile
-# use std install script
-
-before_script:
+install:
 - cd $PATH_TO_REDMINE
-- pwd
-- ls -la
+- bundle install
 - bundle exec rake db:migrate $TRACE
 - bundle exec rake redmine:load_default_data REDMINE_LANG=en $TRACE
 - bundle exec rake $GENERATE_SECRET $TRACE
