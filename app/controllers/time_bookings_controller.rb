@@ -1,5 +1,4 @@
 class TimeBookingsController < ApplicationController
-  unloadable
 
   before_filter :authorize_global
 

@@ -1,5 +1,4 @@
 class TtInfoController < ApplicationController
-  unloadable
 
   menu_item :time_tracker_menu_tab_active_trackers
   before_filter :authorize_global, :check_settings_for_ajax

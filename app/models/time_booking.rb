@@ -1,7 +1,6 @@
 require 'redmine/i18n'
 class TimeBooking < ActiveRecord::Base
   include Redmine::I18n
-  unloadable
 
   attr_accessible :started_on, :stopped_at, :time_entry_id, :time_log_id, :project, :project_id, :comments, :issue, :activity_id
   belongs_to :project
