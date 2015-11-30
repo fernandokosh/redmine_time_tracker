@@ -3,10 +3,11 @@ module TtQueryConcern
 
   included do
     class_eval do
-      scope :visible, lambda { |*args|
+      scope :visible, lambda {|*args|
         user = args.shift || User.current
-        base = Project.allowed_to_condition(user, @visibile_permission, *args)
-        scope = joins(:project).where("#{table_name}.project_id IS NULL OR (#{base})")
+        base = Project.allowed_to_condition(user, @visible_permission, *args)
+        scope = joins("LEFT OUTER JOIN #{Project.table_name} ON #{table_name}.project_id = #{Project.table_name}.id").
+            where("#{table_name}.project_id IS NULL OR (#{base})")
 
         if user.admin?
           scope.where("#{table_name}.visibility <> ? OR #{table_name}.user_id = ?", Query::VISIBILITY_PRIVATE, user.id)
