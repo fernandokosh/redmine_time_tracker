@@ -23,7 +23,7 @@ class BookingsAndLogsIntegrationTest < RedmineTimeTracker::IntegrationTest
     find(:css, 'a.tt_stop').click
 
     visit '/tt_logs_list'
-    find(:css, 'a.icon-time').trigger('click')
+    find(:css, 'a.icon-time', :visible => false).trigger('click')
     find(:css, "#time_log_add_booking_#{TimeLog.first.id}_project_id_select option[value='1']").select_option
     find(:css, "#time_log_add_booking_#{TimeLog.first.id}_activity_id_select option[value='10']").select_option
     find(:css, '.tl_book_form_button').click
