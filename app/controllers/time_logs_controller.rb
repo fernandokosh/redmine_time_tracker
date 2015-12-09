@@ -1,5 +1,4 @@
 class TimeLogsController < ApplicationController
-  unloadable
 
   menu_item :time_tracker_menu_tab_logs
   before_filter :authorize_global
@@ -15,7 +14,8 @@ class TimeLogsController < ApplicationController
     unless params[:time_log_add_booking].nil?
       tl_add_booking = params[:time_log_add_booking]
       tl_add_booking.keys.each do |tl_key|
-        last_added_booking_ids.push(add_booking tl_add_booking[tl_key])
+        last_added_booking_id = add_booking tl_add_booking[tl_key]
+        last_added_booking_ids.push last_added_booking_id if last_added_booking_id.present?
       end
     end
 
@@ -38,10 +38,7 @@ class TimeLogsController < ApplicationController
           if item.time_bookings.count == 0
             item.destroy
           else
-            booked_time = item.hours_spent - item.bookable_hours
-            item.stopped_at = item.started_on + booked_time.hours
-            item.bookable = false
-            item.save!
+            raise StandardError, l(:tt_error_not_possible_to_delete_logs)
           end
         else
           flash[:error] = l(:tt_error_not_allowed_to_delete_logs)
@@ -55,6 +52,15 @@ class TimeLogsController < ApplicationController
   rescue StandardError => e
     flash[:error] = e.message
     redirect_to :back
+  end
+
+  def trim
+    if item.time_bookings.count == 1
+      booked_time = item.hours_spent - item.bookable_hours
+      item.stopped_at = item.started_on + booked_time.hours
+      item.bookable = false
+      item.save!
+    end
   end
 
   def show_booking
@@ -92,6 +98,7 @@ class TimeLogsController < ApplicationController
     last_added_booking_id
   rescue StandardError => e
     flash[:error] = e.message
+    nil
   end
 
   def update(tl)

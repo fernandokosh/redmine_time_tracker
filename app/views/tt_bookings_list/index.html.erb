@@ -1,3 +1,8 @@
+<% content_for :header_tags do %>
+    <%= javascript_include_tag 'time_tracker2', :plugin => 'redmine_time_tracker' %>
+    <%= javascript_include_tag 'validators', :plugin => 'redmine_time_tracker' %>
+    <%= javascript_include_tag 'field_updater', :plugin => 'redmine_time_tracker' %>
+<% end %>
 <%= javascript_tag render :partial => 'tt_overview/time_tracker', :formats => [:js] %>
 <% include_calendar_headers_tags %>
 <%= patch_date_picker %>
@@ -44,11 +49,11 @@
     </div>
     <p class="buttons hide-when-print">
       <!-- TODO check link targets! they're project-related here but shouldn't! -->
-      <%= link_to_function l(:button_apply), 'submit_query_form("query_form")', :class => 'icon icon-checked' %>
+      <%= link_to_function l(:button_apply), '$("#query_form").submit()', :class => 'icon icon-checked' %>
       <%= link_to l(:button_clear), {:set_filter => 3, :project_id => @project}, :class => 'icon icon-reload' %>
       <% if query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %>
           <%= link_to_function l(:button_save),
-                               "$('#query_form').attr('action', '#{ @project ? new_project_time_booking_query_path(@project) : new_time_booking_query_path }'); submit_query_form('query_form')",
+                               "$('#query_form').attr('action', '#{ @project ? new_project_time_booking_query_path(@project) : new_time_booking_query_path }'); $('#query_form').submit();",
                                :class => 'icon icon-save' %>
       <% end %>
     </p>
@@ -65,7 +70,7 @@
 <% end %>
 
 <% content_for :sidebar do %>
-    <%= render_sidebar_queries %>
+  <%= render_sidebar_queries %>
 <% end %>
 
 <%= context_menu tt_bookings_list_context_menu_path %>

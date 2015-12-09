@@ -114,14 +114,14 @@ class TimeBookingQuery < Query
       value += User.current.memberships.map(&:project_id).map(&:to_s)
     end
     if operator == "="
-      "( #{TimeBooking.table_name}.project_id IN (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+      "( #{TimeBooking.table_name}.project_id IN (" + value.collect { |val| "'#{self.class.connection.quote_string(val)}'" }.join(",") + ") )"
     else
-      "( #{TimeBooking.table_name}.project_id NOT IN (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") OR #{TimeBooking.table_name}.project_id IS NULL )"
+      "( #{TimeBooking.table_name}.project_id NOT IN (" + value.collect { |val| "'#{self.class.connection.quote_string(val)}'" }.join(",") + ") OR #{TimeBooking.table_name}.project_id IS NULL )"
     end
   end
 
   def sql_for_tt_booking_issue_field(field, operator, value)
-    sql = "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") "
+    sql = "( #{Issue.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{self.class.connection.quote_string(val)}'" }.join(",") + ") "
     if operator == "!"
       sql << " OR #{Issue.table_name}.id IS NULL)"
     else
@@ -131,14 +131,14 @@ class TimeBookingQuery < Query
 
 
   def sql_for_tt_booking_activity_field(field, operator, value)
-    "( #{TimeEntryActivity.table_name}.name #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+    "( #{TimeEntryActivity.table_name}.name #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{self.class.connection.quote_string(val)}'" }.join(",") + ") )"
   end
 
   def sql_for_tt_booking_fixed_version_field(field, operator, value)
     if operator == "="
-      "( #{Issue.table_name}.fixed_version_id IN (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") )"
+      "( #{Issue.table_name}.fixed_version_id IN (" + value.collect { |val| "'#{self.class.connection.quote_string(val)}'" }.join(",") + ") )"
     else
-      "( #{Issue.table_name}.fixed_version_id NOT IN (" + value.collect { |val| "'#{connection.quote_string(val)}'" }.join(",") + ") OR #{Issue.table_name}.fixed_version_id IS NULL )"
+      "( #{Issue.table_name}.fixed_version_id NOT IN (" + value.collect { |val| "'#{self.class.connection.quote_string(val)}'" }.join(",") + ") OR #{Issue.table_name}.fixed_version_id IS NULL )"
     end
   end
 end

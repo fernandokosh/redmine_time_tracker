@@ -1,5 +1,4 @@
 class TtMenuSwitcherController < ApplicationController
-  unloadable
 
   # this controller should dynamically redirect the user to an TimeTracker-page is is allowed to see,
   # if he clicks on the TimeTracker-Menu at the Top-Menu from redmine

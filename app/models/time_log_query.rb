@@ -26,7 +26,7 @@ class TimeLogQuery < Query
   # Returns the logs count
   def log_count
     TimeLog.visible.
-        includes(:user).
+        joins(:user).
         where(statement).
         count(:id)
   rescue ::ActiveRecord::StatementInvalid => e
@@ -40,7 +40,7 @@ class TimeLogQuery < Query
       begin
         gbs = group_by_statement
         r = TimeLog.visible.
-            includes(:user).
+            joins(:user).
             group(gbs).
             where(statement).
             count(:id)
@@ -62,7 +62,7 @@ class TimeLogQuery < Query
     order_option = nil if order_option.blank?
 
     TimeLog.visible.
-        includes(:user, :time_bookings).
+        joins(:user).
         where(statement).
         order(order_option).
         limit(options[:limit]).
@@ -76,15 +76,15 @@ class TimeLogQuery < Query
     case operator
       when "="
         if value[0] == "1"
-          "#{TimeLog.table_name}.bookable = " + connection.quoted_true
+          "#{TimeLog.table_name}.bookable = " + self.class.connection.quoted_true
         else
-          "#{TimeLog.table_name}.bookable = " + connection.quoted_false
+          "#{TimeLog.table_name}.bookable = " + self.class.connection.quoted_false
         end
       when "!"
         if value[0] == "1"
-          "#{TimeLog.table_name}.bookable = " + connection.quoted_false
+          "#{TimeLog.table_name}.bookable = " + self.class.connection.quoted_false
         else
-          "#{TimeLog.table_name}.bookable = " + connection.quoted_true
+          "#{TimeLog.table_name}.bookable = " + self.class.connection.quoted_true
         end
       else
         ""

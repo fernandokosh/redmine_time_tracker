@@ -1,7 +1,6 @@
 require 'redmine/i18n'
 class TimeTracker < ActiveRecord::Base
   include Redmine::I18n
-  unloadable
 
   attr_accessible :comments, :issue_id, :issue_text, :project_id, :start_time, :date, :round, :activity_id
   attr_accessor :start_time, :date
@@ -56,7 +55,7 @@ class TimeTracker < ActiveRecord::Base
     if issue.nil?
       self.issue_id = self.issue_id_was if self.issue_id.present?
     else
-      raise StandardError, l(:tt_error_not_allowed_to_start_tracker_on_issue) if !help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], issue.project) || issue.closed?
+      raise StandardError, l(:tt_error_not_allowed_to_start_tracker_on_issue) if !help.permission_checker([:tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], issue.project)  || issue.closed?
       self.project_id = issue.project_id unless issue.nil? || self.project_id == issue.project_id
     end
   end
@@ -120,9 +119,11 @@ class TimeTracker < ActiveRecord::Base
     end
     if self.valid?
       current_time = Time.now.localtime.change(:sec => 0)
-      last_timelog = TimeLog.where("stopped_at > ?", current_time).first
+      last_timelog = TimeLog.from_current_user.where("stopped_at > ?", current_time).first
       self.started_on =  last_timelog.present? ? last_timelog.stopped_at : current_time
       self.save
+    else
+      false #starting failed
     end
   end
 

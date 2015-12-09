@@ -5,25 +5,13 @@ $(function () {
         source:'tt_completer/get_issue.json?key=<%= key %>',
         minLength:0,
         select:function (event, ui) {
-            $('#time_log_add_booking_<%= time_log.id.to_s %>_comments').val(ui.item.data);
-            updateBookingProject('<%= key %>', 'time_log_add_booking_<%= time_log.id.to_s %>');
-        }
-    });
-});
-
-$(function () {
-    $('#time_log_add_booking_<%= time_log.id.to_s %>_comments').autocomplete({
-        source:'tt_completer/get_issue.json?key=<%= key %>',
-        minLength:0,
-        select:function (event, ui) {
             $('#time_log_add_booking_<%= time_log.id.to_s %>_issue_id').val(ui.item.value);
-            $('#time_log_add_booking_<%= time_log.id.to_s %>_comments').val(ui.item.data);
-            updateBookingProject('<%= key %>', 'time_log_add_booking_<%= time_log.id.to_s %>');
+            redmine_time_tracker.FieldUpdater.updateBookingProject('time_log_add_booking_<%= time_log.id.to_s %>');
         }
     });
 });
 
 $(document).ready(function() {
-    validate_list_inputs('time_log_add_booking_<%= time_log.id.to_s %>');
+    (new redmine_time_tracker.AddBookingValidator('time_log_add_booking_<%= time_log.id.to_s %>')).validate();
 });
 <% end %>

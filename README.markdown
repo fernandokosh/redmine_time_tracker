@@ -1,8 +1,10 @@
 [![Dependency Status](https://gemnasium.com/hicknhack-software/redmine_time_tracker.png)](https://gemnasium.com/hicknhack-software/redmine_time_tracker)
 [![Code Climate](https://codeclimate.com/github/hicknhack-software/redmine_time_tracker.png)](https://codeclimate.com/github/hicknhack-software/redmine_time_tracker)
-[![Build Status](https://travis-ci.org/hicknhack-software/redmine_time_tracker.png)](https://travis-ci.org/hicknhack-software/redmine_time_tracker)
+[![Build Status](https://travis-ci.org/hicknhack-software/redmine_time_tracker.png?branch=master)](https://travis-ci.org/hicknhack-software/redmine_time_tracker)
 
 # Redmine Time Tracker plugin
+
+_Note:_ We are working on a complete rewrite of this plugin. Checkout this issue for more infos: [#194](https://github.com/hicknhack-software/redmine_time_tracker/issues/194)
 
 Time tracker is a Redmine plugin to ease time tracking when working on an issue.
 The plugin allows to start/stop a timer on a per user basis. The timer can be started with or without any reference to a Redmine Issue.
@@ -30,15 +32,25 @@ It is be individual configurable for every user and as a module can be enabled p
 Most current version is available at: [GitHub](https://github.com/hicknhack-software/redmine_time_tracker).
 
 ## Requirements
-* Redmine 2.4.0
-* ruby >= 1.8.7 (production, development)
-* ruby >= 1.9.2 (test, because of the gem 'timecop', which requires >= 1.9.2)
+* Redmine one of (see travis.yml)
+  * Version 2.4.0
+  * Version 2.4.5
+  * Version 2.5.0
+  * Version 2.5.1
+  * Version 2.6.0
+  * Version 3.0.4
+  * Version 3.1.0
+* Ruby one of
+  * Version 1.9.3
+  * Version 2.0.0
+  * Version 2.1.1
 
 ## Install
 
 1. Follow the Redmine plugin installation steps at http://www.redmine.org/wiki/redmine/Plugins. Make sure the plugin is installed to `#{RAILS_ROOT}/plugins/redmine_time_tracker`
 1. Rerun `bundle install` to install all necessary gems
-1. Setup the database using the migrations: `rake redmine:plugins:migrate RAILS_ENV=production`
+1. Run `rake redmine:plugins:migrate RAILS_ENV=production`
+1. Run `rake redmine:plugins:redmine_time_tracker:install RAILS_ENV=production` to load assets
 1. Login to your Redmine install as an administrator
 1. Setup the "log time" permissions for your roles
 1. Enable the "Time tracking" module for your project
@@ -49,7 +61,8 @@ Most current version is available at: [GitHub](https://github.com/hicknhack-soft
 
 1. Open a shell to your Redmine's `#{RAILS_ROOT}/plugins/redmine_time_tracker` folder
 1. Update your git copy with: `git pull`
-1. Update the database using the migrations: `redmine:plugins:migrate RAILS_ENV=production`
+1. Update the database using the migrations: `rake redmine:plugins:migrate RAILS_ENV=production`
+1. Run `rake redmine:plugins:redmine_time_tracker:install RAILS_ENV=production` to load assets
 1. Restart your Redmine instance
 
 ## Usage
@@ -87,6 +100,20 @@ The plugin offers a list of settings at the Redmine roles and permission setting
 Reports are the method of generating invoices for customers. The layout is set up to be a simple list and you are able to generate a print-out. You can add you custom logo via the plugin settings in the Redmine administration.
 
 ## Version History
+* 0.10.3 fixed report hardcoding the jquery version
+* 0.10.2 fixed time bookings not being updateable
+* 0.10.1 fixed some bugs with Redmine > 3
+* 0.10.0 compatible with Redmine 3.0.x and 3.1.x
+* 0.9.20 added madeups patches
+* 0.9.19 fixed time tracker queries not saveable for non admins
+* 0.9.18 improved creating muliple bookings from one log
+* 0.9.17 prevent time tracker update to create a new timer, if the old one is gone; fixed autocompletion for postgres
+* 0.9.16 improved start/stop routine of a timer
+* 0.9.15 set jqplot margin to 2
+* 0.9.14 fixed report queries being totally broken
+* 0.9.13 fixed javascript bugs with assets
+* 0.9.12 fixed gemfile dependency problem 
+* 0.9.11 added new assets
 * 0.9.10 Separate filters for bookings and reports
 * 0.9.9 fixed bugs
 * 0.9.8 fixed bug, when right-clicking on the time tracker button

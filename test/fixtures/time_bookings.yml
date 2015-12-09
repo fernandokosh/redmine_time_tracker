@@ -13,3 +13,17 @@ tb_002:
   started_on: 2012-10-25 08:47:00 +2
   stopped_at: 2012-10-25 08:53:00 +2
   project_id: 1
+tb_003:
+  id: 3
+  time_log_id: 3
+  time_entry_id: 1
+  started_on: 2012-10-29 08:30:00 +2
+  stopped_at: 2012-10-29 10:30:00 +2
+  project_id: 1
+tb_004:
+  id: 4
+  time_log_id: 4
+  time_entry_id: 1
+  started_on: 2011-10-29 08:30:00 +2
+  stopped_at: 2011-10-29 10:30:00 +2
+  project_id: 1

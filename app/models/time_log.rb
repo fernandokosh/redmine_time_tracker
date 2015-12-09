@@ -1,7 +1,6 @@
 require 'redmine/i18n'
 class TimeLog < ActiveRecord::Base
   include Redmine::I18n
-  unloadable
 
   attr_accessible :user_id, :started_on, :stopped_at, :project_id, :comments, :issue_id, :spent_time, :bookable
   attr_accessor :issue_id, :spent_time
@@ -16,16 +15,20 @@ class TimeLog < ActiveRecord::Base
   validates :started_on, :presence => true
   validates :stopped_at, :presence => true
 
-  scope :bookable, where(:bookable => true)
+  scope :bookable, -> { where(:bookable => true) }
 
   scope :visible, lambda {
     if help.permission_checker([:tt_edit_time_logs], {}, true)
-      {:conditions => "1 = 1"}
+      where("1 = 1")
     elsif help.permission_checker([:tt_log_time, :tt_edit_own_time_logs, :tt_book_time, :tt_edit_own_bookings, :tt_edit_bookings], {}, true)
       where(:user_id => User.current.id)
     else
-      {:conditions => "1 = 0"}
+      where("1 = 0")
     end
+  }
+
+  scope :from_current_user, lambda {
+    where arel_table[:user_id].eq User.current.id
   }
 
   # we have to check user-permissions. i some cass we have to forbid some or all of his actions
@@ -102,6 +105,7 @@ class TimeLog < ActiveRecord::Base
 
     raise StandardError, l(:error_booking_negative_time) if args[:hours] <= 0
     raise StandardError, l(:error_booking_to_much_time) if args[:hours] > bookable_hours
+    raise StandardError, l(:error_booking_overlapping) if TimeBooking.from_time_log(self.id).overlaps_with(args[:started_on], args[:stopped_at]).exists?
 
     args[:time_log_id] = self.id
     # userid of booking will be set to the user who created timeLog, even if the admin will create the booking

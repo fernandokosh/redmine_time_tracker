@@ -1,14 +1,17 @@
 // ================== time_tracker_controller helpers ============================
 function updateTTControllerForm(form) {
-    $.ajax({url: base_url() + '/time_trackers/update?key=<%= key %>&' + $("#" + form.id).serialize(),
+    $.ajax({url: redmine_time_tracker.TimeTracker.base_url() + '/time_trackers/update?key=<%= key %>&' + $("#" + form.id).serialize(),
         type: 'PUT',
         dataType: 'html',
         success: function (html) {
+            if (time_tracker_timer_interval != null && time_tracker_timer_interval != undefined) {
+              window.clearInterval(time_tracker_timer_interval);
+            }
             $('#content .flash').remove();
             $('#content').prepend($(html).filter('.flash'));
             $('#time-tracker-control').replaceWith($(html).filter('#time-tracker-control'))
             $('#time_tracker_date').datepicker(locDatepickerOptions);
-            validate_time_tracker_form();
+            (new redmine_time_tracker.TimeTrackerFormValidator).validate()
             start_time_tracker_timer();
             enableIssueAutoCompletion();
         }
@@ -27,6 +30,7 @@ function enableIssueAutoCompletion() {
 }
 
 $(document).ready(function () {
+    (new redmine_time_tracker.TimeTrackerFormValidator).validate();
     enableIssueAutoCompletion();
 });
 

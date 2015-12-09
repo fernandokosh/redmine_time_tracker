@@ -159,16 +159,19 @@ module TimeTrackersHelper
 
   def query_from_id
     unless params[:query_id].blank?
-      query = Query.find(params[:query_id], :conditions => "project_id IS NULL")
+      query = Query.find(params[:query_id])
       raise ::Unauthorized unless query.visible?
       sess_info = {:filters => query.filters, :group_by => query.group_by, :column_names => query.column_names}
-      case query.class.queried_class.name
-        when 'TimeLog'
+      case query.class.name
+        when 'TimeLogQuery'
           session[:tt_user_logs_query] = sess_info
           @query_logs = query.clone
-        when 'TimeBooking'
+        when 'TimeBookingQuery'
           session[:tt_user_bookings_query] = sess_info
           @query_bookings = query.clone
+        when 'ReportQuery'
+          session[:tt_user_reports_query] = sess_info
+          @query_reports = query.clone
       end
       sort_clear
     end

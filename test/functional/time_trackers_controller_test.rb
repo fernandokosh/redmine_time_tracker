@@ -13,6 +13,10 @@ class TimeTrackersControllerTest < ActionController::TestCase
     @request.session[:user_id] = nil
     Setting.default_language = 'en'
     Setting.date_format = '%Y-%m-%d'
+
+    # Quick fix for Redmine > 3.0 so the tests do not need to send an XHR request when the response will be
+    # JavaScript
+    subject.class.skip_before_filter :verify_authenticity_token
   end
 
   # test_permissions

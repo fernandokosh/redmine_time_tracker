@@ -15,3 +15,19 @@ tl_002:
   project_id:
   comments: original comment
   bookable: true
+tl_003:
+  id: 3
+  user_id: 1
+  started_on: 2012-10-29 08:30:00 +2
+  stopped_at: 2012-10-29 10:30:00 +2
+  project_id:
+  comments: actual time log
+  bookable: true
+tl_004:
+  id: 4
+  user_id: 1
+  started_on: 2011-10-29 08:30:00 +2
+  stopped_at: 2011-10-29 10:30:00 +2
+  project_id:
+  comments: old time log
+  bookable: true

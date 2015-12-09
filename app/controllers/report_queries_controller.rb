@@ -12,18 +12,16 @@ class ReportQueriesController < ApplicationController
   end
 
   def new
-    @query = ReportsQuery.new
+    @query = ReportQuery.new
     @query.user = User.current
     @query.project = @project
-    @query.is_public = false unless User.current.allowed_to?(:manage_public_queries, @project) || User.current.admin?
     @query.build_from_params(params)
   end
 
   def create
-    @query = ReportsQuery.new(params[:query])
+    @query = ReportQuery.new(params[:query])
     @query.user = User.current
     @query.project = params[:query_is_for_all] ? nil : @project
-    @query.is_public = false unless User.current.allowed_to?(:manage_public_queries, @project) || User.current.admin?
     @query.build_from_params(params)
     @query.column_names = nil if params[:default_columns]
 
@@ -41,7 +39,6 @@ class ReportQueriesController < ApplicationController
   def update
     @query.attributes = params[:query]
     @query.project = nil if params[:query_is_for_all]
-    @query.is_public = false unless User.current.allowed_to?(:manage_public_queries, @project) || User.current.admin?
     @query.build_from_params(params)
     @query.column_names = nil if params[:default_columns]
 
@@ -61,7 +58,7 @@ class ReportQueriesController < ApplicationController
   private
 
   def find_query
-    @query = ReportsQuery.find(params[:id])
+    @query = ReportQuery.find(params[:id])
     @project = @query.project
     render_403 unless @query.editable_by?(User.current)
   rescue ActiveRecord::RecordNotFound

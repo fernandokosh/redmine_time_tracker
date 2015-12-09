@@ -5,25 +5,13 @@ $(function () {
         source:'tt_completer/get_issue.json?key=<%= key %>',
         minLength:0,
         select:function (event, ui) {
-            $('#time_booking_edit_<%= time_booking.id.to_s %>_comments').val(ui.item.data);
-            updateBookingProject('<%= key %>', 'time_booking_edit_<%= time_booking.id.to_s %>');
-        }
-    });
-});
-
-$(function () {
-    $('#time_booking_edit_<%= time_booking.id.to_s %>_comments').autocomplete({
-        source:'tt_completer/get_issue.json?key=<%= key %>',
-        minLength:0,
-        select:function (event, ui) {
             $('#time_booking_edit_<%= time_booking.id.to_s %>_issue_id').val(ui.item.value);
-            $('#time_booking_edit_<%= time_booking.id.to_s %>_comments').val(ui.item.data);
-            updateBookingProject('<%= key %>', 'time_booking_edit_<%= time_booking.id.to_s %>');
+            redmine_time_tracker.FieldUpdater.updateBookingProject('time_booking_edit_<%= time_booking.id.to_s %>');
         }
     });
 });
 
 $(document).ready(function() {
-    validate_list_inputs('time_booking_edit_<%= time_booking.id.to_s %>');
+    (new redmine_time_tracker.EditBookingValidator('time_booking_edit_<%= time_booking.id.to_s %>')).validate();
 });
 <% end %>

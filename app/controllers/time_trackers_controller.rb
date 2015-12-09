@@ -1,5 +1,4 @@
 class TimeTrackersController < ApplicationController
-  unloadable
 
   menu_item :time_tracker_menu_tab_overview
   before_filter :js_auth, :authorize_global
@@ -38,6 +37,7 @@ class TimeTrackersController < ApplicationController
       if @time_tracker.start
         flash[:notice] = l(:start_time_tracker_success)
       else
+        @time_tracker.destroy
         flash[:error] = l(:start_time_tracker_error)
       end
     else
@@ -60,32 +60,32 @@ class TimeTrackersController < ApplicationController
         render :partial => 'flash_messages'
       end
     else
-      unless params[:time_tracker].nil?
+      if params[:time_tracker].present?
         @time_tracker.issue_text = params[:time_tracker][:issue_text]
         @time_tracker.comments = params[:time_tracker][:comments]
         @time_tracker.activity_id = params[:time_tracker][:activity_id]
       end
       @time_tracker.stop
-      flash[:error] = l(:stop_time_tracker_error) unless @time_tracker.destroyed?
-      @time_tracker = get_current
-      flash[:notice] = l(:stop_time_tracker_success)
-      if !params[:start_new_time_tracker].nil?
-        start({:issue_id => params[:start_new_time_tracker]})
-      else
-        if request.env['HTTP_REFERER'].present?
-          redirect_to request.env['HTTP_REFERER']
-        else
-          render :partial => 'flash_messages'
+      if @time_tracker.destroyed?
+        flash[:notice] = l(:stop_time_tracker_success)
+        if params[:start_new_time_tracker].present?
+          start({:issue_id => params[:start_new_time_tracker]})
+          return
         end
+      else
+        flash[:error] = l(:stop_time_tracker_error)
+      end
+      if request.env['HTTP_REFERER'].present?
+        redirect_to request.env['HTTP_REFERER']
+      else
+        render :partial => 'flash_messages'
       end
     end
   end
 
   def delete
     time_tracker = TimeTracker.where(:id => params[:id]).first
-    #if User.current.id == time_tracker.user_id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}) || User.current.allowed_to_globally?(:tt_edit_time_logs, {}) # user could only delete his own entries, except he's admin
-    
-    if User.current.id == time_tracker.user_id && (User.current.allowed_to_globally?(:tt_edit_time_logs, {}) or User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}))
+    if User.current.id == time_tracker.user_id && User.current.allowed_to_globally?(:tt_edit_own_time_logs, {}) || User.current.allowed_to_globally?(:tt_edit_time_logs, {})
       time_tracker.destroy
       flash[:notice] = l(:time_tracker_delete_success)
     else
@@ -104,8 +104,12 @@ class TimeTrackersController < ApplicationController
 
   def update
     @time_tracker = get_current
-    @time_tracker.update_attributes!(params[:time_tracker])
-    flash[:notice] = l(:update_time_tracker_success)
+    unless @time_tracker.new_record?
+      @time_tracker.update_attributes!(params[:time_tracker])
+      flash[:notice] = l(:update_time_tracker_success)
+    else
+      flash[:error] = l(:update_time_tracker_already_deleted)
+    end
     unless request.xhr?
       redirect_to :back
     else

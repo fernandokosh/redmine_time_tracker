@@ -1,4 +1,4 @@
 $('#<%= "booking-entry-" + @entry.id.to_s %>').html('<%= escape_javascript(render(:partial => 'time_bookings/list_entry', :locals => {:entry => @entry, :query => @query_bookings, :button => :book})) %>');
 contextMenuHide();
 contextMenuUnselectAll();
-hideMultiFormButtons('tb_edit_form_update_button');
+redmine_time_tracker.TimeTracker.hideMultiFormButtons('tb_edit_form_update_button');

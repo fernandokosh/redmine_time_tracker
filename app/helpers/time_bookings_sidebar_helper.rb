@@ -1,13 +1,8 @@
 module TimeBookingsSidebarHelper
   def sidebar_queries
-    unless @sidebar_queries
-      @sidebar_queries = TimeBookingQuery.visible.all(
-          :order => "#{Query.table_name}.name ASC",
-          # Project specific queries and global queries
-          :conditions => (@project.nil? ? ["project_id IS NULL"] : ["project_id IS NULL OR project_id = ?", @project.id])
-      )
-    end
-    @sidebar_queries
+    return @sidebar_queries if @sidebar_queries
+    @sidebar_queries = TimeBookingQuery.visible
+    @project.nil? ? @sidebar_queries.where(project_id: nil) : @sidebar_queries.where(project_id: [nil, @project.id])
+    @sidebar_queries.order(name: :asc)
   end
-
 end

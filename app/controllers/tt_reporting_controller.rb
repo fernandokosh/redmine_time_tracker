@@ -1,5 +1,4 @@
 class TtReportingController < ApplicationController
-  unloadable
 
   menu_item :time_tracker_menu_tab_reporting
   before_filter :authorize_global, :check_settings_for_ajax
@@ -13,7 +12,7 @@ class TtReportingController < ApplicationController
   include TtSortHelper
   helper :time_trackers
   include TimeTrackersHelper
-  helper :time_bookings_sidebar
+  helper :report_sidebar
 
   def index
     fetch_query

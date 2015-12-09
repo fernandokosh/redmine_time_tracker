@@ -1,5 +1,4 @@
 class TtOverviewController < ApplicationController
-  unloadable
 
   menu_item :time_tracker_menu_tab_overview
   before_filter :authorize_global, :check_settings_for_ajax
@@ -25,7 +24,7 @@ class TtOverviewController < ApplicationController
     time_logs_query
     # group list by date per default // TODO replace this with some kind of user-settings later!
     @query_logs.group_by ||= "tt_log_date"
-    @query_logs.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}, :tt_log_bookable => {:operator => "=", :values => ["1"]}}
+    @query_logs.filters = {:tt_user => {:operator => "=", :values => [User.current.id.to_s]}, :tt_log_bookable => {:operator => "=", :values => ["1"]}, :tt_start_date => {:operator => ">=", :values => [(Time.now.localtime-2.weeks).beginning_of_day.to_s]}}
     sort_init(@query_logs.sort_criteria.empty? ? [['tt_log_date', 'desc']] : @query_logs.sort_criteria)
     tt_sort_update(:sort_logs, @query_logs.sortable_columns, "tt_log_sort")
 

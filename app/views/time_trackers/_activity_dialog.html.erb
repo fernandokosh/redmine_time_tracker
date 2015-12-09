@@ -1,3 +1,8 @@
+<% content_for :header_tags do %>
+    <%= javascript_include_tag 'time_tracker2', :plugin => 'redmine_time_tracker' %>
+    <%= javascript_include_tag 'validators', :plugin => 'redmine_time_tracker' %>
+    <%= javascript_include_tag 'field_updater', :plugin => 'redmine_time_tracker' %>
+<% end %>
 <%= javascript_tag render :partial => 'tt_overview/time_tracker', :formats => [:js] %>
 <%
    activities = time_tracker.project_id.nil? ? TimeEntryActivity.shared.active.all : Project.visible.where(:id => time_tracker.project_id).first().activities
@@ -13,7 +18,7 @@
         } else {
             $('#tt_activity').val(val);
         }
-        $.ajax({url: base_url() + '/time_trackers/update?key=<%= User.current.api_key %>&time_tracker[activity_id]=' + val,
+        $.ajax({url: redmine_time_tracker.TimeTracker.base_url() + '/time_trackers/update?key=<%= User.current.api_key %>&time_tracker[activity_id]=' + val,
             type: 'PUT'
         });
         $('#tt_activity_dialog_stop').button("option", "disabled", val == '');

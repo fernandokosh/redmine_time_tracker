@@ -1,25 +1,66 @@
 language: ruby
-rvm:
-  - 2.1.1
-  - 2.0.0
-  - 1.9.3
-  - 1.9.2
+sudo: false
 branches:
   only:
-    - master
-    - travis
+  - master
+  - travis
+
+rvm:
+- 1.9.3
+- 2.0.0
+- 2.1.7
+- 2.2.3
+
 env:
-  - REDMINE_VERSION=2.4.0 VERBOSE=yes
-  - REDMINE_VERSION=2.4.5 VERBOSE=yes
-  - REDMINE_VERSION=2.5.0 VERBOSE=yes
-  - REDMINE_VERSION=2.5.1 VERBOSE=yes
+  global:
+  - PLUGIN=redmine_time_tracker
+  - REDMINE=test_redmine
+
+  matrix:
+  - REDMINE_VERSION=2.4.0 TRACE=--trace
+  - REDMINE_VERSION=2.4.5 TRACE=--trace
+  - REDMINE_VERSION=2.5.3 TRACE=--trace
+  - REDMINE_VERSION=2.6.3 TRACE=--trace
+  - REDMINE_VERSION=2.6.4
+  - REDMINE_VERSION=2.6.6
+  - REDMINE_VERSION=3.0.4 TRACE=--trace
+  - REDMINE_VERSION=3.1.0 TRACE=--trace
+
+matrix:
+  exclude:
+  # Redmine before 2.6.6 will not run on Ruby 2.2
+  - rvm: 2.2.3
+    env: REDMINE_VERSION=2.4.0 TRACE=--trace
+  - rvm: 2.2.3
+    env: REDMINE_VERSION=2.4.5 TRACE=--trace
+  - rvm: 2.2.3
+    env: REDMINE_VERSION=2.5.3 TRACE=--trace
+  - rvm: 2.2.3
+    env: REDMINE_VERSION=2.6.3 TRACE=--trace
+  - rvm: 2.2.3
+    env: REDMINE_VERSION=2.6.4
+  # Redmine before 2.5 will not run on Ruby 2.1
+  - rvm: 2.1.7
+    env: REDMINE_VERSION=2.4.0 TRACE=--trace
+  - rvm: 2.1.7
+    env: REDMINE_VERSION=2.4.5 TRACE=--trace
+
+before_install:
+- . .travis/clone_redmine.sh
+
+gemfile: test_redmine/Gemfile
+install:
+- cd $PATH_TO_REDMINE
+- bundle install --jobs=3 --retry=3 --path=$PATH_TO_PLUGIN/vendor/bundle
+- bundle exec rake $TRACE db:migrate
+- bundle exec rake $TRACE redmine:load_default_data REDMINE_LANG=en
+- bundle exec rake $TRACE $GENERATE_SECRET
+- bundle exec rake $TRACE $MIGRATE_PLUGINS
+
 script:
-  - export PLUGIN=redmine_time_tracker
-  - export WORKSPACE=$(pwd)/workspace
-  - export PATH_TO_PLUGIN=$(pwd)
-  - export PATH_TO_REDMINE=$WORKSPACE/redmine
-  - mkdir $WORKSPACE
-  - bash -x ./.travis-init.sh -r || exit 1
-  - bash -x ./.travis-init.sh -i || exit 1
-  - bash -x ./.travis-init.sh -t || exit 1
-  - bash -x ./.travis-init.sh -u || exit 1
+- cd $PATH_TO_REDMINE
+- bundle exec rake $TRACE redmine:plugins:test NAME=$PLUGIN
+
+cache:
+  directories:
+  - vendor/bundle

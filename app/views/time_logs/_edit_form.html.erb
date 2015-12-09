@@ -18,14 +18,14 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_start_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :start_time, :value => time_log.get_formatted_start_time, :size => "10", :placeholder => l(:time_tracker_label_start_time), :onchange => "updateBookingHours('time_log_edit_#{time_log.id}')", :readonly => time_log.permission_level < 3 %>
+              <%= f.text_field :start_time, :value => time_log.get_formatted_start_time, :size => "10", :placeholder => l(:time_tracker_label_start_time), data: {updater: 'updateBookingHours'}, :readonly => time_log.permission_level < 3 %>
             </div>
           </div>
 
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_stop_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :stop_time, :value => time_log.get_formatted_stop_time, :size => "10", :placeholder => l(:time_tracker_label_stop_time), :onchange => "updateBookingHours('time_log_edit_#{time_log.id}')", :readonly => time_log.permission_level < 3 %>
+              <%= f.text_field :stop_time, :value => time_log.get_formatted_stop_time, :size => "10", :placeholder => l(:time_tracker_label_stop_time), data: {updater: 'updateBookingHours'}, :readonly => time_log.permission_level < 3 %>
             </div>
           </div>
 
@@ -37,7 +37,7 @@
           <div class="task_form_sub_fields">
             <div class="input_hint"><%= l(:time_tracker_label_time) %></div>
             <div class="task_form_input">
-              <%= f.text_field :spent_time, :value => time_log.get_formatted_time_span, :size => "12", :placeholder => l(:time_tracker_label_time), :onchange => "updateBookingStop('time_log_edit_#{time_log.id}')", :readonly => time_log.permission_level < 3 %>
+              <%= f.text_field :spent_time, :value => time_log.get_formatted_time_span, :size => "12", :placeholder => l(:time_tracker_label_time), data: {updater: 'updateBookingStop'}, :readonly => time_log.permission_level < 3 %>
             </div>
           </div>
           <div class="task_form_sub_fields">

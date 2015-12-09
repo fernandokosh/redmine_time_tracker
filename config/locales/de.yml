@@ -1,6 +1,7 @@
 # German strings go here for Rails i18n
 de:
   error_booking_negative_time: "Die Zeitangabe muss größer null sein!"
+  error_booking_overlapping: "Es existieren bereits Zeitbuchungen der gewählten Zeiterfassung, die sich mit dem gewählten Zeitraum überkreuzen!"
   error_booking_to_much_time: "Es ist nicht möglich mehr Zeit als verfügbar zu buchen!"
   error_add_booking_failed: "Die Zeitbuchung ist fehlgeschlagen!"
   field_tt_booking_issue: "Ticket"
@@ -62,6 +63,7 @@ de:
   tt_error_not_allowed_to_create_time_log_on_project: "Sie haben keine Berechtigung Zeit in diesem Projekt erfassen!"
   tt_error_not_allowed_to_delete_bookings: "Sie haben keine Berechtigung Zeitbuchungen zu löschen!"
   tt_error_not_allowed_to_delete_logs: "Sie haben keine Berechtigung Zeiterfassungen zu löschen!"
+  tt_error_not_possible_to_delete_logs: "Die Zeiterfassung kann nicht gelöscht werden, solange Zeitbuchungen hierfür existieren!"
   tt_error_not_allowed_to_start_tracker_on_issue: "Sie haben keine Berechtigung Zeit für dieses Ticket zu erfassen oder das Ticket ist geschlossen!"
   tt_error_could_not_set_comments: "Kommentare konnten nicht gespeichert werden!"
   tt_error_could_not_set_issue: "Die Ticketeinstellung konnte nicht gespeichert werden!"
@@ -117,8 +119,8 @@ de:
   time_tracker_label_true: "wahr"
   time_tracker_label_update: "Aktualisierung"
   time_tracker_label_your_time_trackers: "Meine Zeiterfassungen"
-  time_tracker_label_your_time_logs: "Meine Zeiterfassungen"
-  time_tracker_label_your_time_bookings: "Meine Zeitbuchungen"
+  time_tracker_label_your_time_logs: "Meine Zeiterfassungen (aus den letzten zwei Wochen)"
+  time_tracker_label_your_time_bookings: "Meine Zeitbuchungen (aus den letzten zwei Wochen)"
   time_tracker_label_other_time_trackers: "Zeiterfassungen anderer Benutzer"
   time_tracker_chart_title: "gebuchte Stunden pro Tag"
   time_tracker_list_title: "Aktive Tracker"
@@ -150,4 +152,5 @@ de:
   time_tracker_settings_unknown_status: "Unbekannter Status"
   time_tracker_settings_zombie_transition: "Zombie Statusänderung"
   update_time_tracker_success: "Die Zeiterfassung wurde aktualisiert."
+  update_time_tracker_already_deleted: "Konnte die Zeiterfassung nicht aktualisieren. Die aktuelle Instanz ist nicht valide (eventuell gelöscht oder gestoppt)."
   waiting_for_slot: "Warten auf Erreichen der Startzeit..."

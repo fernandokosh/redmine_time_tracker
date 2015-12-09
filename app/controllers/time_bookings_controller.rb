@@ -1,5 +1,4 @@
 class TimeBookingsController < ApplicationController
-  unloadable
 
   before_filter :authorize_global
 
@@ -62,10 +61,10 @@ class TimeBookingsController < ApplicationController
   private
 
   def update(tb)
-    time_booking = TimeBooking.where(:id => tb[:id]).first
+    time_booking = TimeBooking.find(tb[:id])
     tl = time_booking.time_log
-    issue = Issue.where(:id => tb[:issue_id]).first
-    issue.nil? ? project = Project.where(:id => tb[:project_id]).first : project = issue.project
+    issue = Issue.where(id: tb[:issue_id]).first
+    project = issue.nil? ? Project.find(tb[:project_id]) : issue.project
 
     start = build_timeobj_from_strings parse_localised_date_string(tb[:tt_booking_date]), parse_localised_time_string(tb[:start_time])
     hours = time_string2hour(tb[:spent_time])
@@ -75,8 +74,8 @@ class TimeBookingsController < ApplicationController
     # only set project separately if no issue is set, otherwise the project from the issue is taken
     time_booking.update_attributes!(:project => project) if issue.nil?
     # have to set issue separately due to mass-assignment-rules
-    # TODO check if there is a security problem due to mass-assignment here!
-    time_booking.update_attributes!({:comments => tb[:comments], :issue => issue, :activity_id => tb[:activity_id]}, {:without_protection => true})
+    # TODO check if there is a security problem due to mass-assignment here!)
+    time_booking.update_attributes!({:comments => tb[:comments], :issue => issue, :activity_id => tb[:activity_id]})
 
     tl.check_bookable
     flash[:notice] = l(:tt_update_booking_success)

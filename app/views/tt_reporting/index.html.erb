@@ -6,8 +6,8 @@
 
 <div class="contextual">
   <% if !query.new_record? && query.editable_by?(User.current) %>
-      <%= link_to l(:button_edit), edit_time_booking_query_path(query), :class => 'icon icon-edit' %>
-      <%= link_to l(:button_delete), time_booking_query_path(query), :confirm => l(:text_are_you_sure),
+      <%= link_to l(:button_edit), edit_report_query_path(query), :class => 'icon icon-edit' %>
+      <%= link_to l(:button_delete), report_query_path(query), :confirm => l(:text_are_you_sure),
                   :method => :delete, :class => 'icon icon-del' %>
   <% end %>
 </div>
@@ -47,11 +47,11 @@
     </div>
     <p class="buttons hide-when-print">
       <!-- TODO check link targets! they're project-related here but shouldn't! -->
-      <%= link_to_function l(:button_apply), 'submit_query_form("query_form")', :class => 'icon icon-checked' %>
+      <%= link_to_function l(:button_apply), '$("#query_form").submit();', :class => 'icon icon-checked' %>
       <%= link_to l(:button_clear), {:set_filter => 3, :project_id => @project}, :class => 'icon icon-reload' %>
       <% if query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %>
           <%= link_to_function l(:button_save),
-                               "$('#query_form').attr('action', '#{ @project ? new_project_time_booking_query_path(@project) : new_time_booking_query_path }'); submit_query_form('query_form')",
+                               "$('#query_form').attr('action', '#{ @project ? new_project_report_query_path(@project) : new_report_query_path }'); $('#query_form').submit();",
                                :class => 'icon icon-save' %>
       <% end %>
     </p>
@@ -73,7 +73,6 @@
 
 <% content_for :sidebar do %>
     <%= render_sidebar_queries %>
-
     <div id="tt_reporting-sidebar">
       <h3><%=l(:time_tracker_label_menu_tab_reports)%></h3>
       <!--TODO insert statistics here-->
