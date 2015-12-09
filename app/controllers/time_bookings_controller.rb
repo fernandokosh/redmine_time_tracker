@@ -63,7 +63,7 @@ class TimeBookingsController < ApplicationController
   def update(tb)
     time_booking = TimeBooking.find(tb[:id])
     tl = time_booking.time_log
-    issue = Issue.find_by(id: tb[:issue_id])
+    issue = Issue.where(id: tb[:issue_id]).first
     project = issue.nil? ? Project.find(tb[:project_id]) : issue.project
 
     start = build_timeobj_from_strings parse_localised_date_string(tb[:tt_booking_date]), parse_localised_time_string(tb[:start_time])
