@@ -108,9 +108,8 @@ module TtQueryConcern
   end
 
   def sql_for_tt_user_field(field, operator, value)
-    if value.delete('me')
-      value += User.current.id.to_s.to_a
-    end
+    value << User.current.id.to_s if value.delete('me')
+
     "( #{User.table_name}.id #{operator == "=" ? 'IN' : 'NOT IN'} (" + value.collect { |val| "'#{self.class.connection.quote_string(val)}'" }.join(",") + ") )"
   end
 
