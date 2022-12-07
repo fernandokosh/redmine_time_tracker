@@ -63,24 +63,24 @@ the issue list to start or stop the timer or press the "Start Tracking" button o
 The Plugin is intended to help us create invoices for customers. This requires the separation of time that was spent and time that is booked. Only booked times can be billed.
 More informations are available in the [wiki](http://github.com/fernandokosh/redmine_time_tracker/wiki "Wiki").
 
-###Time Tracker
+### Time Tracker
 
 The stop watch. Time you spent get's "generated" by the tracker
 
-###Time Log
+### Time Log
 
 A time log is a spent amount of time. If you stop the tracker, a time log is created. A time log has nothing attached to it. To add this time to issues or projects, you **book** time.
 Role permissions can be edited to disable logging. This might be useful for reviewers, that do not generate time on their own but want to look up statistics on a project or user.
 
-###Time Booking
+### Time Booking
 
 A booking is time that is actually connected to a task (project or issue). To create a booking, you book time from a time log. You are not limited to spent the whole time of a single booking, you can divide as you wish. You however aren't able book more time than what was actually logged. The role you have on projects and their settings determine if you are able to edit bookings or are just allowed to create them.
 
-###Settings
+### Settings
 
 The plugin offers a list of settings at the Redmine roles and permission settings page. Also you can set the size and file for a logo to be displayed at the report in the Redmine plugin settings, enable rounding behaviour and interval as well as snapping percentage.
 
-###Report
+### Report
 
 Reports are the method of generating invoices for customers. The layout is set up to be a simple list and you are able to generate a print-out. You can add you custom logo via the plugin settings in the Redmine administration.
 
